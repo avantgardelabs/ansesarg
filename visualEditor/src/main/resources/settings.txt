@@ -1,0 +1,28 @@
+IMPORTANTE
+==========
+Por favor, tener en cuenta lo siguiente antes de poner la aplicacion en producción
+
+1) Revisar el archivo 
+asistente_reglas_merge/src/main/resources/ar/gob/anses/prissa/mi/asistente_reglas/seam/Parametros.properties
+
+Verificar que contenga la linea
+path.destino=SETEAR_DIRECTORIO
+
+con el directorio que corresponda.
+En ese directorio, se van a guardar los archivos que se adjunten a los instrumentos normativos
+
+2) Ver el siguiente link 
+http://docs.jboss.org/seam/2.1.2/reference/en-US/html/i18n.html#d0e13938 
+
+En resumen NO SE OLVIDEN DE MODIFICAR lo siguiente: en la carpeta 
+jboss-eap-4.3/jboss-as/server/prissa/deploy/jboss-web.deployer
+
+verificar el archivo server.xml 
+en la linea que empieza con
+<Connector port="8080" ...
+
+agregar el atributo siguiente dentro de ese tag
+
+useBodyEncodingForURI="true"
+
+

@@ -1,0 +1,179 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j" template="template.xhtml">
+
+<ui:define name="ayuda">
+		<div class="ayuda">Pantalla de Anclaje de Atributos. Seleccion de atributos <br />
+		<a href="" class="textoayuda">ver mas >></a>
+		</div>
+</ui:define>
+
+	<ui:define name="body">
+		<script type="text/javascript">
+			//<!--
+				var _persistible = false;
+				var _tamanioBusqueda = 0;
+				function busquedaValida() {
+					if (_tamanioBusqueda < 3) {
+						alert('Debe ingresar al menos tres caracteres para la busqueda');
+						return false;
+					}
+					return true;
+				}
+			//-->
+		</script>
+		<script type="text/javascript"> 
+			//<!--
+			function toggleSelectAllRows(cant) { 				 
+				//var rows = document.getElementById('frmPrincipal:tablaAtributos').rows; 
+				//alert(rows.length);
+				var currentState = document.getElementById('frmPrincipal:tablaAtributos:checkall').checked;
+				var i;
+				for (i=0;i<cant;i++) { 
+					var check = document.getElementById('frmPrincipal:tablaAtributos:' + i + ':check');
+					if(check != null) {
+						if (currentState) { 
+							check.checked=true; 				
+						} else if (!currentState) { 
+							check.checked=false;					
+						} 
+					}
+				} 
+			} 
+			//-->
+		</script> 
+				
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+			<span class="waitingPanel">
+			<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+			<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+			</span>
+		</rich:modalPanel>
+		
+		
+		
+		
+		<rich:simpleTogglePanel id="panelAtributos" styleClass="margen5">
+		  	 <f:facet name="header">#{entidadHome.managed ? 'Editar' : 'Agregar'} Entidad</f:facet>
+			<s:decorate id="nombre" template="../layout/display.xhtml">
+  	          <ui:define name="label">Nombre</ui:define>
+    	        <h:outputText value="#{entidadHome.instance.nombre}"/>
+        	</s:decorate>
+  
+  			<s:decorate id="descripcion" template="../layout/display.xhtml">
+              <ui:define name="label">Descripcion</ui:define>
+            	<h:outputText value="#{entidadHome.instance.descripcion}"/>
+        	</s:decorate>
+          	
+        </rich:simpleTogglePanel>
+				
+		<rich:panel styleClass="margen5">
+		  <f:facet name="header">Atributos</f:facet>
+
+   			   <div class="results" id="tablaValores">
+   							
+   				
+				<rich:dataTable id="tablaAtributos"
+				styleClass="rich-table70"
+						value="#{entidadHome.instance.atributos}" rows="10" var="atr"
+						rowKeyVar="nroFila">
+
+						<rich:column width="20px">
+							<h:graphicImage value="/img/aviso.png" width="20px"
+								height="20px" title="El atributo no posee referencias a datos"
+								alt="El atributo no posee referencias a datos" rendered="#{not entidadHome.esAnclado(atr)}"/>
+							<h:graphicImage value="/img/ok.png" width="20px"
+								height="20px" title="El atributo posee referencias a datos"
+								alt="El atributo posee referencias a datos" rendered="#{entidadHome.esAnclado(atr)}"/>
+						</rich:column>
+
+						<rich:column>
+							<f:facet name="header">
+								<h:outputText value="Nombre" />
+							</f:facet>
+							<h:outputText value="#{atr.nombre}" />
+						</rich:column>
+
+						<rich:column>
+							<f:facet name="header">
+								<h:outputText value="Descripcion" />
+							</f:facet>
+							<h:outputText value="#{atr.descripcion}" />
+						</rich:column>
+
+						<rich:column>
+							<f:facet name="header">
+								<h:outputText value="Tipo de Dato" />
+							</f:facet>
+							<h:outputText value="#{atr.tipoDato}" />
+						</rich:column>
+
+						<rich:column styleClass="ancho70">
+							<f:facet name="header">
+								<h:outputText value="Tipo de Carga" />
+							</f:facet>
+							<h:graphicImage value="/img/bbdd_borrar.png" width="20px"
+								height="20px" title="Atributo Logico"
+								alt="El atributo es cargado por una regla"
+								rendered="#{not atr.persistible}" />
+
+
+							<h:graphicImage
+								title="Atributo Fisico"
+								alt="Atributo Fisico"
+								value="/img/bbdd_nuevo.png" width="20px" height="20px"
+								rendered="#{atr.persistible}" />
+
+
+						</rich:column>
+						
+					<rich:column>
+        				<f:facet name="header">        					
+        					<h:selectBooleanCheckbox value="#{requerimientosAction.allSelected}" id="checkall" onclick="toggleSelectAllRows(#{entidadHome.instance.atributos.size});">        						
+	        					<a4j:support event="onchange" 
+									action="#{requerimientosAction.addRemoveAll(entidadHome.instance.atributos)}" 
+									ajaxSingle="true"
+									immediate="true" 
+									reRender="tablaAtributos"/>								
+        					</h:selectBooleanCheckbox>
+        				</f:facet>
+        				
+						<h:selectBooleanCheckbox rendered="#{not entidadHome.esAnclado(atr)}" id="check#{nroFila}" value="#{atr.selected}">							
+							<a4j:support event="onchange" 
+										action="#{requerimientosAction.addRemoveAtributo(atr, nroFila)}" 
+										ajaxSingle="true" 
+										immediate="true"/>
+						</h:selectBooleanCheckbox>								
+					</rich:column>
+
+						<f:facet name="footer">
+							<rich:datascroller id="datascroller" />
+						</f:facet>
+			</rich:dataTable>
+		
+		</div>
+
+
+		</rich:panel>
+        <div class="actionButtons">
+
+			<h:commandButton id="anclar"
+				value="Solicitar Anclaje" propagation="join" action="#{requerimientosAction.solicitudAnclajeAtributos(entidadHome.instance)}"
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+							
+			<s:button id="cancel"
+				value="Cancelar" propagation="end" view="/Rational/buscarEntidad.xhtml"				
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300});" />							
+				
+		</div>
+	
+	</ui:define>
+
+</ui:composition>

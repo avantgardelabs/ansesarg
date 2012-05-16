@@ -1,0 +1,904 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j" template="layout/template.xhtml">
+
+	<ui:define name="ayuda">
+		<div class="ayuda">
+			Pantalla para crear o modificar condiciones que seran usadas en
+			reglas. <br /> <a href="" class="textoayuda">ver mas >></a>
+		</div>
+	</ui:define>
+	<ui:define name="body">
+		<script type="text/javascript">
+		//<!--
+		
+		function soloNumeros(e, str) {
+			var key = e.charCode;
+			if (key == undefined) key = e.keyCode;
+			if (key > 0) {
+		        var skey = String.fromCharCode(key);
+		        if (!((skey == "." && (str.indexOf(".") == -1)) || ((str.length == 0) && skey == "-") || (key >= 48 && key <= 57))) {
+			        return false;
+		        }
+		        return true;
+		    }
+		    return true;
+		};
+		
+//		function showHideLiteral(){	
+//			if(document.getElementById("frmPrincipal:optValorRadio:0") != null){				
+//				if(document.getElementById("frmPrincipal:optValorRadio:0").checked){
+//					var div = document.getElementById('divLiteral');
+//					div.style.visibility = 'visible';
+//					div.style.display = 'inline';
+//				}else{
+//					var div = document.getElementById('divLiteral');
+//					div.style.visibility = 'hidden';
+//					div.style.display = 'none';
+//				}
+//			}
+//		}
+
+		function mostrarPanel() {
+
+			var e = document.getElementById("frmPrincipal:modoCarga:0");
+			if (e!=null) {
+				if (e.checked) {
+					var panel = document.getElementById("frmPrincipal:panelFuncion");
+					if (panel!=null)
+						panel.style.display = 'block';
+
+					var panel = document.getElementById("frmPrincipal:panelRegla");
+					if (panel!=null)
+						panel.style.display ='none';
+				}
+				else {
+					var panel = document.getElementById("frmPrincipal:panelRegla");
+					if (panel != null)
+						panel.style.display = 'block';
+
+					var panel = document.getElementById("frmPrincipal:panelFuncion");
+					if (panel!=null)
+						panel.style.display ='none';
+				}
+			}
+
+//			showHideLiteral();
+		}
+
+		window.onload=mostrarPanel;
+
+		
+		//-->
+	</script>
+
+		<script type="text/javascript">
+
+		function validacionLongCamposBusqueda(){
+			if(document.getElementById("frmPrincipal:txtNombreBusqueda").value.length &lt; 3 
+				&amp;&amp; document.getElementById("frmPrincipal:txtNombreBusqueda").value.length &gt; 0)
+				{
+				alert("Todos los campos de busqueda debe tener al menos 3 caracteres.");
+				return false;
+			}
+			return true;
+		}
+	</script>
+
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false"
+			resizeable="false" autosized="true" zindex="2000" top="500"
+			minWidth="350" width="300">
+			<span class="waitingPanel"> <h:graphicImage
+					value="/img/wait_bar.gif" style="vertical-align: middle;" /> <h:outputText
+					style="" value="#{messages['message.pleasewait']}" /> </span>
+		</rich:modalPanel>
+
+		<rich:panel id="frmDatos">
+			<f:facet name="header">#{condicionHome.managed ? 'Editar' : 'Agregar'} Condicion</f:facet>
+			<s:decorate id="nombre" template="layout/edit.xhtml">
+
+				<ui:define name="label">Nombre</ui:define>
+				<h:inputText id="txtnombre"
+					onblur="javascript:this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');"
+					onchange="_modificado=true" size="50" maxlength="50"
+					value="#{condicionHome.instance.nombre}" required="true"
+					requiredMessage="El nombre de la condicion es obligatorio"
+					styleClass="ancho300">
+
+
+				</h:inputText>
+
+			</s:decorate>
+
+			<s:decorate id="descripcion" template="layout/edit.xhtml">
+
+				<ui:define name="label">Descripcion</ui:define>
+				<h:inputText id="txtdescripcion"
+					onblur="javascript:this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');"
+					onchange="_modificado=true" maxlength="100"
+					value="#{condicionHome.instance.descripcion}" required="true"
+					requiredMessage="La descripcion de la condicion es obligatorio"
+					styleClass="ancho500">
+
+				</h:inputText>
+			</s:decorate>
+
+
+			<s:decorate id="dominio" template="layout/edit.xhtml">
+
+				<ui:define name="label">Dominio</ui:define>
+				<h:selectOneMenu onchange="_modificado=true" id="idDominio"
+					required="true" value="#{condicionHome.instance.dominio}"
+					requiredMessage="Debe seleccionar el dominio correspondiente."
+					styleClass="ancho300">
+					<s:selectItems var="dominio"
+						noSelectionLabel="Indique un dominio..."
+						value="#{dominioList.myResultList}" label="#{dominio.descripcion}">
+					</s:selectItems>
+					<s:convertEntity />
+					<a4j:support event="onchange" reRender="cancelEdit"
+						action="#{condicionHome.setModificado(true)}" ajaxSingle="false"
+						bypassUpdates="true" />
+				</h:selectOneMenu>
+			</s:decorate>
+
+
+			<s:decorate id="entidad" template="layout/edit.xhtml">
+
+				<ui:define name="label">Entidad</ui:define>
+				<h:selectOneMenu id="idEntidad"
+					value="#{condicionHome.instance.entidad}" required="true"
+					requiredMessage="La condicion debe tener una entidad"
+					styleClass="ancho300" onblur="_modificado = true"
+					disabled="#{not empty condicionHome.instance.literales}"
+					immediate="true">
+
+					<s:selectItems var="entidad"
+						noSelectionLabel="Indique una entidad..."
+						value="#{condicionHome.entidades}" label="#{entidad.nombre}">
+
+					</s:selectItems>
+					<a4j:support event="onchange" reRender="cancelEdit,listaAtributos"
+						ajaxSingle="true" action="#{condicionHome.setModificado(true)}" />
+
+					<s:convertEntity />
+				</h:selectOneMenu>
+
+			</s:decorate>
+
+			<s:decorate id="lista" template="layout/edit.xhtml">
+
+				<ui:define name="label">Atributo</ui:define>
+				<h:selectOneMenu onblur="_modificado=true" id="listaAtributos"
+					required="true"
+					requiredMessage="La condicion debe tener un atributo"
+					value="#{condicionHome.instance.atributo}" styleClass="ancho300"
+					immediate="true"
+					disabled="#{not empty condicionHome.instance.literales}">
+					<s:selectItems
+						noSelectionLabel="Indique El atributo para la condicion..."
+						var="atributo" value="#{condicionHome.atributos}"
+						label="#{atributo.nombre}">
+					</s:selectItems>
+					<a4j:support event="onchange"
+						reRender="cancelEdit,literal,cboOperadorLogico1,modoCarga,cargaLogica,cargaPorLiteral"
+						action="#{condicionHome.setModificado(true)}" ajaxSingle="true"
+						oncomplete="mostrarPanel()" />
+					<s:convertEntity />
+				</h:selectOneMenu>
+
+
+			</s:decorate>
+
+			<div style="clear: both">
+				<rich:panel id="literal" style="display:block">
+					<rich:panel id="cargaLogica"
+						rendered="#{condicionHome.instance.atributo.tipoCarga=='LOGICO'}">
+						<h:selectOneRadio id="modoCarga"
+							value="#{condicionHome.tipoCarga}" onclick="mostrarPanel()">
+
+							<f:selectItem id="porFuncion" itemLabel="Funcion" itemValue="FUN"></f:selectItem>
+							<f:selectItem id="porRegla" itemLabel="Regla" itemValue="REG"></f:selectItem>
+						</h:selectOneRadio>
+
+						<h:panelGroup id="panelRegla" style="display:none">
+							<h:outputText
+								value="Regla seleccionada: #{condicionHome.instance.getRegla().nombre} #{condicionHome.instance.getReglaPsC().nombre}" />
+							<br />
+							<h:panelGrid columns="2">
+								<s:decorate>
+									<h:outputText value="Nombre:" />
+									<h:inputText id="txtNombreReglasTablaDecision"
+										value="#{condicionHome.nombreReglaTablaDecision}"
+										rendered="true">
+										<a4j:support event="onblur"
+											action="#{condicionHome.reachServer()}" ajaxSingle="true" />
+									</h:inputText>
+								</s:decorate>
+
+								<a4j:commandButton id="buscarReglasTablaDecision"
+									action="#{condicionHome.buscarReglasDecision()}" value="Buscar"
+									reRender="panelReglaTablaDecision,panelReglaPseudocodigo,txtNombreReglasTablaDecision"
+									ajaxSingle="true" />
+							</h:panelGrid>
+							<div>
+
+								<h:panelGroup id="panelReglaTablaDecision">
+									<f:facet name="header">Resultados de Busqueda de Reglas</f:facet>
+									<div class="results">
+
+										<h:outputText id="sinResultadosReglas"
+											value="No se han encontrado resultados."
+											rendered="#{empty condicionHome.listTablaDecision}" />
+
+										<rich:dataTable id="reglaTablaDecisionList"
+											var="_reglaTablaDecision"
+											value="#{condicionHome.listTablaDecision}"
+											rendered="#{not empty condicionHome.listTablaDecision}"
+											rows="10">
+
+											<h:column>
+												<f:facet name="header">
+													<h:outputText styleClass="columnHeader" value="Nombre" />
+												</f:facet>
+												<h:outputText value="#{_reglaTablaDecision.nombre}" />
+											</h:column>
+
+											<h:column>
+												<f:facet name="header">
+													<h:outputText styleClass="columnHeader" value="Descripcion" />
+
+												</f:facet>
+												<h:outputText value="#{_reglaTablaDecision.descripcion}" />
+											</h:column>
+
+											<h:column>
+												<f:facet name="header">
+													<h:outputText styleClass="columnHeader" value="Dominio" />
+
+												</f:facet>
+												<h:outputText
+													value="#{_reglaTablaDecision.dominio.descripcion}" />
+											</h:column>
+
+											<h:column>
+												<f:facet name="header">
+													<h:outputText styleClass="columnHeader" value="Version" />
+
+												</f:facet>
+												<h:outputText value="#{_reglaTablaDecision.versionRegla}" />
+											</h:column>
+
+											<rich:column styleClass="action">
+												<f:facet name="header">Accion</f:facet>
+												<h:commandLink event="onclick"
+													action="#{condicionHome.setReglaTablaDecision(_reglaTablaDecision)}"
+													ajaxSingle="true" immediate="true"
+													reRender="reglaTablaDecisionList" value="Seleccionar"
+													styleClass="hover">
+				            #{' '}
+				            <h:graphicImage value="/img/editar.png" width="15px"
+														height="15px" styleClass="img" />
+
+
+												</h:commandLink>
+											</rich:column>
+
+											<f:facet name="footer">
+												<rich:datascroller id="datascroller" />
+											</f:facet>
+										</rich:dataTable>
+									</div>
+								</h:panelGroup>
+
+								<h:panelGroup id="panelReglaPseudocodigo">
+									<f:facet name="header">Resultados de Busqueda de Reglas por Pseudocodigo</f:facet>
+									<div class="results">
+
+										<h:outputText value="No se han encontrado resultados."
+											rendered="#{empty condicionHome.listRPS}" />
+
+										<rich:dataTable id="reglaPseudocodigoList"
+											var="_reglaPseudocodigo" value="#{condicionHome.listRPS}"
+											rendered="#{not empty condicionHome.listRPS}" rows="10">
+
+											<h:column>
+												<f:facet name="header">
+													<h:outputText styleClass="columnHeader" value="Nombre" />
+												</f:facet>
+												<h:outputText value="#{_reglaPseudocodigo.nombre}" />
+											</h:column>
+
+											<h:column>
+												<f:facet name="header">
+													<h:outputText styleClass="columnHeader" value="Descripcion" />
+
+												</f:facet>
+												<h:outputText value="#{_reglaPseudocodigo.descripcion}" />
+											</h:column>
+
+											<h:column>
+												<f:facet name="header">
+													<h:outputText styleClass="columnHeader" value="Dominio" />
+
+												</f:facet>
+												<h:outputText
+													value="#{_reglaPseudocodigo.dominio.descripcion}" />
+											</h:column>
+
+											<rich:column styleClass="action">
+												<f:facet name="header">Accion</f:facet>
+												<h:commandLink event="onclick"
+													action="#{condicionHome.setReglaPS(_reglaPseudocodigo)}"
+													ajaxSingle="true" immediate="true"
+													reRender="reglaTablaDecisionList" value="Seleccionar"
+													styleClass="hover">
+				            #{' '}
+				            <h:graphicImage value="/img/editar.png" width="15px"
+														height="15px" styleClass="img" />
+
+
+												</h:commandLink>
+											</rich:column>
+
+											<f:facet name="footer">
+												<rich:datascroller id="datascroller" />
+											</f:facet>
+										</rich:dataTable>
+									</div>
+								</h:panelGroup>
+							</div>
+						</h:panelGroup>
+
+
+						<h:panelGroup id="panelFuncion" style="display:none">
+							<h:outputText
+								value="Funcion seleccionada: #{condicionHome.instance.funcion.nombre}" />
+							<h:panelGrid columns="2">
+								<s:decorate>
+									<h:outputText value="Funcion:" rendered="false" />
+									<h:inputText id="txtNombreReglasTablaDecision"
+										value="#{condicionHome.nombreFuncion}" rendered="true">
+										<a4j:support event="onblur"
+											action="#{condicionHome.reachServer()}" ajaxSingle="true" />
+									</h:inputText>
+								</s:decorate>
+								<a4j:commandButton value="Buscar funcion" id="searchFuncion"
+									action="#{condicionHome.buscarFunciones()}"
+									reRender="panelFuncionesList">
+								</a4j:commandButton>
+							</h:panelGrid>
+
+							<h:panelGroup id="panelFuncionesList">
+								<f:facet name="header">Resultados de Busqueda de Funciones</f:facet>
+								<div class="results">
+
+									<h:outputText
+										value="La busqueda de funciones se realiza sobre el conjunto de funciones cuyo tipo de dato de retorno sea #{condicionHome.instance.atributo.tipoDato}" />
+									<br />
+									<h:outputText value="No se han encontrado resultados."
+										rendered="#{empty condicionHome.listFunciones}" />
+
+									<rich:dataTable id="fucionesList" var="_funcion"
+										value="#{condicionHome.listFunciones}"
+										rendered="#{not empty condicionHome.listFunciones}" rows="10">
+
+										<h:column>
+											<f:facet name="header">
+												<h:outputText styleClass="columnHeader" value="Nombre" />
+											</f:facet>
+											<h:outputText value="#{_funcion.nombre}" />
+										</h:column>
+										<h:column>
+											<f:facet name="header">
+												<h:outputText styleClass="columnHeader" value="Descripcion" />
+
+											</f:facet>
+											<h:outputText value="#{_funcion.descripcion}" />
+										</h:column>
+
+										<h:column>
+											<f:facet name="header">
+												<h:outputText styleClass="columnHeader" value="Dominio" />
+
+											</f:facet>
+											<h:outputText value="#{_funcion.dominio.descripcion}" />
+										</h:column>
+
+										<rich:column styleClass="action">
+											<f:facet name="header">Accion</f:facet>
+											<h:commandLink action="#{condicionHome.setFuncion(_funcion)}"
+												value="Seleccionar" id="seleccionarFuncionId"
+												styleClass="hover"
+												onclick="#{rich:component('asistenteWaitingPanel')}.hide()">
+							
+				            #{' '}
+				            <h:graphicImage value="/img/editar.png" width="15px"
+													height="15px" styleClass="img" />
+
+											</h:commandLink>
+										</rich:column>
+
+										<f:facet name="footer">
+											<rich:datascroller id="datascroller" />
+										</f:facet>
+									</rich:dataTable>
+								</div>
+							</h:panelGroup>
+						</h:panelGroup>
+					</rich:panel>
+
+					<rich:panel id="cargaPorLiteral"
+						rendered="#{condicionHome.instance.atributo.tipoCarga=='FISICO' || condicionHome.instance.atributo.tipoCarga=='LOGICO'}">
+						<h:outputText value="Operador Logico" />
+						<span class="required">*</span>
+
+						<h:selectOneMenu id="cboOperadorLogico1" value="#{operadorLogico}"
+							immediate="true">
+							<s:selectItems var="op" label="#{op}"
+								noSelectionLabel="Seleccione un operador"
+								value="#{condicionHome.listaOperadores}" />
+
+							<a4j:support limitToList="true" ajaxSingle="true"
+								event="onchange" reRender="cargaPorLiteral"
+								onsubmit="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300});"
+								oncomplete="#{rich:component('asistenteWaitingPanel')}.hide(); showHideLiteral();" />
+						</h:selectOneMenu>
+						<br />
+
+						<h:outputText value="Valor Posible" />
+						<span class="required">*</span>
+						<a4j:region>
+							<h:selectOneRadio id="optValorRadio"
+								value="#{condicionHome.instance.vacio}">
+
+								<f:selectItem id="valor" itemLabel="Valor" itemValue="false">
+								</f:selectItem>
+								<f:selectItem id="vacio" itemLabel="Vacio / Nulo"
+									itemValue="true">
+								</f:selectItem>
+								<f:selectItem id="atributoOption"
+									itemLabel="Atributo de otra entidad" itemValue="atributo">
+								</f:selectItem>
+								<f:selectItem id="formulaOption" itemLabel="Fórmula"
+									itemValue="formula"
+									itemDisabled="#{!condicionHome.instance.atributo.esNumero()}">
+								</f:selectItem>
+								<a4j:support event="onclick"
+									reRender="panelLiteral,panelValores,panelAtributo2,botonAgregar, valoresAtributos, panelFormula, valoresFormulas, resultadoFormulas"
+									limitToList="true" />
+							</h:selectOneRadio>
+						</a4j:region>
+						<br />
+						<a4j:outputPanel id="panelLiteral">
+							<rich:panel rendered="#{condicionHome.instance.vacio=='false'}">
+								<h:outputText id="mayorA" value="Mayor a: "
+									rendered="#{operadorLogico=='BETWEEN'}" />
+								<h:inputText id="literalText" size="50" maxlength="50"
+									value="#{condicionHome.currentLiteral}" styleClass="ancho300"
+									rendered="#{condicionHome.esTexto()}">
+
+
+								</h:inputText>
+
+								<h:inputText id="literalNumber" size="50" maxlength="50"
+									value="#{condicionHome.currentLiteralNumero}"
+									styleClass="ancho300" rendered="#{condicionHome.esNumero()}">
+
+
+									<h:message for="literalNumber" />
+								</h:inputText>
+
+								<rich:calendar id="literalFecha" size="50"
+									value="#{condicionHome.currentLiteralFecha}"
+									styleClass="ancho300" datePattern="dd/MM/yyyy"
+									rendered="#{condicionHome.esFecha()}" locale="ES">
+									<a4j:support event="onchange" reRender="literalFecha"
+										ajaxSingle="true" />
+
+								</rich:calendar>
+
+								<rich:comboBox id="literalBoolean" size="50"
+									value="#{condicionHome.currentLiteralBoolean}"
+									styleClass="ancho300" rendered="#{condicionHome.esBooleano()}"
+									enableManualInput="false">
+
+									<f:selectItem itemValue="VERDADERO" itemLabel="Verdadero" />
+									<f:selectItem itemValue="FALSO" itemLabel="Falso" />
+
+									<a4j:support event="onchange" reRender="literalBoolean"
+										ajaxSingle="true" />
+								</rich:comboBox>
+								<h:panelGroup id="limitesup"
+									rendered="#{operadorLogico == 'BETWEEN'}">
+									<h:outputText id="menorA" value=" Menor a: " />
+									<h:inputText id="numeroMenorA" size="50" maxlength="20"
+										value="#{condicionHome.auxMenorAUnValor}"
+										rendered="#{condicionHome.esNumero()}">
+										<a4j:support event="onblur" reRender="numeroMenorA"
+											ajaxSingle="true" />
+									</h:inputText>
+									<rich:calendar id="fechaMenorA" size="50"
+										value="#{condicionHome.auxMenorAUnaFecha}"
+										styleClass="ancho300" datePattern="dd/MM/yyyy"
+										rendered="#{condicionHome.esFecha()}" locale="ES">
+										<a4j:support event="onchange" reRender="fechaMenorA"
+											ajaxSingle="true" />
+
+									</rich:calendar>
+								</h:panelGroup>
+							</rich:panel>
+						</a4j:outputPanel>
+						<div style="clear: both">
+							<a4j:outputPanel id="botonAgregar">
+								<h:commandButton action="#{condicionHome.addLiteral()}"
+									onclick="_modificado=true; Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300});"
+									value="Agregar ..."
+									rendered="#{condicionHome.instance.vacio!='atributo' and condicionHome.instance.vacio!='formula' }" />
+							</a4j:outputPanel>
+
+						</div>
+
+						<a4j:outputPanel id="panelAtributo2">
+							<h:panelGrid
+								rendered="#{condicionHome.instance.vacio=='atributo'}">
+
+								<s:decorate id="entidad2" template="layout/edit.xhtml">
+									<ui:define name="label">Entidad</ui:define>
+									<h:selectOneMenu id="idEntidad2"
+										value="#{condicionHome.entidadAtributo2}" required="true"
+										requiredMessage="La condicion debe tener una entidad"
+										styleClass="ancho300" immediate="true">
+
+										<s:selectItems var="entidad2"
+											noSelectionLabel="Indique una entidad..."
+											value="#{condicionHome.entidades2}"
+											label="#{entidad2.nombre}">
+
+										</s:selectItems>
+										<a4j:support event="onchange" reRender="listaAtributos2"
+											ajaxSingle="true" />
+
+										<s:convertEntity />
+									</h:selectOneMenu>
+
+
+
+								</s:decorate>
+
+								<s:decorate id="lista2" template="layout/edit.xhtml">
+
+
+
+
+
+									<ui:define name="label">Atributo</ui:define>
+									<h:selectOneMenu id="listaAtributos2" required="true"
+										requiredMessage="La condicion debe tener un atributo"
+										value="#{condicionHome.atributo2}" styleClass="ancho300"
+										immediate="true">
+										<s:selectItems
+											noSelectionLabel="Indique El atributo para la condicion..."
+											var="atributo2" value="#{condicionHome.atributosEntidad2}"
+											label="#{atributo2.nombre}">
+										</s:selectItems>
+										<s:convertEntity />
+									</h:selectOneMenu>
+
+								</s:decorate>
+								<h:outputText
+									value="Nota: Solo se muestran los atributos que sean de igual tipo que el atributo seleccionado en la cabecera de la condición."
+									style="font-weight:bold; color:red" />
+								<br />
+								<a4j:commandButton
+									action="#{condicionHome.agregarCondicionAtributo()}"
+									value="Agregar ..."
+									rendered="#{condicionHome.instance.vacio=='atributo'}"
+									reRender="valoresAtributos" />
+
+
+							</h:panelGrid>
+
+						</a4j:outputPanel>
+
+
+						<a4j:outputPanel id="panelFormula">
+							<h:panelGrid columns="3" style="border:none;"
+								rendered="#{condicionHome.instance.vacio=='formula'}">
+								<h:outputText value="Nombre" style="font-weight:bold" />
+
+
+								<h:inputText id="txtNombreBusqueda"
+									value="#{condicionHome.nombreFormula}" styleClass="ancho300"
+									onblur="javascript:this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');">
+								</h:inputText>
+
+
+								<a4j:commandButton value="Buscar"
+									action="#{condicionHome.buscarFormulas(condicionHome.nombreFormula)}"
+									reRender="resultadoFormulas" limitToList="true"
+									onbeforedomupdate="return validacionLongCamposBusqueda()" />
+
+								<h:outputText value="Fórmula Actual: " style="font-weight:bold" />
+								<a4j:outputPanel id="formulaSeleccionada">
+									<h:outputText value="#{condicionHome.formulaSelected.nombre}" />
+								</a4j:outputPanel>
+							</h:panelGrid>
+						</a4j:outputPanel>
+
+						<a4j:outputPanel id="resultadoFormulas">
+							<rich:panel
+								rendered="#{condicionHome.instance.vacio == 'formula' and condicionHome.formulas != null}">
+								<f:facet name="header">Resultado de la búsqueda de fórmulas</f:facet>
+								<h:panelGrid columns="3" style="width : 100%">
+
+									<rich:dataTable value="#{condicionHome.formulas}" var="var"
+										rows="10">
+										<rich:column>
+											<f:facet name="header">
+                    Nombre
+                </f:facet>
+											<h:outputText value="#{var.nombre}" />
+
+										</rich:column>
+
+										<rich:column>
+											<f:facet name="header">
+                    Dominio
+                </f:facet>
+											<h:outputText value="#{var.dominio.descripcion}" />
+
+										</rich:column>
+
+										<rich:column>
+											<f:facet name="header">
+                    Descripción
+                </f:facet>
+											<h:outputText value="#{var.descripcion}" />
+
+										</rich:column>
+
+										<rich:column>
+											<f:facet name="header">
+                    Cuerpo
+                </f:facet>
+											<h:outputText value="#{var.cuerpo}" />
+
+										</rich:column>
+
+										<rich:column>
+											<f:facet name="header">
+                    Acción
+                </f:facet>
+											<a4j:commandLink
+												action="#{condicionHome.setFormulaSelected(var)}"
+												ajaxSingle="true" style="color: black"
+												reRender="formulaSeleccionada">
+
+												<h:graphicImage value="/img/ok.png" styleClass="img" />
+												<h:outputText value="Seleccionar" />
+											</a4j:commandLink>
+											<h:outputText />
+										</rich:column>
+
+
+
+										<f:facet name="footer">
+											<rich:datascroller id="datascroller" />
+										</f:facet>
+
+									</rich:dataTable>
+								</h:panelGrid>
+
+								<a4j:commandButton value="Agregar"
+									action="#{condicionHome.agregarFormula(condicionHome.formulaSelected)}"
+									reRender="valoresFormulas" limitToList="true" />
+								<rich:spacer height="20"/>
+							</rich:panel>
+						</a4j:outputPanel>
+
+						<div style="clear: both">
+							<h:outputText value="#{condicionHome.msgErrorLiteral}"
+								styleClass="errors" escape="false" id="txtMsgErrorLiteral" />
+						</div>
+
+						<div style="clear: both">
+							los campos que contengan <span class="required">(*)</span> son de
+							caracter obligatorio
+
+						</div>
+						<br />
+						<div>
+							<a4j:outputPanel id="panelValores">
+								<rich:panel
+									rendered="#{condicionHome.instance.vacio!='atributo' and condicionHome.instance.vacio!='formula'}">
+									<f:facet name="header">Valores Seleccionados</f:facet>
+
+									<rich:dataTable id="tablaValores" var="_literal"
+										value="#{condicionHome.instance.literales}" rows="6"
+										styleClass="rich-table70"
+										style="FONT-FAMILY: 'Century Schoolbook L';">
+
+										<rich:column>
+											<f:facet name="header">Operador Logico</f:facet>
+											<h:outputText value="#{_literal.operadorLogico}" />
+										</rich:column>
+
+										<rich:column>
+											<f:facet name="header">Valor Posible</f:facet>
+											<h:outputText value="#{_literal.descripcion}" />
+										</rich:column>
+
+										<rich:column style="width:100px;">
+											<f:facet name="header">Accion</f:facet>
+											<h:commandLink id="removeLiteral" value=""
+												action="#{condicionHome.eliminarLiteral(_literal)}"
+												onclick="if(!confirm('Se eliminara un literal y no podra recuperarlo, esta seguro que desea Continuar?')) {return false;} else {Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300});}"
+												styleClass="hover">
+												<h:graphicImage value="/img/bin_closed.png" title="Quitar"
+													alt="Quitar" styleClass="img" />
+												<h:outputText value="Eliminar" />
+
+											</h:commandLink>
+										</rich:column>
+
+										<f:facet name="footer">
+											<rich:datascroller id="datascroller" />
+										</f:facet>
+									</rich:dataTable>
+								</rich:panel>
+							</a4j:outputPanel>
+						</div>
+
+					</rich:panel>
+
+				</rich:panel>
+
+				<a4j:outputPanel id="valoresAtributos">
+					<rich:panel rendered="#{condicionHome.instance.vacio=='atributo'}">
+						<f:facet name="header">Valores Seleccionados</f:facet>
+
+						<rich:dataTable id="tablaValores2" var="atributos"
+							value="#{condicionHome.instance.condicionAtributoList}" rows="10"
+							styleClass="rich-table70">
+
+							<rich:column>
+								<f:facet name="header">Operador Logico</f:facet>
+								<h:outputText value="#{atributos.operadorLogico}" />
+							</rich:column>
+
+							<rich:column>
+								<f:facet name="header">Valor Posible</f:facet>
+								<h:outputText
+									value="#{condicionHome.nombreAtributo(atributos.atributo2)}" />
+							</rich:column>
+
+							<rich:column style="width:100px;">
+								<f:facet name="header">Accion</f:facet>
+								<a4j:commandLink id="removeLiteral" value=""
+									action="#{condicionHome.instance.condicionAtributoList.remove(atributos)}"
+									onclick="if(!confirm('Se eliminara un literal y no podra recuperarlo, esta seguro que desea Continuar?')) {return false;} "
+									styleClass="hover" reRender="valoresAtributos">
+									<h:graphicImage value="/img/bin_closed.png" title="Quitar"
+										alt="Quitar" styleClass="img" />
+									<h:outputText value="Eliminar" />
+
+								</a4j:commandLink>
+							</rich:column>
+
+							<f:facet name="footer">
+								<rich:datascroller id="datascroller" />
+							</f:facet>
+						</rich:dataTable>
+					</rich:panel>
+				</a4j:outputPanel>
+
+				<a4j:outputPanel id="valoresFormulas">
+					<rich:panel rendered="#{condicionHome.instance.vacio=='formula'}">
+						<f:facet name="header">Valores Seleccionados</f:facet>
+
+						<rich:dataTable id="tablaValores3" var="formulas"
+							value="#{condicionHome.instance.condicionFormulaList}" rows="10"
+							styleClass="rich-table70">
+
+							<rich:column>
+								<f:facet name="header">Operador Logico</f:facet>
+								<h:outputText value="#{formulas.operadorLogico}" />
+							</rich:column>
+
+							<rich:column>
+								<f:facet name="header">Valor Posible</f:facet>
+								<h:outputText value="#{formulas.formula.nombre}" />
+							</rich:column>
+
+							<rich:column style="width:100px;">
+								<f:facet name="header">Accion</f:facet>
+								<a4j:commandLink value=""
+									action="#{condicionHome.instance.condicionFormulaList.remove(formulas)}"
+									onclick="if(!confirm('Se eliminara el valor para una formula  y no podra recuperarlo, esta seguro que desea Continuar?')) {return false;} "
+									styleClass="hover" reRender="valoresFormulas">
+									<h:graphicImage value="/img/bin_closed.png" title="Quitar"
+										alt="Quitar" styleClass="img" />
+									<h:outputText value="Eliminar" />
+
+								</a4j:commandLink>
+							</rich:column>
+
+							<f:facet name="footer">
+								<rich:datascroller id="datascroller" />
+							</f:facet>
+						</rich:dataTable>
+					</rich:panel>
+				</a4j:outputPanel>
+
+			</div>
+
+		</rich:panel>
+
+
+		<div class="actionButtons">
+
+			<h:commandButton id="save" value="Guardar"
+				action="#{condicionHome.persist}" disabled="#{!condicionHome.wired}"
+				rendered="true"
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})" />
+
+			<h:commandButton id="update" value="Guardar"
+				action="#{condicionHome.update}" rendered="false"
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})" />
+
+			<h:commandButton id="delete" value="Eliminar"
+				action="#{condicionHome.remove}" rendered="#{condicionHome.managed}"
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+
+				<a4j:support event="onclick" ajaxSingle="true"
+					onsubmit="if(!confirm('Se eliminara un elemento y no podra recuperarlo, esta seguro que desea Continuar?')) {return false;}" />
+			</h:commandButton>
+
+			<s:button id="cancelEdit" value="Cancelar" propagation="end"
+				onclick="javascript:
+					if (!_modificado) {
+						_modificado = #{condicionHome.modificado}; 
+						Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300});
+					}
+					if (_modificado) {
+						if(!confirm('Se perderan los cambios. Esta seguro que desea Cancelar?')) {
+							return false;
+						}else{
+							Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300});
+						}
+					}"
+				view="/condicionList.xhtml" rendered="#{condicionHome.managed}"
+				action="#{condicionHome.cancel}">
+			</s:button>
+
+			<s:button id="cancelAdd" value="Cancelar" propagation="end"
+				onclick="javascript:
+					if (!_modificado) {
+						_modificado = #{condicionHome.modificado}; 
+						Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300});
+					}
+					if (_modificado) {
+						if(!confirm('Se perderan los cambios. Esta seguro que desea Cancelar?')) {
+							return false;
+						}else{
+							Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300});
+						}
+					}"
+				view="/#{empty condicionFrom ? 'condicionList' : condicionFrom}.xhtml"
+				rendered="#{!condicionHome.managed}">
+			</s:button>
+
+
+		</div>
+
+	</ui:define>
+
+</ui:composition>

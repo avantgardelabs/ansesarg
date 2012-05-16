@@ -1,0 +1,217 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                xmlns:a4j="http://richfaces.org/a4j" 
+                template="layout/template.xhtml">
+
+<ui:define name="ayuda">
+		<div class="ayuda">Pantalla que muestra las relaciones entre entidades que contiene el sistema. <br />
+		<a href="" class="textoayuda">ver mas >></a>
+		</div>
+</ui:define>
+
+<ui:define name="body">
+    
+    <![CDATA[<h:messages globalOnly="true" styleClass="message" id="globalMessages"/>]]>
+     
+    <script type="text/javascript" >
+	
+    function validacionLongCamposBusqueda(){
+		if( (document.getElementById("frmPrincipal:txtEntidadBusqueda").value.length &lt; 3 
+			&amp;&amp; document.getElementById("frmPrincipal:txtEntidadBusqueda").value.length &gt; 0)
+			||
+			(document.getElementById("frmPrincipal:txtAtributoBusqueda").value.length &lt; 3 
+			&amp;&amp; document.getElementById("frmPrincipal:txtAtributoBusqueda").value.length &gt; 0)
+			){
+			alert("Todos los campos de busqueda debe tener al menos 3 caracteres.");
+			return false;
+		}
+		Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300});
+		return true;
+	}
+
+	window.onload = function() {
+		if (#{not relacionList.firstTime and not empty relacionList.resultList})
+			document.getElementById("frmPrincipal:pnlLista").style.display="block";
+
+		if (#{relacionList.order != null})
+			document.getElementById("frmPrincipal:pnlLista").style.display="block";
+	}
+	</script>
+	
+	<rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+		<span class="waitingPanel">
+		<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+		<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+		</span>
+	</rich:modalPanel>
+	
+	<rich:panel id="relacionSearch" styleClass="edit">	 
+                        
+
+        <rich:simpleTogglePanel label="Busqueda de relacion entre Entidades" switchType="client" opened="true">
+			
+           <h:panelGrid columns="7" style="border:none;">   
+           
+	                <h:outputText value="Entidad" style="font-weight:bold" />
+                    
+	            <h:inputText 
+	            			id="txtEntidadBusqueda" 
+	            			value="#{relacionList.relacion.entidad.nombre}"
+	               			styleClass="ancho300"
+	               			onblur="javascript:this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');"
+	               			>
+	            </h:inputText>
+	    
+                <h:outputText value="Atributo" style="font-weight:bold" />
+                <h:inputText 
+                	id="txtAtributoBusqueda" 
+                	value="#{relacionList.relacion.atributo.nombre}" 
+               		styleClass="ancho300" 
+               		onblur="javascript:this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');">
+            
+               </h:inputText>
+          
+		        <div class="actionButtons">
+		            <h:commandButton  id="search" value="Buscar" action="#{relacionList.searchWrap()}" 
+		            onclick="return validacionLongCamposBusqueda()"
+		            >
+		            </h:commandButton>		            
+            		<s:button id="reset" value="Limpiar" includePageParams="false" action="#{relacionList.limpiar()}" onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+		        </div>
+	        
+	        		
+			</h:panelGrid> 	
+            
+        </rich:simpleTogglePanel>	        
+		
+		 
+		
+		<rich:panel styleClass="margen5">
+	        <f:facet name="header">Relaciones entre entidades</f:facet>
+		    <div class="results">  
+		    
+		    <h:outputText value="No se han encontrado resultados." 
+	               rendered="#{empty relacionList.relaciones}"/>
+	    
+	    <rich:dataTable id="relacionList" 
+	                var="_relacion"
+	              value="#{relacionList.relaciones}" 
+	           rows="10">	
+	                   
+	        <h:column>
+	            <f:facet name="header"> 	            	          
+	            	<s:link styleClass="columnHeader"
+	                             value="La entidad.atributo #{relacionList.order=='entidad asc' ? 'Asc.' : ( relacionList.order=='entidad desc' ? 'Desc.' : '' )}"
+	                             style="color:#000000;" >
+	                    <f:param name="order" value="#{relacionList.order=='entidad asc' ? 'entidad desc' : 'entidad asc'}"/>
+	                </s:link>	                
+	            </f:facet>	            		                        
+	            <h:outputText value="#{_relacion.entidad.nombre}"/>
+	            <h:outputText value="."/>
+	            <h:outputText value="#{_relacion.atributo.nombre}"/>
+	         </h:column>	        			
+	        <h:column>
+	            <f:facet name="header">
+	                <s:link styleClass="columnHeader"
+	                             value="Se corresponde con la entidad.atributo #{relacionList.order=='atributo asc' ? 'Asc.' : ( relacionList.order=='atributo desc' ? 'Desc.' : '' )}" 
+	                             style="color:#000000;">
+	                    <f:param name="order" value="#{relacionList.order=='atributo asc' ? 'atributo desc' : 'atributo asc'}"/>
+	                </s:link>
+	            </f:facet>
+	            <h:outputText value="#{_relacion.entidad_1.nombre}"/>
+	            <h:outputText value="."/>
+	            <h:outputText value="#{_relacion.atributo_1.nombre}"/>
+	        </h:column>  
+	        
+	        <rich:column styleClass="ancho150">
+	            <f:facet name="header">Accion</f:facet>	        
+	        
+	        	<a4j:commandLink id="delete"	        						
+								action="#{relacionList.removeRelation(_relacion)}"                        											
+								inmediate="true"				
+								onclick="if(!confirm('Se eliminara una Relacion y no podra recuperarlo, esta seguro que desea Continuar?')) {return false;}"
+								styleClass="hover"
+								><h:graphicImage value="/img/bin_closed.png"
+								title="Quitar" alt="Quitar" styleClass="img"/>
+								Eliminar								
+								<a4j:support event="onclick"				
+										reRender="relacionList"
+										ajaxSingle="true"
+										/>					
+							</a4j:commandLink>
+	        </rich:column>
+	        
+	        <f:facet name="footer">
+						<rich:datascroller for="relacionList" maxPages="10"
+						page="#{relacionList.scrollerPage}" id="down" reRender="up" />
+
+			</f:facet>			
+	    </rich:dataTable>
+   	 </div>				
+    </rich:panel>
+    
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/relacionEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Crear Ralacion"
+                 onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+            <f:param name="relacionId"/>
+        </s:button>
+        
+        <s:button view="/home.xhtml"
+                    id="salir"
+           propagation="none"
+                 value="Salir"
+                 onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+        </s:button>        
+    </s:div>
+    <br />
+    </rich:panel>
+    <div class="tableControl">
+      
+        <s:link view="/entidadList.xhtml" 
+            rendered="#{entidadList.previousExists}" 
+               value="#{messages.left}#{messages.left} Primera Pagina"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+        
+        <s:link view="/entidadList.xhtml" 
+            rendered="#{entidadList.previousExists}" 
+               value="#{messages.left} Pagina Anterior"
+                  id="previousPage">
+            <f:param name="firstResult" 
+                    value="#{entidadList.previousFirstResult}"/>
+        </s:link>
+        
+        <s:link view="/entidadList.xhtml" 
+            rendered="#{entidadList.nextExists}" 
+               value="Next Page #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult" 
+                    value="#{entidadList.nextFirstResult}"/>
+        </s:link>
+        
+        <s:link view="/entidadList.xhtml" 
+            rendered="#{entidadList.nextExists}" 
+               value="Last Page #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult" 
+                    value="#{entidadList.lastFirstResult}"/>
+        </s:link>
+        
+    </div>  
+    
+</ui:define>
+
+</ui:composition>
+

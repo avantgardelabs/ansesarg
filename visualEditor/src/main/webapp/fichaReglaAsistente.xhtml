@@ -1,0 +1,399 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                xmlns:a4j="http://richfaces.org/a4j"
+                template= "layout/template.xhtml">
+
+<ui:define name="titulo">
+		<h1>Detalle de regla: <h:outputText value="#{tablaD.nombre}" /> </h1>
+	</ui:define>
+
+
+	                       
+<ui:define name="body">
+    
+    <![CDATA[<h:messages globalOnly="true" styleClass="message" id="globalMessages"/>]]>
+    
+    <script type="text/javascript">
+		function mostrar(id){
+			var panel = document.getElementById(id);
+			panel.style.visibility = 'visible';
+			panel.style.display = 'inline';
+		}
+		function ocultar(id){
+			var panel = document.getElementById(id);
+			panel.style.visibility = 'hidden';
+			panel.style.display = 'none';
+		}
+	</script>
+    
+    <rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+		<span class="waitingPanel">
+		<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+		<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+		</span>
+	</rich:modalPanel>
+	
+	
+	<div id="formulario" style="height: 850px; overflow-y:auto; background-color: #FFFFFF;">
+	<rich:panel>
+        
+        <rich:panel>
+        <f:facet name="header">Resumen</f:facet>
+        <div style="height: 160px;">
+        
+            <s:decorate template="/layout/display.xhtml">
+	            <ui:define name="label">Titulo</ui:define>
+	            <h:outputText value="#{tablaD.nombre}" />
+	        </s:decorate>	
+	        
+	         <s:decorate template="/layout/display.xhtml">
+	            <ui:define name="label">Descripcion</ui:define>
+	            <h:outputText value="#{tablaD.descripcion}" />
+	        </s:decorate>	
+	        
+	         <s:decorate template="/layout/display.xhtml">
+	            <ui:define name="label">Dominio</ui:define>
+	           <h:outputText value="#{tablaD.dominio.descripcion}" />
+	        </s:decorate>	
+    
+	         <s:decorate template="/layout/display.xhtml">
+	            <ui:define name="label">Autor</ui:define>
+	            <h:outputText value="#{tablaD.autor}" />
+	        </s:decorate>
+	        
+	         <s:decorate template="/layout/display.xhtml">
+	            <ui:define name="label">Version</ui:define>
+	            <h:outputText value="#{tablaD.versionRegla}" />
+	        </s:decorate>
+	        
+	         <s:decorate template="/layout/display.xhtml">
+	            <ui:define name="label">Fecha</ui:define>
+	            <h:outputText value="#{tablaD.fecha}">
+	            	<f:convertDateTime type="date" dateStyle="medium" pattern="dd/MM/yyyy" />
+				</h:outputText>
+	        </s:decorate>
+	        </div>
+	        
+	      </rich:panel>
+	      
+	      
+	      <rich:simpleTogglePanel switchType="client" label="Entidades">
+	      	<h:outputText value="No hay datos" rendered="#{empty entidades}"></h:outputText>
+           <rich:dataTable
+           	value="#{entidades}"
+           	var="entidad"
+           	rowKeyVar="nroFila"
+           	rendered="#{not empty entidades}">
+           	<f:facet name="header">Resumen de entidades que intervienen en la regla (suma de condiciones y acciones)</f:facet>
+           
+           <rich:column>
+           	<f:facet name="header">Nombre</f:facet>
+           	<h:outputText value="#{entidad.nombre}"  />
+           </rich:column>
+           
+           <rich:column>
+           	<f:facet name="header">descripcion</f:facet>
+           	<h:outputText value="#{entidad.descripcion}" />
+           </rich:column>
+           
+           <rich:column styleClass="ancho70">
+           	<f:facet name="header">Accion</f:facet>
+           	<div id="detalles#{nroFila}">
+           	<h:graphicImage value="/img/ver.png" width="15px" height="15px" styleClass="img" />
+           	<a4j:commandLink action="#{fichaRegla.consultarEntidad(entidad)}" value="detalles" reRender="listaAtributos" onclick="mostrar('subgrilla');ocultar('detalles#{nroFila}');mostrar('contraer#{nroFila}');"/>
+           	</div>
+           	<div id="contraer#{nroFila}" style="display: none; visibility: hidden;">
+           	<h:graphicImage value="/img/close.png" width="15px" height="15px" styleClass="img" />
+           	<a4j:commandLink action="#{fichaRegla.contraerEntidad()}" value="contraer" reRender="listaAtributos" onclick="ocultar('subgrilla');ocultar('contraer#{nroFila}');mostrar('detalles#{nroFila}');"/>
+           	</div>
+           </rich:column>
+           
+           </rich:dataTable>
+           
+           <div id="subgrilla" style="display: none; visibility: hidden;">
+           <br/>
+           <rich:dataTable 
+           	id="listaAtributos"
+           	value="#{entConsultada.atributos}"
+           	var="atributo"
+           	>
+           	<f:facet name="header">Atributos de la entidad <h:outputText value="#{entConsultada.nombre}" /></f:facet>
+           
+           <rich:column>
+           	<f:facet name="header">Nombre</f:facet>
+           	<h:outputText value="#{atributo.nombre}" />
+           </rich:column>
+           
+            <rich:column>
+           	<f:facet name="header">Tipo de Datos</f:facet>
+           	<h:outputText value="#{atributo.tipoDato}" />
+           </rich:column>
+           
+           <rich:column>
+           	<f:facet name="header">Tipo de Carga</f:facet>
+           	<h:outputText value="#{atributo.tipoCarga}" />
+           </rich:column>
+           
+           </rich:dataTable>
+           </div>
+        </rich:simpleTogglePanel>
+	     
+	     
+	     
+	     <rich:simpleTogglePanel switchType="client" label="Instrumentos Normativos">
+				
+				<h:outputText value="No hay datos" rendered="#{empty tablaD.instrumentos}"></h:outputText>
+				
+				<rich:dataTable
+					value="#{tablaD.instrumentos}"
+					id="tablaInstrumento" var="instrumento" rendered="#{not empty tablaD.instrumentos}">
+					<f:facet name="header">
+						<h:outputText value="Instrumentos Normativos que intervienen en la regla" />
+					</f:facet>
+
+					<rich:column>
+						<f:facet name="header">Descripcion</f:facet>
+						<h:outputText value="#{instrumento.descripcion}" id="descripcion" />
+					</rich:column>
+	
+					<rich:column>
+						<f:facet name="header">Fecha de firma</f:facet>
+						<h:outputText value="#{instrumento.fechaFirma}">
+							<f:convertDateTime type="date" dateStyle="medium"
+								pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</rich:column>
+	
+					<rich:column>
+						<f:facet name="header">Fecha de vigencia</f:facet>
+						<h:outputText value="#{instrumento.fechaVigencia}">
+							<f:convertDateTime type="date" dateStyle="medium"
+								pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</rich:column>
+	
+					<rich:column>
+						<f:facet name="header">Fecha de aplicacion</f:facet>
+						<h:outputText value="#{instrumento.fechaAplicacion}">
+							<f:convertDateTime type="date" dateStyle="medium"
+								pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</rich:column>
+
+
+
+				</rich:dataTable>
+			</rich:simpleTogglePanel>
+			
+			
+	     
+	     
+	     <rich:simpleTogglePanel switchType="client" label="Condiciones">
+	     	
+	     	<h:outputText value="No hay datos" rendered="#{empty condiciones}"></h:outputText>
+	     	
+            <rich:dataTable
+            	value="#{condiciones}"
+            	var="condicion"
+            	rendered="#{not empty condiciones}"
+            >
+            	<f:facet name="header">Condiciones que intervienen en la regla</f:facet>
+            
+            <rich:column>
+            	<f:facet name="header">Nombre</f:facet>
+            	<h:outputText value="#{condicion.nombre}" />
+            	
+            </rich:column>
+            
+              <rich:column>
+            	<f:facet name="header">Descripcion</f:facet>
+            	<h:outputText value="#{condicion.descripcion}" />           	
+            </rich:column>
+            
+              <rich:column>
+            	<f:facet name="header">Dominio</f:facet>
+            	<h:outputText value="#{condicion.dominio.descripcion}" />
+            	
+            </rich:column>
+            
+            <rich:column>
+            	<f:facet name="header">Entidad</f:facet>
+            	<h:outputText value="#{condicion.entidad.nombre}" />
+            	
+            </rich:column>
+            
+            <rich:column>
+            	<f:facet name="header">Atributo</f:facet>
+            	<h:outputText value="#{condicion.atributo.nombre}" />            	
+            </rich:column>
+            
+            </rich:dataTable>
+        </rich:simpleTogglePanel>
+        
+        
+	      
+        
+        <rich:simpleTogglePanel switchType="client" label="Acciones">
+        
+        	<h:outputText value="No hay datos" rendered="#{empty acciones}"></h:outputText>
+
+            <rich:dataTable 
+            	value="#{acciones}"
+            	var="accion"
+            	rendered="#{not empty acciones}"
+            >
+            	<f:facet name="header">Acciones que intervienen en la regla</f:facet>
+            	<rich:column>
+            		<f:facet name="header">Nombre</f:facet>
+            		<h:outputText value="#{accion.nombre}" />
+            	</rich:column>
+            	
+            	<rich:column>
+            		<f:facet name="header">Descripcion</f:facet>
+            		<h:outputText value="#{accion.descripcion}" />
+            	</rich:column>
+            	
+            	<rich:column>
+            		<f:facet name="header">Dominio</f:facet>
+            		<h:outputText value="#{accion.dominio.descripcion}" />
+            	</rich:column>
+            	
+            	<rich:column>
+            		<f:facet name="header">Tipo Accion</f:facet>           		
+            		<h:outputText value="Modifica un hecho" rendered="#{accion.getTipoAccion() =='MH'}" />
+            		<h:outputText value="Activa una regla" rendered="#{accion.getTipoAccion() =='AR'}" />
+            		<h:outputText value="Sin accion" rendered="#{accion.getTipoAccion() =='SA'}" />
+            	</rich:column>
+            	
+            	<rich:column>
+            		<f:facet name="header">Entidad</f:facet>           		
+            		<h:outputText value="#{accion.accionModificaHecho.entidad.nombre}" rendered="#{not empty accion.accionModificaHecho}" />
+            	</rich:column>
+            	
+            	<rich:column>
+            		<f:facet name="header">Atributo</f:facet>           		
+            		<h:outputText value="#{accion.accionModificaHecho.atributo.nombre}" rendered="#{not empty accion.accionModificaHecho}" />
+            	</rich:column>
+            	
+            	<rich:column>
+            		<f:facet name="header">Regla que activa</f:facet>           		
+            		<h:commandLink action="#{fichaRegla.init(accion.accionActivaRegla.reglaQueActiva)}" value="#{accion.accionActivaRegla.reglaQueActiva.nombre}" rendered="#{accion.getTipoAccion() =='AR' and not empty accion.accionActivaRegla.tablaDecision}"/>
+            		<h:outputText value="#{accion.accionActivaRegla.reglaQueActiva.nombre}" rendered="#{accion.getTipoAccion() =='AR' and empty accion.accionActivaRegla.tablaDecision}"/>
+            	</rich:column>
+            	
+            </rich:dataTable>
+        </rich:simpleTogglePanel>
+        
+        <rich:simpleTogglePanel switchType="client" label="Tabla de Decision">
+        
+        	<h:outputText value="No hay datos" rendered="#{empty tablaD.filas}"></h:outputText>
+        
+        	<rich:dataTable
+			       id="mainTable"
+			    value="#{tablaD.filas}" 
+				  var="filaTablaDesicion" 
+			rowKeyVar="nroFila"
+			rendered="#{not empty tablaD.filas}">
+				<f:facet name="header">
+					<h:outputText value="Condiciones"></h:outputText>
+				</f:facet>
+	
+				<rich:columns 
+					    value="#{condiciones}"
+            			var="condicion"
+						index="indice" 
+						   id="condicionEditada#{indice}">
+					<f:facet name="header">
+						<h:outputText value="#{condicion.nombre}"
+							styleClass="columna" />
+					</f:facet>				
+					
+				<h:outputText
+					value="#{tablaD.filas[nroFila].valores[indice].valor.operadorLogico} #{tablaD.filas[nroFila].valores[indice].valor.descripcion}" rendered="#{tablaD.filas[nroFila].valores[indice].valor!=null}"/>
+				
+				<h:outputText
+					value="#{tablaD.filas[nroFila].valores[indice].valorCondicionAtributo.operadorLogico} #{atributoNameGetter.convertirATexto(tablaD.filas[nroFila].valores[indice].valorCondicionAtributo.atributo2)}" rendered="#{tablaD.filas[nroFila].valores[indice].valorCondicionAtributo!=null}"/>
+				<h:outputText
+					value="#{tablaD.filas[nroFila].valores[indice].valorCondicionFormula.operadorLogico} #{tablaD.filas[nroFila].valores[indice].valorCondicionFormula.formula.cuerpo}" rendered="#{tablaD.filas[nroFila].valores[indice].valorCondicionFormula!=null}"/>
+				
+				</rich:columns>
+				
+				
+				
+				<rich:column>
+					<f:facet name="header">
+						<h:outputText value="Accion" styleClass="columna" />
+					</f:facet>
+	
+					<h:selectOneMenu 
+						id="accion" 
+						>
+						<s:selectItems var="accion" value="#{filaTablaDesicion.acciones}"
+							label="#{accion.nombre}">
+						</s:selectItems>
+						<s:convertEntity />
+					</h:selectOneMenu>
+				</rich:column>
+			</rich:dataTable>
+        
+        </rich:simpleTogglePanel>
+        
+        <rich:simpleTogglePanel switchType="client" label="Subreglas">
+        		
+        		<h:outputText value="No hay datos" rendered="#{empty subreglas}"></h:outputText>
+	      
+	        	<rich:dataTable
+	        	    rendered="#{not empty subreglas}"
+	        		value="#{subreglas}"
+	        		var="subR"
+	        	>
+	        	<f:facet name="header">Sub Reglas que son invocadas desde la regla</f:facet>
+	        	<rich:column>
+	        		<f:facet name="header">Nombre</f:facet>
+	        		<h:outputText value="#{subR.nombre}" />	        	
+	        	</rich:column>
+	        	
+	        	<rich:column>
+	        		<f:facet name="header">Descripcion</f:facet>
+	        		<h:outputText value="#{subR.descripcion}" />	        	
+	        	</rich:column>
+	        	<rich:column>
+	        		<f:facet name="header">dominio</f:facet>
+	        		<h:outputText value="#{subR.dominio.descripcion}" />	        	
+	        	</rich:column>
+	        	
+	        	<rich:column>
+	        		<f:facet name="header">version</f:facet>
+	        		<h:outputText value="#{subR.versionRegla}" />	        	
+	        	</rich:column>
+	        	
+	        	<rich:column>
+	        		<f:facet name="header">Accion</f:facet>
+	        		<h:commandLink action="#{fichaRegla.init(subR)}" value="Consultar" />	        	
+	        	</rich:column>
+	        	
+	        	</rich:dataTable>
+	        	
+	       
+        </rich:simpleTogglePanel>
+        
+        
+    </rich:panel>
+	</div>
+
+</ui:define>
+
+<ui:define name="botonera">
+		<div id="botonera"> 
+    		<input type="button" onclick="javascript:history.back()" value="Volver" />
+    	</div>
+	</ui:define>
+
+</ui:composition>

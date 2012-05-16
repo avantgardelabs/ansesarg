@@ -1,0 +1,215 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j" template="layout/template.xhtml">
+
+
+	<ui:define name="titulo">
+		<h1>Paso 3 de 4 -Cuerpo de la funcion</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Aqui va un texto de ayuda<br />
+		<a href="" class="textoayuda">ver mas >></a></div>
+	</ui:define>
+
+
+	<ui:define name="body">
+		<script type="text/javascript" src="js/insertartexto.js"></script>
+		
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+			<span class="waitingPanel">
+			<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+			<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+			</span>
+		</rich:modalPanel>		
+	
+		<div id="formulario100">
+		<div style="width: 44%; float:left;">
+			<rich:panel bodyClass="inpanelBody"
+			style="height: 150px;overflow:scroll">	
+				<f:facet name="header">
+                   Parametros de Entrada
+                </f:facet>
+
+				
+				<rich:dataTable id="parametrosList" 
+	           styleClass="margen5"    
+	           rows="10"
+	           value="#{funcionHome.instance.parametros}"
+	           var="_parametro"
+	           >
+	
+	        
+	        <h:column>
+	            <f:facet name="header">
+	               <h:outputText value="Nombre" />
+	            </f:facet>
+	            <h:outputText value="#{_parametro.nombre}" />
+	        </h:column>
+	
+	        <h:column>
+	            <f:facet name="header">
+	                <h:outputText value="Tipo de Dato" />
+	            </f:facet>
+	            <h:outputText value="#{_parametro.atributo.tipoDato}" />
+	        </h:column>
+	 
+	        <rich:column styleClass="ancho70">
+	            <f:facet name="header">Accion</f:facet>
+	        
+	        
+	        <h:commandLink id="removeLiteral"
+			onclick="insertAtCursor('frmPrincipal:txtCuerpo', '#{_parametro.nombre}'); return false;" styleClass="hover"
+			>
+			<h:graphicImage value="/img/editar.png"
+				title="Agregar" alt="Agregar"  styleClass="img" />
+			<h:outputText value="Agregar" />
+			</h:commandLink>   
+	        
+	        </rich:column>
+	        
+			
+	    </rich:dataTable>
+				
+			</rich:panel>
+		</div>
+		<div>		
+			<rich:panel bodyClass="inpanelBody"
+			style="height: 150px;overflow:scroll;width:55%">	
+				<f:facet name="header">
+                    Funciones
+                </f:facet>
+
+				<rich:dataTable id="funcionesList" rowKeyVar="_rowid"
+		           styleClass="margen5"    
+		           rows="10"
+		           value="#{funcionList.myResultList}"
+		           var="_funcion"
+		           >
+
+		        <h:column>
+		            <f:facet name="header">
+		               <h:outputText value="Nombre" />
+		            </f:facet>
+		            <h:outputText value="#{_funcion.nombre}" rendered="#{_funcion.nombre != funcionHome.instance.nombre}" />
+		        </h:column>
+		
+				<h:column>
+		            <f:facet name="header">
+		               <h:outputText value="Parametros" />
+		            </f:facet>
+		         	
+		            <rich:dataList value="#{_funcion.parametros}" var="_parametro" id="ulParametros" rendered="#{_funcion.nombre != funcionHome.instance.nombre}">
+		            	<h:outputText value="#{_parametro.entidad.nombre}.#{_parametro.atributo.nombre}" />
+		            </rich:dataList>
+		        </h:column>
+				
+		        <h:column>
+		            <f:facet name="header">
+		                <h:outputText value="Tipo de Dato" />
+		            </f:facet>
+		            <h:outputText value="#{_funcion.tipoDato}" rendered="#{_funcion.nombre != funcionHome.instance.nombre}"/>
+		        </h:column>
+		 
+		        <rich:column styleClass="ancho70">
+		            <f:facet name="header">Accion</f:facet>
+				
+				
+		        <h:commandLink id="removeParametro"
+				onclick="insertFuncion('frmPrincipal:txtCuerpo', '#{_funcion.nombre}', 'ulParametros', #{_rowid}, 'frmPrincipal:funcionesList');return false;"
+				styleClass="hover" rendered="#{_funcion.nombre != funcionHome.instance.nombre}"
+				>
+				<h:graphicImage value="/img/editar.png"
+					title="Agregar" alt="Agregar"  styleClass="img" rendered="#{_funcion.nombre != funcionHome.instance.nombre}"/>
+				<h:outputText value="Agregar" rendered="#{_funcion.nombre != funcionHome.instance.nombre}"/>
+				</h:commandLink>   
+		        
+		        </rich:column>
+
+				
+		    </rich:dataTable>				
+			</rich:panel>
+			</div>
+			<div>
+					<rich:panel bodyClass="inpanelBody"
+			style="height:620px;overflow:scroll; width :99%;">	
+				<f:facet name="header">
+                    Referencias
+                </f:facet>
+<h:panelGrid columns="2" >
+
+				<h:panelGroup>
+					<h:outputText value="Operadores Aritmeticos" style="font-weight:bold" />
+					<ul>
+						<li><a href="javascript:insertAtCursor('frmPrincipal:txtCuerpo', '+')" class="hover">Suma (+)</a></li>
+						<li><a href="javascript:insertAtCursor('frmPrincipal:txtCuerpo', '-')" class="hover">Resta (-)</a></li>
+						<li><a href="javascript:insertAtCursor('frmPrincipal:txtCuerpo', '/')" class="hover">Division (/)</a></li>
+						<li><a href="javascript:insertAtCursor('frmPrincipal:txtCuerpo', '*')" class="hover">Multiplicacion (*)</a></li>						
+					</ul>
+					
+					<h:outputText value="Operadores Logicos" style="font-weight:bold" />
+					<ul>
+						<li><a href="javascript:insertAtCursor('frmPrincipal:txtCuerpo', '&amp;&amp;')" class="hover">Conjuncion (AND)</a></li>
+						<li><a href="javascript:insertAtCursor('frmPrincipal:txtCuerpo', '||')" class="hover">Disyuncion (OR)</a></li>
+						<li><a href="javascript:insertAtCursor('frmPrincipal:txtCuerpo', '!')" class="hover">Negacion (NOT)</a></li>
+					</ul>
+				</h:panelGroup>
+
+				<h:inputTextarea id="txtCuerpo" value="#{funcionHome.instance.cuerpo}" style="height: 550px;width: 970px">
+					<s:validate />
+				</h:inputTextarea>
+				
+
+		</h:panelGrid>
+				
+			</rich:panel>
+				
+			</div>
+		
+		</div>
+		
+		
+		<div style="clear: both" />
+	</ui:define>
+	<ui:define name="botonera">
+
+		<h:messages styleClass="error errors" />
+
+		<div id="botonera">
+			<h:commandButton
+				id="cancelEdit"
+				propagation="end"
+				action="#{funcionHome.exit()}"
+				view="/funcionList.xhtml" 
+				value="Cancelar" 
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+			>
+				<a4j:support 
+					event="onclick"
+					onsubmit="javascript:return confirm('Esta seguro que desea cancelar la operacion?')"
+				/>
+			</h:commandButton>
+			
+			<h:commandButton
+				id="atras"
+				action="#{funcionHome.atras()}" 
+				value=" Atras" 
+				styleClass="botoncancelar" 
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+				/>	
+			
+		 <h:commandButton value="Continuar >>" action="#{funcionHome.irAPaso4()}"
+			styleClass="botonnavegacion" style="color:#ffffff;" onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+			
+		</div>
+	</ui:define>
+
+</ui:composition>
+

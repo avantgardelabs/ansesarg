@@ -1,0 +1,73 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                template= "/layout/template.xhtml">
+
+<ui:define name="titulo">
+		<h1>Dominio</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Pantalla principal de Dominio<br />
+		<a href="" class="textoayuda">ver mas >></a></div>
+	</ui:define>
+	                       
+<ui:define name="body">
+    
+    <![CDATA[<h:messages globalOnly="true" styleClass="message" id="globalMessages"/>]]>
+    
+    <rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+		<span class="waitingPanel">
+		<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+		<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+		</span>
+	</rich:modalPanel>
+    
+   	<div id="formulario">
+		
+	<h:panelGrid columns="3" styleClass="rich-table70">
+    
+    <rich:panel styleClass="rich-table70">
+        <f:facet name="header">Detalle de Dominio</f:facet>
+
+        <s:decorate id="descripcion" template="/layout/display.xhtml">
+            <ui:define name="label">Descripcion</ui:define>
+            <h:outputText value="#{dominioHome.instance.descripcion}"/>
+        </s:decorate>
+
+  
+        <div style="clear:both"/>
+        
+        
+    </rich:panel>
+    
+    </h:panelGrid>
+		
+	</div>
+    
+    <div class="actionButtons">      
+
+        <s:button view="/dominioEdit.seam" 
+                    id="edit" 
+                 value="Editar"
+                 onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+                  <f:param name="dominioFrom" value="dominioList"/>
+
+        </s:button>
+
+        <s:button view="/#{empty dominioFrom ? 'dominioList' : dominioFrom}.xhtml"
+                    id="done"
+                 value="Aceptar"
+                 onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+
+    </div>
+
+</ui:define>
+
+</ui:composition>

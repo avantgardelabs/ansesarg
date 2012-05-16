@@ -1,0 +1,55 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                template="layout/template_asistente.xhtml">
+        <ui:define name="titulo">
+	 <h1>Nombre de la regla</h1>
+		</ui:define>
+	
+		<ui:define name="ayuda">
+		<div class="ayuda">Indique el nombre de la regla de ......
+		(Otorgamiento, de Concepto,etc).<br />
+		<a href="" style="text-align: right; cursor: pointer;">ver mas >></a></div>
+		</ui:define>
+<ui:define name="body">
+    
+   
+            <div id="cajaformulario">
+                <h:panelGrid columns="2" >
+                <h:outputText value="Nombre" />                
+               <h:inputText value="" style="width:300px;" />
+            	<h:outputText value="Descripción"/>
+            	<h:inputTextarea style="width : 300px; height : 120px;"/>    
+                </h:panelGrid>
+            
+            </div>
+            <div style="clear:both"/>        
+</ui:define>
+<ui:define name="preview">
+<rich:dataTable width="300px;" style="overflow:scroll;"
+			var="paso" value="#">
+			<f:facet name="header">
+				<h:outputText value="Area de Preview" />
+			</f:facet>
+			
+			<rich:column title="Paso">
+				<h:outputText value="Debera ingresar el nombre de la regla y su descripcion" />
+			</rich:column>
+			
+			
+
+		</rich:dataTable>
+		</ui:define>
+<ui:define name="botonera">
+		<div id="botonera">
+		<h:commandButton type="submit" value="Grabar" />
+		 <h:commandButton type="submit" value="Continuar" action="#{asistente.establecerPaso('NOMBREREGLA')}"/>
+			 </div>
+	</ui:define>
+
+</ui:composition>

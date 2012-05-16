@@ -1,0 +1,326 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	template="layout/templateMnt.xhtml">
+	
+	<ui:define name="titulo">
+		<h1>#{messages['instrumentos.instrumento.normativo']}</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">#{messages['instrumentos.ayuda']}<br />
+		<a href="" style="text-align: right; cursor: pointer;">#{messages['message.ver.mas']}</a></div>
+	</ui:define>
+
+	<ui:define name="bodyInstrumento">
+	
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+			<span class="waitingPanel">
+			<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+			<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+			</span>
+		</rich:modalPanel>
+	
+		<rich:modalPanel id="modalPanelAddFolder" width="330" height="100" >
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="Agregar carpeta"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="img/close.png" styleClass="hidelink"
+						id="hidelinkMover" />
+					<rich:componentControl for="modalPanelAddFolder" attachTo="hidelinkMover"
+						operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+				
+			
+				<f:facet name="header">
+					Nueva carpeta en #{instrumentoNormativoManager.nombreNodoActual}.
+				</f:facet>
+					
+				<h:outputText value="Nombre:" />
+					<h:inputText id="txtNameNewFolder" value="#{instrumentoNormativoManager.newCurrentFolder.descripcion}" rendered="true" >
+					<a4j:support 
+							event="onblur" 
+							action="#{instrumentoNormativoManager.myPing()}" 
+							ajaxSingle="true"/>
+				</h:inputText>
+				
+				<h:panelGrid columns="2">
+						
+					<a4j:commandButton 
+						value="Aceptar"
+						onclick="#{rich:component('modalPanelAddFolder')}.hide()"
+						reRender="txtNameNewFolder,arbolInstrumentos,errorMsg, mensajesPrincipal" 
+						action="#{instrumentoNormativoManager.newNormativeFolder()}"/>
+						 
+					<a4j:commandButton 
+						value="Cancelar"
+						onclick="#{rich:component('modalPanelAddFolder')}.hide()"
+					/>
+				</h:panelGrid>
+		</rich:modalPanel>
+	
+	
+	
+	
+		<![CDATA[<h:messages globalOnly="true" styleClass="message" id="globalMessages"/>]]>  
+		<div style="width: 100%">
+		
+		<rich:panel bodyClass="inpanelBody"
+			style="height: 450px;overflow:scroll">
+			
+			<f:facet name="header">
+					#{messages['instrumentos.carpetas.disponibles']}
+                </f:facet>
+
+
+			<div style="overflow: true;">
+				<h:panelGroup id="lblMensajeArbol">
+					<h:outputText value="#{messages['instrumentos.ud.esta.en']}" rendered="#{instrumentoNormativoManager.nombreNodoActual != ''}"/>
+					<h:outputText value="#{instrumentoNormativoManager.nombreNodoActual}" style="font-weight:bold" />
+				</h:panelGroup>
+				
+				<rich:tree 
+					id="arbolInstrumentos"
+					nodeSelectListener="#{instrumentoNormativoManager.processSelection}"
+					ajaxSubmitSelection="true"
+					switchType="client" 
+					value="#{instrumentoNormativoManager.treeNode}"
+					var="item" 
+					ajaxKeys="#{null}" 
+					nodeFace="#{item.tipo}"
+					reRender="errorMsg, mensajesPrincipal, lblMensajeArbol, btnNuevo">
+					<rich:treeNode type="carpeta" icon="/img/iconFolder.gif" iconLeaf="/img/iconFolder.gif">
+		                <h:outputText value="#{item.descripcion}" />
+		            </rich:treeNode>
+
+				</rich:tree>
+			</div>
+
+		</rich:panel> </div>
+			<h:panelGrid columns="1" id="errorMsg">
+			<h:messages styleClass="Error errors"/>
+		</h:panelGrid> 
+		
+		<div style="clear: both" />
+	</ui:define>
+	
+	<ui:define name="formulario" >
+ 	  <rich:panel id="panelInfoElemento" style="height: 450px;overflow:scroll;" >
+ 	  	<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="#{messages['instrumentos.instrumentos.normativos']}"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+    	
+			<div id="panelBuscar" >
+			
+				<h:panelGrid columns="4" >				
+					
+					<h:outputText value="Nombre:" />
+					<h:inputText id="txtNameFunction" value="#{instrumentoNormativoManager.nameInstrument}" rendered="true">
+								<a4j:support 
+										event="onblur" 
+										action="#{instrumentoNormativoManager.myPing()}" 
+										ajaxSingle="true"/>
+					</h:inputText>
+					
+					<a4j:commandButton 
+							id="btnSearchNormativeInstrument" 
+							action="#{instrumentoNormativoManager.searchNormativeInstrument()}" 
+							value="#{messages['buttons.buscar']}"
+							reRender="normativeInstrumentsList,panelNormativeInstrumentsList,txtNameFunction,errorMsg, mensajesPrincipal" 
+							ajaxSingle="true"
+							immediate="true"/>
+					
+				</h:panelGrid>
+				<br/><br/><br/>
+			<div>
+			
+			<rich:panel id="panelNormativeInstrumentsList">
+		        <f:facet name="header">#{messages['instrumentos.resultado']}</f:facet>
+			    <div class="results">
+					               
+					<rich:dataTable id="normativeInstrumentsList" 
+					                	var="_normativeInstrument"
+					              		value="#{listInstruments}" 
+					           			rendered="#{not empty listInstruments}"
+					           			rows="10">
+			  	 
+			        <h:column>
+			            <f:facet name="header">
+			                <h:outputText styleClass="columnHeader" value="#{messages['instrumentos.carpeta.padre']}" />
+			            </f:facet>
+			            <h:outputText value="#{_normativeInstrument.padre == null?'-':_normativeInstrument.padre.descripcion}"/>
+			        </h:column>
+			        			  
+			        <h:column>
+			            <f:facet name="header">
+			                <h:outputText styleClass="columnHeader" value="#{messages['instrumentos.descripcion']}" />
+			            </f:facet>
+			            <h:outputText value="#{_normativeInstrument.descripcion}"/>
+			        </h:column>
+			
+			        <h:column>
+			            <f:facet name="header">
+			                <h:outputText styleClass="columnHeader" value="#{messages['instrumentos.fecha.de.firma']}"/>
+			            </f:facet>
+			            <h:outputText value="#{_normativeInstrument.fechaFirmaFormat}" />
+			        </h:column>
+			        
+			        <h:column>
+			            <f:facet name="header">
+			                <h:outputText styleClass="columnHeader" value="#{messages['instrumentos.fecha.de.vigencia']}" />
+			            </f:facet>
+			            <h:outputText value="#{_normativeInstrument.fechaVigenciaFormat}" />
+			        </h:column>
+			        
+			        <h:column>
+			            <f:facet name="header">
+			                <h:outputText styleClass="columnHeader" value="#{messages['instrumentos.fecha.de.aplicacion']}" />
+			            </f:facet>
+			            <h:outputText value="#{_normativeInstrument.fechaAplicacionFormat}" />
+			        </h:column>	        
+	
+			        <rich:column styleClass="action">
+			            <f:facet name="header">#{messages['message.accion']}</f:facet>
+			            
+			            <h:panelGrid columns="1">
+					        <s:link 
+					        	value="Editar"
+					            id="seleccionarFuncionId"
+								styleClass="hover" 
+								view="/altaInstrumento.xhtml"
+								propagation="none"
+								endered="#{empty from}"
+								onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+								>
+							
+								#{' '}
+					            <h:graphicImage value="/img/editar.png" width="15px" height="15px" styleClass="img" />
+						
+								<a4j:support 
+					            	event="onclick"
+					            	ajaxSingle="true"
+								/> 
+					            	
+								<f:param name="instrumentoNormativoId"
+	                       				 value="#{_normativeInstrument.id}"/>
+	               				<f:param 
+	            						name="instrumentoNormativoFrom" 
+	                					value="instrumentoList" />
+							</s:link>
+							
+							<a4j:commandLink id="removeInst" 
+										value=""
+										action="#{instrumentoNormativoManager.deleteNormativeInst(_normativeInstrument)}"
+										onclick="if(!confirm('#{messages['instrumentos.message.borrar.instrumento']}')) {return false;}"
+										styleClass="hover"
+										reRender="normativeInstrumentsList,errorMsg, mensajesPrincipal">
+										
+										<h:outputText value="Eliminar" />
+										<h:graphicImage value="/img/bin_closed.png"
+													title="Quitar" alt="Quitar"  
+													styleClass="img" />
+							</a4j:commandLink>
+							
+							<h:selectBooleanCheckbox >
+								<a4j:support event="onchange" 
+											action="#{instrumentoNormativoManager.managerNormativeInstrumentToMove(_normativeInstrument)}" 
+											ajaxSingle="true" 
+											immediate="true"/>
+											
+											<h:outputText value="#{messages['labels.mover']}" id="lblMover" />
+							</h:selectBooleanCheckbox>
+							
+							
+				        </h:panelGrid>
+			        </rich:column>
+		
+			        <f:facet name="footer">
+						<rich:datascroller id="datascroller" />
+					</f:facet>
+			    	</rich:dataTable>
+		   	 	</div>
+		    </rich:panel>
+		    </div>
+    	</div>
+						
+    		<h:panelGrid columns="2">
+    			<a4j:commandButton  id="btnNuevo" action="#{instrumentoNormativoManager.goAltaInstrumento()}" value="#{messages['buttons.nuevo']}" reRender="btnNuevo"
+    						onclick="javascript:if (#{!instrumentoNormativoManager.getHaySeleccionado()}) {	alert ('#{messages['instrumentos.message.seleccionar.carpeta']}'); return false;} else {Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300});}">			
+				
+					<f:param name="instrumentoNormativoId" value=""/>
+				</a4j:commandButton>
+				
+				<h:commandButton
+				value="#{messages['buttons.mover']}" 
+				id="addEntidad" 
+				styleClass="botonnavegacion" 
+				action="#{instrumentoNormativoManager.rescueCurrentNodeOnMainTree()}"
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+			</h:panelGrid>
+			
+        
+		
+      </rich:panel>
+         
+	</ui:define>
+	
+
+	<ui:define name="botonera">
+		<div id="divBotonera">
+		 
+		<a4j:commandButton
+				id="btnNuevoCarpetaNormativa" 
+				value="#{messages['instrumentos.buttons.nueva.carpeta']}" 
+				styleClass="botonnavegacion"
+				oncomplete="javascript:
+					if (#{!instrumentoNormativoManager.getHaySeleccionado()}) 
+						alert ('#{messages['instrumentos.message.seleccionar.carpeta']}'); 
+					else 
+						Richfaces.showModalPanel('modalPanelAddFolder');"
+				reRender="modalPanelAddFolder, panelInfoElemento, arbolInstrumentos"/>
+		
+		<h:commandButton 
+				action="#{instrumentoNormativoManager.eliminaNodo()}" 
+				value="#{messages['instrumentos.buttons.eliminar.carpeta']}" 
+				styleClass="botonnavegacion"
+				reRender="arbolInstrumentos, normativeInstrumentsList,errorMsg, mensajesPrincipal" style=" height : 20px;">
+				<a4j:support 
+		            event="onclick"
+					onsubmit="if(!confirm('#{messages['instrumentos.message.borrar.carpeta']}')) {return false;}" />
+		</h:commandButton>
+		
+		<a4j:commandButton
+				id="btnMostrarCarpetaNormativa" 
+				value="#{messages['instrumentos.buttons.mostrar.contenido']}" 
+				styleClass="botonnavegacion"
+				action="#{instrumentoNormativoManager.viewInstOfFolderSelected()}"
+				reRender="panelNormativeInstrumentsList,errorMsg, mensajesPrincipal"
+				oncomplete="javascript:
+					if (#{!instrumentoNormativoManager.getHaySeleccionado()}) 
+						alert ('#{messages['instrumentos.message.seleccionar.carpeta']}');"
+				/>
+	
+		<h:commandButton
+				id="btnSalirInstrumentosNormativos" 
+				value="#{messages['buttons.salir']}" 
+				styleClass="botonnavegacion"
+				action="#{instrumentoNormativoManager.exit()}"
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+		</div>
+	</ui:define>
+</ui:composition>
+		
+	

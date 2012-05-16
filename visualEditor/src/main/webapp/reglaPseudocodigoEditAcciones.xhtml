@@ -1,0 +1,177 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" 
+	template="layout/template.xhtml">
+
+	<ui:define name="titulo">
+		<h1>Paso 3 de 4 - Armado de la Regla</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Texto Simulado <br />
+		<a href="" style="text-align: right; cursor: pointer;">ver mas >></a></div>
+	</ui:define>
+
+	<ui:define name="body">
+	
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+			<span class="waitingPanel">
+			<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+			<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+			</span>
+		</rich:modalPanel>	
+
+		<div id="formulario">
+
+		<div id="div100" style="height: 320px;">
+		
+		<rich:dataTable
+			       id="mainTable"
+			    value="#{reglaPseudocodigoHome.instance.reglasFilas}" 
+				  var="reglaFila" 
+			rowKeyVar="nroFila">
+			<f:facet name="header">
+				<h:outputText value="Paquete de reglas"></h:outputText>
+			</f:facet>
+
+			<rich:column style="width:16px">
+				<f:facet name="header">
+					<h:outputText value="Accion"
+								styleClass="columnHeader" />
+				</f:facet>	
+				<h:commandLink action="#{reglaPseudocodigoHome.eliminarFila(reglaFila)}" onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+					<h:graphicImage value="img/bin_closed.png" styleClass="img"
+						title="Quitar" alt="Quitar" />
+				</h:commandLink>
+				
+				<h:commandLink action="#{reglaPseudocodigoHome.editarFila(reglaFila)}" onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+					<h:graphicImage  value="img/editar.png" styleClass="img"/>
+				</h:commandLink>
+	            
+			</rich:column>
+			
+			
+			
+			<rich:column>
+					   
+				<f:facet name="header">
+					<h:outputText value="Condicion"
+								styleClass="columnHeader" />
+				</f:facet>				
+				
+				<h:outputText value="#{reglaFila.condicionPseudocodigo}"/>
+			</rich:column>
+			
+			
+			
+			<rich:column>
+				<f:facet name="header">
+					<h:outputText value="Acciones de la condicion" styleClass="columna" />
+				</f:facet>
+
+				<rich:dataTable  
+					id="listAcciones"
+			    	value="#{reglaPseudocodigoHome.getAccionesReglaFila(reglaFila)}" 
+				  	var="unaAccionReglaFila" 
+					rowKeyVar="nroFila">
+						<rich:column>
+							<h:outputText value="#{unaAccionReglaFila.nombre}"/>
+						</rich:column>
+				</rich:dataTable>
+			</rich:column>
+		</rich:dataTable>
+		</div>
+		<br/>
+		<h:inputTextarea value="#{reglaPseudocodigoHome.instance.observaciones}" style="width : 100%;" rows="4">
+			Observaciones
+		</h:inputTextarea>
+		</div>
+
+		<div style="clear: both" />
+	</ui:define>
+	<ui:define name="botonera">
+ 	
+	<h:commandButton
+				value="Agregar Fila" 
+				styleClass="botonnavegacion"
+				action="#{reglaPseudocodigoHome.irAPaso4()}"
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+			>
+	</h:commandButton>
+
+		<h:commandButton action="#{reglaPseudocodigoHome.persist()}"
+			value="Guardar Borrador" onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+			
+		<h:commandButton action="#{reglaPseudocodigoHome.versioning()}"
+			value="Versionar" rendered="#{reglaPseudocodigoHome.managed}"
+			onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+			/>
+			
+		
+	
+    	
+		
+		<h:outputLink rendered="false" styleClass="botonnavegacion" value="#" id="export_pdf">
+        	Exportar a PDF
+        	<rich:componentControl for="panel" attachTo="export_pdf" operation="show" event="onclick"/>
+    	</h:outputLink>
+    	
+    	<h:commandButton action="#{reglaPseudocodigoHome.exportar()}" value="Exportar PDF"/>
+    	
+    	<h:outputLink styleClass="botonnavegacion" value="#" id="btn_simular">
+        	Simular
+        	<rich:componentControl for="panel" attachTo="btn_simular" operation="show" event="onclick"/>
+    	</h:outputLink>
+    	
+    	
+    	
+		<div id="botonera">
+		<h:commandButton action="#{reglaPseudocodigoHome.atras()}"
+						styleClass="botoncancelar"
+						value="Atras" 
+						onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+						
+		<h:commandButton action="#{reglaPseudocodigoHome.exit()}"
+						styleClass="botoncancelar"
+						value="Cancelar" 
+						onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+		
+		<h:commandButton  id="finalizar"  value="Finalizar" styleClass="botonnavegacion" 
+		onclick="alert('La funcionalidad aun no ha sido implementada'); return false;"
+		/>
+
+</div>
+
+
+
+		<rich:modalPanel id="panel" width="350" height="100">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="Atencion"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="img/cancel.png"
+						styleClass="hidelink" id="hidelink" />
+					<rich:componentControl for="panel" attachTo="hidelink"
+						operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+			<h:outputText
+				value="Esta funcionalidad no esta vigente en la presente version"></h:outputText>
+			<br />
+			
+		</rich:modalPanel>
+		
+		
+		
+	</ui:define>
+
+</ui:composition>

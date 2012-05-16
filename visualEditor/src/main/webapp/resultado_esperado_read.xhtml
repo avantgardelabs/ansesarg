@@ -1,0 +1,117 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j" 
+	 template="layout/template.xhtml" >
+
+
+<ui:define name="titulo">
+		<h1>Paso 3 de 4 - Resultados Esperados</h1>
+	</ui:define>
+
+	
+	<ui:define name="body">
+	
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+			<span class="waitingPanel">
+			<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+			<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+			</span>
+		</rich:modalPanel>
+
+		<div id="formulario">
+		
+	<h:panelGrid columns="2"
+			rowClasses="prop" columnClasses="name,value">
+			
+			<h:outputText value="Dominio " />
+				
+				<h:selectOneMenu
+				 value="#{editor.dominioFiltroCondiciones}" 
+				 readonly="true"
+				 disabled="true"
+				 >
+					<s:selectItems var="dominio" value="#{editor.dominiosRegistrados}"
+						label="#{dominio.descripcion}"
+						
+						noSelectionLabel="Seleccione un dominio para filtrar...">
+						
+					</s:selectItems>
+					<a4j:support
+						 event="onchange"
+						  action="#{editor.filtrarAccion()}" 
+						  reRender="listas" 
+						  ajaxSingle="true"
+						  /> 
+					  
+					<s:convertEntity />
+				</h:selectOneMenu>
+
+			<rich:listShuttle 
+				id="listas"
+				sourceValue="#{editor.resultadosEsperadosDisponibles}"
+				targetValue="#{editor.resultadosEsperadosSeleccionados}"
+				sourceCaptionLabel="Resultados Esperados Disponibles del dominio #{editor.dominioFiltroCondiciones.descripcion}"
+				targetCaptionLabel="Resultados Esperados Seleccionados"
+				 var="accion"
+					removeControlLabel="Quitar"
+                 	removeAllControlLabel="Quitar Todos"
+                 	copyAllControlLabel="Agregar todos"
+                 	copyControlLabel="Agregar"
+                 	upControlLabel="Subir"
+                 	downControlLabel="Bajar"
+                 	fastOrderControlsVisible="false"
+                 		listsHeight="200"
+                 	targetListWidth="450"
+                 	sourceListWidth="450"
+                 	controlsType="none"
+                 	switchByClick="none">
+
+				<rich:column width="300px">
+					<f:facet name="header">
+						<h:outputText value="Dominio" styleClass="columna" />
+					</f:facet>
+					<h:outputText value="#{accion.dominio.descripcion}"></h:outputText>
+				</rich:column>
+				<rich:column width="150px">
+					<f:facet name="header">
+						<h:outputText value="Accion" styleClass="columna" />
+					</f:facet>
+					<h:outputText value="#{accion.nombre}"></h:outputText>
+				</rich:column>
+				
+				<s:convertEntity/>
+
+			</rich:listShuttle>
+			
+			
+		</h:panelGrid></div>
+
+
+		<div style="clear: both" />
+</ui:define>
+	<ui:define name="botonera">
+
+		<div id="botonera">  	
+		<s:button
+				id="atras"
+				view="/condiciones_read.seam" 
+				value="Atras" 
+				styleClass="botoncancelar" 
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+		/>
+		
+		<h:commandLink action="#{editor.cancelar()}" value="Cancelar" styleClass="botonnavegacion" style="color:#ffffff;" onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+		
+			<s:button view="/editor_read.seam" style="margin-top:5px;" action="#{editor.ordenarTablaDecision(tablaDesicion.filas, editor.condicionesSeleccionadas)}" value="Continuar..." onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+			</div>
+	</ui:define>
+
+</ui:composition>
+

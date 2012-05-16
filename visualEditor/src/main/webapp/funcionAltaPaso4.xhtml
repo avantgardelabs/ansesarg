@@ -1,0 +1,89 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j" template="layout/template.xhtml">
+
+
+	<ui:define name="titulo">
+		<h1>Paso 4 de 4 -Funcion Terminada</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Aqui va un texto de ayuda<br />
+		<a href="" class="textoayuda">ver mas >></a></div>
+	</ui:define>
+
+
+	<ui:define name="body">
+	
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+			<span class="waitingPanel">
+			<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+			<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+			</span>
+		</rich:modalPanel>
+		
+		<div id="formulario100">
+			<rich:panel>
+				<f:facet name="header">
+					Presentacion de Funcion
+				</f:facet>
+				
+				<h:inputTextarea value="#{funcionHome.pseudocodigo}" style="height : 700px; width : 1150px;" disabled="true" />
+			</rich:panel>
+		</div>
+		<div style="clear: both" />
+	</ui:define>
+	<ui:define name="botonera">
+ 		<h:commandButton action="#{funcionHome.exportar()}"
+			styleClass="botonnavegacion" style="color:#ffffff;" value="Exportar a PDF" />
+			
+		<h:commandButton action="#{funcionHome.persist()}" propagation="end"
+			styleClass="botonnavegacion" style="color:#ffffff;" value="Guardar Borrador" 
+			onclick="if (!#{funcionHome.validado}) {if (!confirm('La funcion no ha sido validada. Desea grabar de todas formas?')) {return false;} else {Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})}}"
+		/>
+			
+		<h:commandButton action="#{funcionHome.validate()}"
+			styleClass="botonnavegacion" style="color:#ffffff;" value="Validar" 
+			onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+
+
+		<div id="botonera">
+			<h:commandButton
+				id="cancelEdit"
+				propagation="end"
+				action="#{funcionHome.exit()}"
+				value="Cancelar" 
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+			>
+				<a4j:support 
+					event="onclick"
+					onsubmit="javascript:return confirm('Esta seguro que desea cancelar la operacion?')"
+				/>
+			</h:commandButton>
+			
+			<h:commandButton
+				id="atras"
+				action="#{funcionHome.atras()}" 
+				value=" Atras" 
+				styleClass="botoncancelar" 
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+				/>	
+			
+		 <h:commandButton
+			styleClass="botonnavegacion" style="color:#ffffff;" value="Finalizar" 
+			onclick="alert('La funcionalidad aun no ha sido implementada'); return false;"
+			/>
+			
+		</div>
+	
+	</ui:define>
+
+</ui:composition>
+

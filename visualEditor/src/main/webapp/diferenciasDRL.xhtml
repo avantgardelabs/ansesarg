@@ -1,0 +1,65 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	template="/layout/template.xhtml">
+
+	<ui:define name="titulo">
+		<h1>Diferencias DRL</h1>
+	</ui:define>
+
+
+
+	<ui:define name="body">
+	
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+			<span class="waitingPanel">
+			<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+			<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+			</span>
+		</rich:modalPanel>
+
+		<![CDATA[<h:messages globalOnly="true" styleClass="message" id="globalMessages"/>]]>
+
+		<div id="formulario" style="height: auto">
+		<h:panelGrid columns="3" styleClass="rich-table70" >
+			<rich:panel styleClass="rich-table70"
+				style="width : 882px;" >
+				<f:facet name="header">
+				<h:outputText
+					value="Diferencia entre versi&#243;n #{reglaHistorialList.diff1.versionRegla} y versi&#243;n #{reglaHistorialList.diff2.versionRegla}" />
+				</f:facet>
+				<h:outputText value="No existe codigo DRL para comparar" rendered="#{empty diferenciasAction.diferenciasDRL}"/>
+				<f:verbatim rendered="#{not empty diferenciasAction.diferenciasDRL}">
+					<font face="courier">
+						#{diferenciasAction.diferenciasDRL}
+					</font>
+				</f:verbatim>
+				</rich:panel>
+
+		</h:panelGrid>
+		</div>
+		<br/>
+		<br/>
+		<br/>
+		<div class="actionButtons">
+			<br/><pre>  </pre><br/>
+			<img src="img/refrojo.png" />
+			<h:outputText>Texto Eliminado</h:outputText>
+			<img src="img/refverde.png" style="margin-left: 50px;"/>
+			<h:outputText>Texto Agregado</h:outputText>
+			<br/>
+			<br/>
+			 
+			<s:button id="atras"
+			value="Atras"  view="/diferencias.xhtml" onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+			</div>
+
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,86 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                xmlns:a4j="http://richfaces.org/a4j"
+                template= "layout/template.xhtml">
+
+<ui:define name="titulo">
+		<h1>Paso 4 de 4 - Validar Regla en Pseudocodigo</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Pantalla principal de Regla en Pseudocodigo<br />
+		<a href="" class="textoayuda">ver mas >></a></div>
+	</ui:define>
+	                       
+<ui:define name="body">
+    
+    <![CDATA[<h:messages globalOnly="true" styleClass="message" id="globalMessages"/>]]>
+    
+   	<div id="formulario100">
+		
+	
+    
+    <rich:panel styleClass="panel250" >
+        <f:facet name="header">Detalle de la Regla en Pseudocodigo</f:facet>
+
+		
+			<h:inputTextarea 
+				value="#{reglaPseudocodigoHome.instance.pseudocodigo}" 
+				disabled="true" 
+				style="width : 90%; height : 138px;"
+				id="txtPseudoCodigo"
+			/>
+		
+  
+        <div style="clear:both"/>
+        
+        
+    </rich:panel>
+
+		
+	</div>
+    
+    <div class="actionButtons">      
+		
+		<h:commandButton  
+        		value="Validar" />
+        
+        <h:commandButton value="Exportar"
+        			action="#{reglaPseudocodigoHome.exportar()}"
+        			styleClass="botonnavegacion"
+        />
+        			
+        
+		
+        
+    </div>
+    
+    <div id="botonera">
+		 <h:outputLink value="reglaPseudocodigoEditAcciones.seam"
+			styleClass="botonnavegacion" style="color:#ffffff;">Cancelar </h:outputLink>
+			
+			
+			
+			<h:commandButton
+				id="atras"
+				action="#{reglaPseudocodigoHome.atras()}" 
+				value="Atras" 
+				styleClass="botoncancelar" 
+				/>	
+			
+			 <h:outputLink value="reglaPseudocodigoEditAcciones.seam"
+			styleClass="botonnavegacion" style="color:#ffffff;">Aceptar </h:outputLink>
+			
+			
+		</div>
+
+</ui:define>
+
+</ui:composition>

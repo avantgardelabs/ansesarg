@@ -1,0 +1,973 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                xmlns:a4j="http://richfaces.org/a4j"
+                template="layout/template.xhtml">
+
+<ui:define name="ayuda">
+		<div class="ayuda">Pantalla editar o crear acciones. <br />
+		<a href="" class="textoayuda">ver mas >></a>
+		</div>
+</ui:define>
+
+<ui:define name="body">
+
+	
+	<script type="text/javascript">
+		
+		function viewOnlySelectedOption(radio, idRadio, idCtrlFirst, idCtrlSecond) {
+			if (radio == undefined || radio.name == undefined) return;
+			
+			var id = radio.id.substring(radio.name.lastIndexOf(':'));
+					
+			if(id == ":"+idRadio+":0"){
+				var panel = document.getElementById(idCtrlFirst);
+				panel.style.visibility = 'visible';
+				panel.style.display = 'inline';
+				
+				var panel = document.getElementById(idCtrlSecond);
+				panel.style.visibility = 'hidden';
+				panel.style.display = 'none';
+
+				var panel = document.getElementById("frmPrincipal:parametrosList");
+				if (panel!=null)
+					panel.style.visibility = 'hidden';
+
+				if(idCtrlSecond == "frmPrincipal:ctrlFuncion"){
+					var table = document.getElementById("frmPrincipal:parametrosList");
+					table.style.visibility = 'hidden';
+					
+					var panelBusquedaFunciones = document.getElementById("frmPrincipal:ctrlFuncion");
+					panelBusquedaFunciones.style.visibility = 'hidden';
+					panelBusquedaFunciones.style.display = 'inline';
+				}
+
+				var panelBusquedaFunciones = document.getElementById("frmPrincipal:panelReglas");
+
+				if(panelBusquedaFunciones != null){
+				panelBusquedaFunciones.style.visibility = 'hidden';
+				panelBusquedaFunciones.style.display = 'none';
+				}
+
+				/*
+				panelBusquedaFunciones = document.getElementById("frmPrincipal:optFuncionLiteral:0");
+				if (!panelBusquedaFunciones.checked) panelBusquedaFunciones = document.getElementById("frmPrincipal:optFuncionLiteral:1");
+				*/
+				
+				if (idRadio != 'optFuncionLiteral') {
+					viewOnlySelectedOption(panelBusquedaFunciones,'optFuncionLiteral','frmPrincipal:ctrlLiteral','frmPrincipal:ctrlFuncion');
+				}
+				
+			}
+			else if(id == ":"+idRadio+":1") {
+				var panel = document.getElementById(idCtrlSecond);
+				panel.style.visibility = 'visible';
+				panel.style.display = 'inline';
+				
+				if(idCtrlSecond == "frmPrincipal:ctrlFuncion"){
+					var table = document.getElementById("frmPrincipal:parametrosList");
+					table.style.visibility = 'visible';
+					
+				}
+				
+				var panel = document.getElementById(idCtrlFirst);
+				panel.style.visibility = 'hidden';
+				panel.style.display = 'none';
+
+
+				var panelBusquedaFunciones = document.getElementById("frmPrincipal:panelFunciones");
+
+				if(panelBusquedaFunciones != null){
+				panelBusquedaFunciones.style.visibility = 'hidden';
+				panelBusquedaFunciones.style.display = 'none';
+				}
+
+			
+				
+			}
+			else {
+				var panel = document.getElementById(idCtrlFirst);
+				panel.style.visibility = 'hidden';
+				panel.style.display = 'none';
+
+				panel = document.getElementById(idCtrlSecond);
+				panel.style.visibility = 'hidden';
+				panel.style.display = 'none';
+
+				var panelBusquedaFunciones = document.getElementById("frmPrincipal:panelFunciones");
+
+				if(panelBusquedaFunciones != null){
+				panelBusquedaFunciones.style.visibility = 'hidden';
+				panelBusquedaFunciones.style.display = 'none';
+				}
+
+				var panelBusquedaFunciones = document.getElementById("frmPrincipal:panelReglas");
+
+				if(panelBusquedaFunciones != null){
+				panelBusquedaFunciones.style.visibility = 'hidden';
+				panelBusquedaFunciones.style.display = 'none';
+			}
+			}
+	    };
+
+	    function showPanelHideOtherPanel(idPanelToShow, idPanelToHide){
+	    	var ctrlFuncion = document.getElementById(idPanelToHide);
+
+	    	if(ctrlFuncion != null){
+				ctrlFuncion.style.visibility = 'hidden';
+				ctrlFuncion.style.display = 'none';
+	    	}else
+		    	return false;
+			
+			var panelBusquedaFunciones = document.getElementById(idPanelToShow);
+
+			if(panelBusquedaFunciones != null){
+				panelBusquedaFunciones.style.visibility = 'visible';
+				panelBusquedaFunciones.style.display = 'inline';
+			}else
+				return false;
+
+			return true;
+	    }
+
+
+	    window.onload=function(){
+
+				var panelBusquedaFunciones = document.getElementById("frmPrincipal:panelReglas");
+
+				if(panelBusquedaFunciones){
+				panelBusquedaFunciones.style.visibility = 'hidden';
+				panelBusquedaFunciones.style.display = 'none';
+				}
+			
+		    
+	    	var radioNada = document.getElementById('frmPrincipal:optHechoRegla:2');
+			if (radioNada != null  &amp;&amp; radioNada.checked) {
+				var panel = document.getElementById('frmPrincipal:panelActivaRegla');
+				panel.style.visibility = 'hidden';
+				panel.style.display = 'none';
+
+				panel = document.getElementById('frmPrincipal:panelModificaHecho');
+				panel.style.visibility = 'hidden';
+				panel.style.display = 'none';
+				
+				return;
+			}
+		    
+	    	var radioHecho = document.getElementById('frmPrincipal:optHechoRegla:0');
+
+			if(radioHecho &amp;&amp; radioHecho.checked){
+				var panel = document.getElementById('frmPrincipal:panelActivaRegla');
+
+				if(panel != null ){
+				panel.style.visibility = 'hidden';
+				panel.style.display = 'none';	
+				}	
+			}else{
+				var panel = document.getElementById('frmPrincipal:panelModificaHecho');
+
+				if(panel != null ){
+				panel.style.visibility = 'hidden';
+				panel.style.display = 'none';
+			}
+			}
+
+			/*
+			var radioLiteral = document.getElementById('frmPrincipal:optFuncionLiteral:0');
+			*/
+			/*
+			if(radioLiteral &amp;&amp; radioLiteral.checked){
+				var ctrlFuncion = document.getElementById('frmPrincipal:ctrlFuncion');
+
+				if(ctrlFuncion != null){
+				ctrlFuncion.style.visibility = 'hidden';
+				ctrlFuncion.style.display = 'none';
+				}
+
+				var table = document.getElementById("frmPrincipal:parametrosList");
+
+				if(table != null)
+				table.style.visibility = 'hidden';
+				
+			}else{
+				var ctrlFuncion = document.getElementById('frmPrincipal:ctrlLiteral');
+
+				if(ctrlFuncion != null){
+				ctrlFuncion.style.visibility = 'hidden';
+				ctrlFuncion.style.display = 'none';
+			}
+			}*/
+			
+	    };
+	    
+	</script>
+	
+	<rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+		<span class="waitingPanel">
+		<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+		<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+		</span>
+	</rich:modalPanel>	
+	
+	<rich:modalPanel id="panelEditarValorParametro" width="600" height="110" >
+	
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="Editar Valor del Parametro"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="img/bt_exit.png" styleClass="hidelink" id="hidelinkValorParametro" />
+						<rich:componentControl for="panelEditarValorParametro" attachTo="hidelinkValorParametro" operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+
+			<div id="panelEditarValor" >
+			
+				<h:outputText id="ayudaParaAgregarValorParametro" value="#{accionHome.ayuda}"/>
+				<h:panelGrid columns="2" >				
+					
+					<h:outputText value="Valor:" />
+										
+					<h:inputText id="txtValor" value="#{accionHome.valorDeUnParametro}">
+								<a4j:support 
+										event="onblur" 
+										action="#{accionHome.actualizaNombreValor()}" 
+										ajaxSingle="true"
+								/> 
+					</h:inputText>
+					<a4j:commandButton 
+							id="btnEditarValorParametro"
+							action="#{accionHome.addValorParametro(accionHome.param)}"
+							value="Aceptar"
+							onclick="#{rich:component('panelEditarValorParametro')}.hide()" 
+							reRender="parametrosList,errorParametros"
+							/>
+					<a4j:commandButton 
+						value="Cancelar"
+						onclick="#{rich:component('panelEditarValorParametro')}.hide()"
+					/>
+				</h:panelGrid>
+			
+    	</div>
+	</rich:modalPanel>
+	
+	
+	<rich:modalPanel id="panelEditarValorParametroBool" width="600" height="110" >
+	
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="Editar Valor del Parametro"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="img/bt_exit.png" styleClass="hidelink" id="hidelinkValorParametroBool" />
+						<rich:componentControl for="panelEditarValorParametroBool" attachTo="hidelinkValorParametroBool" operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+
+			<div id="panelEditarValorBool" >
+			
+				<h:outputText id="ayudaParaAgregarValorParametroBool" value="#{accionHome.ayuda}"/>
+				<h:panelGrid columns="2" >				
+					
+					<h:outputText value="Valor:" />
+					
+					<rich:comboBox id="pnlliteralBoolean" 
+	                         size="50"
+	                        value="#{accionHome.valorDeUnParametroBool}" styleClass="ancho300"
+							rendered="true"
+	                        enableManualInput="false"
+	                        >
+	                        
+	                        <f:selectItem itemValue="VERDADERO" itemLabel="VERDADERO" />
+							<f:selectItem itemValue="FALSO" itemLabel="FALSO" />
+	                        
+	                        <a4j:support 
+	                        	event="onchange"
+	                        	reRender="pnlliteralBoolean"
+	                        	action="#{accionHome.actualizaNombreValor()}"
+	                        	ajaxSingle="true"/>
+	              </rich:comboBox>
+	              
+					<h:commandButton 
+							id="btnEditarValorParametroBool" 
+							action="#{accionHome.addValorParametro(accionHome.param)}" 
+							value="Aceptar"
+							onclick="#{rich:component('panelEditarValorParametroBool')}.hide()" 
+							ajaxSingle="true"
+							reRender="parametrosList,errorParametros"/>
+					<a4j:commandButton 
+						value="Cancelar"
+						onclick="#{rich:component('panelEditarValorParametroBool')}.hide()"
+					/>
+				</h:panelGrid>
+			
+    	</div>
+	</rich:modalPanel>
+
+
+    
+        <rich:panel styleClass="margen5">
+            <f:facet name="header">#{accionHome.managed ? 'Editar' : 'Agregar'} Accion</f:facet>
+
+			<s:decorate template="layout/display.xhtml">
+				<ui:define name="label">Nombre<span class="required">*</span></ui:define>
+				<h:inputText styleClass="ancho300" id="nombre"
+					onchange="_modificado=true"
+					value="#{accionHome.instance.nombre}" required="true"
+					requiredMessage="El nombre de la accion es obligatorio"
+					maxlength="50"
+					onblur="javascript:this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');" 
+					>
+					
+					 
+				  
+				</h:inputText>
+				<h:message for="nombre" styleClass="errors" />
+			</s:decorate>
+ 		 
+			
+			<s:decorate template="layout/display.xhtml">
+			<ui:define name="label">Descripcion<span class="required">*</span></ui:define>
+			
+			<h:inputText styleClass="ancho500" id="descripcion"
+				onchange="_modificado=true"
+				value="#{accionHome.instance.descripcion}" required="true"
+				requiredMessage="La descripcion de la accion es obligatorio"
+				maxlength="100"
+				onblur="javascript:this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');" 
+				>
+				
+				 
+			</h:inputText>
+			<h:message for="descripcion" styleClass="errors" />
+          	</s:decorate>
+          
+          	<s:decorate template="layout/display.xhtml">
+          	<ui:define name="label">Dominio<span class="required">*</span></ui:define>
+			   <h:selectOneMenu 
+			   
+			   		id="idDominio" required="true"
+			   		requiredMessage="Debe especificar el dominio de la accion"
+			   		value="#{accionHome.instance.dominio}"
+			   		onchange="_modificado=true"
+			   		styleClass="ancho300">
+	           <s:selectItems 
+	            var="dominio" 
+	            value="#{dominioList.myResultList}"
+	            label="#{dominio.descripcion}"	
+	            noSelectionLabel="Indique un Dominio"                                 
+	            >
+	            
+	            </s:selectItems>
+	            
+	            <s:convertEntity/>
+	            <a4j:support event="onchange" reRender="cancelEdit" action="#{accionHome.setModificado(true)}" bypassUpdates="true" ajaxSingle="false"/>
+      		  	</h:selectOneMenu>
+      		 	<h:message for="idDominio" styleClass="errors" />
+        	</s:decorate>
+        	
+            <div style="clear:both">
+        	<h:commandButton value="Continuar" action="#{accionHome.continuar}" onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+        	</div>
+            <div style="FONT-FAMILY: 'Bitstream Charter'; clear:both">
+             Los campos que contengan   <span class="required">(*)</span> son de caracter obligatorio
+               
+               
+            </div>
+            
+            
+        </rich:panel>
+        <rich:panel rendered="#{accionHome.validado}">
+        <f:facet name="header">
+        Tipo de accion
+        </f:facet>
+        <h:panelGrid columns="4">
+			<h:selectOneRadio id="optHechoRegla" 
+         				onclick="viewOnlySelectedOption(this,'optHechoRegla','frmPrincipal:panelModificaHecho','frmPrincipal:panelActivaRegla');"
+         				value="#{accionHome.instance.tipoAccion}">
+                
+                    <f:selectItem id="mHecho" itemLabel="Modifica un Hecho" itemValue="MH" >
+                    </f:selectItem>
+                    <f:selectItem id="aRegla" itemLabel="Activa una Regla" itemValue="AR" >
+                    </f:selectItem>
+                    <f:selectItem id="sAccion" itemLabel="Sin Accion" itemValue="SA" >
+                    </f:selectItem>
+                    <a4j:support event="onchange" action="#{accionHome.setValorOpcionAM()}" ajaxSingle="true" immediate="true"/>
+                    
+			</h:selectOneRadio> 
+        </h:panelGrid>
+        
+        <rich:panel id="panelModificaHecho">
+       		<f:facet name="header">
+        		Modificar un hecho</f:facet>
+        	<h:panelGrid columns="4">
+        	<h:outputText value="Entidad :" />
+           
+            <h:selectOneMenu 
+			  		id="lstEntidades"
+			   		value="#{accionHome.instance.accionModificaHecho.entidad}"
+	   		  		styleClass="ancho300"
+	   		  		onblur="_modificado = true"
+	   		   		>
+				<s:selectItems 
+						var="entidad" 
+						noSelectionLabel="Indique una entidad..."
+		           		value="#{entidadList.myResultList}"
+		           		label="#{entidad.nombre}">
+           		</s:selectItems>
+				<a4j:support event="onchange"
+							reRender="cancelEdit,listaAtributos,persistibleAccionCheck"
+							ajaxSingle="true" 
+							action="#{accionHome.entidadModificada()}"/>
+					
+				<s:convertEntity />		 
+      		</h:selectOneMenu>
+            
+          <h:outputText value="Atributo :" />
+			   	
+              	<h:selectOneMenu 
+			  		onblur="_modificado=true"
+			   		id="listaAtributos"
+			   		value="#{accionHome.instance.accionModificaHecho.atributo}"
+			   		styleClass="ancho300"
+			   		immediate="true">
+	           		<s:selectItems 
+						noSelectionLabel="Indique El atributo para la accion..."
+			            var="atributo" 
+			            value="#{accionHome.atributos}"
+			            label="#{atributo.nombre}">
+	           		</s:selectItems>
+				   <a4j:support event="onchange"
+							reRender="cancelEdit,panelFuncionesList,ctrlLiteral,parametrosList,persistibleAccionCheck,valorActual,funActual, optFunLit" 
+							action="#{accionHome.atributoModificado()}"
+							ajaxSingle="true"
+							
+							/> 
+					<s:convertEntity />
+		       </h:selectOneMenu>
+		       <s:decorate template="layout/display.xhtml">
+	        	<ui:define name="label">Persistible</ui:define>
+	        	<h:selectBooleanCheckbox
+							id="persistibleAccionCheck"
+							value="#{accionHome.instance.accionModificaHecho.persistible}" 
+							disabled="#{accionHome.instance.accionModificaHecho.atributo.tipoCarga =='LOGICO'}"
+							>
+							
+		              	</h:selectBooleanCheckbox>
+		        </s:decorate>
+        </h:panelGrid>
+        
+        
+        	<rich:tabPanel id="optFunLit" switchType="client" value="#{accionHome.instance.accionModificaHecho.tipoModificacion}">
+        		<rich:tab id="literalx" label="Literal" name="LIT">
+        			<h:panelGroup id="ctrlLiteralx">
+	                	<h:outputText id="valorActual" value="Valor literal actual #{accionHome.instance.accionModificaHecho.accionModificaHechoLiteral.literal}"
+	                	rendered="#{accionHome.instance.accionModificaHecho.accionModificaHechoLiteral.literal != null}"/><br/><br/>
+		                <h:outputText value="Valor literal nuevo: "/><br/>               
+		                <h:outputText 
+		                	value="Debe seleccionar un atributo para poder ingresar el valor del literal " 
+		                	rendered="#{accionHome.instance.accionModificaHecho.atributo == null}" 
+		                />
+		                 <h:inputText id="literalText" 
+                  				size="50"
+                    			maxlength="100"
+                        		value="#{accionHome.currentInput}" styleClass="ancho300"
+								rendered="#{accionHome.esTexto()}"
+                  			style=" width : 302px;">
+                        <a4j:support 
+                        	event="onblur"
+                        	reRender="literalText"
+                        	ajaxSingle="true"/>
+                        	 
+              	  </h:inputText>
+	              
+	              <h:inputText id="literalNumber" 
+	                         size="50"
+	                    maxlength="100"
+	                        value="#{accionHome.currentInput}" styleClass="ancho300"
+							rendered="#{accionHome.esNumero()}"
+							
+	                        >
+	                        <a4j:support 
+	                        	event="onblur"
+	                        	reRender="literalNumber"
+	                        	ajaxSingle="true"/>
+	                        	
+	                    <h:message for="literalNumber"/> 
+	              </h:inputText>
+	              
+	              
+	              <rich:calendar id="literalFecha" 
+	                         size="50"
+	                        value="#{accionHome.currentFecha}" styleClass="ancho300"
+							datePattern="dd/MM/yyyy"
+							rendered="#{accionHome.esFecha()}"
+							locale="ES"
+	                        >
+	                        <a4j:support 
+	                        	event="onchange"
+	                        	reRender="literalFecha"
+	                        	ajaxSingle="true"/>
+	                        	 
+	              </rich:calendar>
+	              
+	              <rich:comboBox id="literalBoolean" 
+	                         size="50"
+	                        value="#{accionHome.currentInput}" styleClass="ancho300"
+							rendered="#{accionHome.esBooleano()}"
+	                        enableManualInput="false"
+	                        >
+	                        
+	                        <f:selectItem itemValue="VERDADERO" itemLabel="Verdadero" />
+							<f:selectItem itemValue="FALSO" itemLabel="Falso" />
+	                        
+	                        <a4j:support 
+	                        	event="onchange"
+	                        	reRender="literalBoolean"
+	                        	ajaxSingle="true"/>
+	              </rich:comboBox>
+		            
+	                </h:panelGroup>
+        		</rich:tab>
+        		
+        		<rich:tab id="funcionx" label="Funcion" name="FUN">
+        			<rich:togglePanel id="tp" switchType="ajax" value="#{accionHome.panelBuscarFun}" initialState="one" stateOrder="one,two" >
+							<f:facet name="one">
+								<h:panelGroup style="width:600px;height:300px" id="ctrlFuncion" >
+									<h:panelGrid columns="3">	   
+		             		   			<h:outputText value="Funcion actual:"/>
+		              		  			<h:inputText id="funActual" value="#{accionHome.instance.accionModificaHecho.accionModificaHechoFuncion.funcion.nombre}" styleClass="ancho200" disabled="true"/>
+			
+									</h:panelGrid>
+					
+									<h:panelGroup id="errorParametros">
+										<h:messages styleClass="message Error errors"/>
+									</h:panelGroup>
+					
+									<rich:dataTable id="parametrosList"
+			 								var="_paramsFunction"
+               								value="#{accionHome.instance.accionModificaHecho.accionModificaHechoFuncion.funcion.parametros}" 
+											styleClass="margen5"
+											rendered="#{accionHome.instance.accionModificaHecho.accionModificaHechoFuncion.funcion != null}"
+											rows="10">
+	        
+							        <h:column>
+				        			    <f:facet name="header">
+				                			<s:link styleClass="columnHeader"
+				                      	    	value="Nombre #{funcionList.order=='parametro asc' ? 'Desc.' : ( funcionList.order=='nombre desc' ? 'Asc.' : '' )}"
+				                        	    style="color:#000000;" >
+				                    			<f:param name="order" value="#{funcionList.order=='parametro asc' ? 'nombre desc' : 'nombre asc'}"/>
+				                			</s:link>
+				            			</f:facet>
+				            			<h:outputText value="#{_paramsFunction.nombre}"/>
+				        			</h:column>
+				
+				        			<h:column>
+				           				<f:facet name="header">
+				                			<s:link styleClass="columnHeader"
+				                           			value="Valor #{funcionList.order=='parametro asc' ? 'Desc.' : ( funcionList.order=='descripcion desc' ? 'Asc.' : '' )}"
+				                             		style="color:#000000;" >
+				                    			<f:param name="order" value="#{funcionList.order=='parametro asc' ? 'descripcion desc' : 'descripcion asc'}"/>
+				                			</s:link>
+				           				</f:facet>
+				           				  <h:outputText id="valorparam" value="#{accionHome.getValorDelParametro(_paramsFunction)} "/>
+										</h:column>
+				 
+							        <rich:column styleClass="ancho150">
+				            			<f:facet name="header">Accion</f:facet>
+				        			     #{' '}
+				        			    <h:graphicImage value="/img/editar.png" width="15px" height="15px" styleClass="img" />
+				            			<a4j:commandLink action="#{accionHome.putParametro(_paramsFunction)}" 
+				            							value="Editar"
+				            							oncomplete="javascript:Richfaces.showModalPanel('panelEditarValorParametro');"
+				          	            				style="color:#000000;"
+				          				  				reRender="panelEditarValorParametro,ayudaParaAgregarValorParametro,txtValor"
+				            							id="condicionEdit"
+				            							rendered="#{!_paramsFunction.atributo.esBooleano()}"
+				            			/>
+				            				
+				            			<a4j:commandLink action="#{accionHome.putParametro(_paramsFunction)}" 
+				            							value="Editar" 
+				            							oncomplete="javascript:Richfaces.showModalPanel('panelEditarValorParametroBool');"
+				            							style="color:#000000;"
+				            							reRender="panelEditarValorParametroBool,ayudaParaAgregarValorParametro,txtValor"
+				            							id="condicionEditBool"
+				            							rendered="#{_paramsFunction.atributo.esBooleano()}"
+				            			/>
+				        			</rich:column>
+				        
+				     			   	<f:facet name="footer">
+										<rich:datascroller id="datascroller" />
+									</f:facet>
+	    							</rich:dataTable>
+							</h:panelGroup>
+						 </f:facet>
+					<f:facet name="two">
+								<rich:panel id="panelFunciones" width="400" height="300" >
+	
+									<div id="panelBuscar">
+									<h:panelGrid columns="2" >				
+										<s:decorate>
+											<h:outputText value="Nombre:" />
+											<h:inputText id="txtNombre" value="#{accionHome.nombreFun}" rendered="true">
+											<a4j:support event="onblur" 
+													action="#{accionHome.actualizaNombreFuncion()}" 
+													ajaxSingle="true"/>
+											</h:inputText>
+										</s:decorate>
+	          
+										<a4j:commandButton id="buscar" 
+														action="#{accionHome.buscarFunciones()}"
+														value="Buscar"
+														reRender="panelFuncionesList,txtNombre" 
+														ajaxSingle="true"
+														immediate="true" style="FONT-SIZE: small;"/>
+									</h:panelGrid>
+									<br/><br/><br/>
+									<div>
+			
+									<rich:panel id="panelFuncionesList">
+		    							    <f:facet name="header">Resultados de Busqueda de Funciones</f:facet>
+					    					<div class="results">
+												<h:outputText value="La busqueda de funciones se realiza sobre el conjunto de funciones cuyo tipo de dato de retorno sea #{accionHome.instance.accionModificaHecho.atributo.tipoDato}" rendered="#{accionHome.instance.accionModificaHecho.atributo != null}"/>
+												<br/>
+												<h:outputText value="No ha seleccionado ninguna entidad ni atributo" rendered="#{accionHome.instance.accionModificaHecho.atributo == null}"/>
+												<br/>
+												<h:outputText id="notFound" value="No se han encontrado resultados." 
+			      		       								  rendered="#{empty accionHome.listFunciones}"/>
+						               
+											<rich:dataTable id="fucionesList" 
+					             			  	var="_funcion"
+					              				value="#{accionHome.listFunciones}" 
+					           					rendered="#{not empty accionHome.listFunciones}"
+					           					rows="10">
+			  	
+			      			 					 <h:column>
+			          								 <f:facet name="header">
+			       				        				 <h:outputText styleClass="columnHeader" value="Nombre" />
+			       			    					 </f:facet>
+			      			      					<h:outputText value="#{_funcion.nombre}"/>
+			       								 </h:column>
+
+	        									<h:column>
+		           			 						<f:facet name="header">
+				     			           				<h:outputText styleClass="columnHeader" value="Descripcion" />			                 
+						            				</f:facet>
+													<h:outputText value="#{_funcion.descripcion}"/>
+	        									</h:column>
+			
+							    			    <h:column>
+			     							       <f:facet name="header">
+			     		          					 <h:outputText styleClass="columnHeader" value="Dominio" />
+				     		          			  </f:facet>
+			         							   <h:outputText value="#{_funcion.dominio.descripcion}" />
+			      			  					</h:column>	        
+	
+									       		 <rich:column styleClass="action">
+			     							       <f:facet name="header">Accion</f:facet>
+			     		      						 <rich:toggleControl action="#{accionHome.setFuncion(_funcion)}"
+			     		       								for="tp" switchToState="one" value="Seleccionar">
+			     		       							<h:graphicImage value="/img/editar.png" width="15px" height="15px" styleClass="img" />
+			     		       						</rich:toggleControl>				  		     						 
+			        							</rich:column>
+		
+										        <f:facet name="footer">
+													<rich:datascroller id="datascroller" />
+												</f:facet>
+					    					</rich:dataTable>
+					   	 				</div>
+					    			</rich:panel>
+						    	</div>
+    							</div>
+					    	 </rich:panel>
+						</f:facet>
+					</rich:togglePanel>
+					
+				
+				<rich:toggleControl for="tp" switchToState="two" action="#{accionHome.setModificado(true)}">
+						<h:outputText value="Buscar Funcion" />
+				</rich:toggleControl>
+        		
+        		</rich:tab>
+        	
+        	<rich:tab id="Formul" label="Fórmula" name="FORMULA" rendered="#{accionHome.instance.accionModificaHecho.atributo.tipoDato=='NUMERO'}">
+       			<h:panelGrid columns="2" >
+       			<h:outputText value="Fórmula:" />
+			  <h:selectOneMenu 
+			  		id="listaFunciones"
+			   		requiredMessage="Debe Seleccionar una Fórmula"
+			   		value="#{accionHome.formula}">
+			   	<s:selectItems 
+				noSelectionLabel="Indique una Fórmula..."
+	            var="formula" 
+	            value="#{accionHome.formulas}"
+	            label="#{formula.nombre}"/>
+	           <s:convertEntity />
+	           </h:selectOneMenu>
+		       </h:panelGrid>
+   
+       		</rich:tab>
+        		
+        	</rich:tabPanel>
+       		
+
+	    
+	    
+	    <!-- PANEL QUE REEMPLAZA AL POP-PUP DE BUSQUEDA DE FUNCIONES -->
+	
+	</rich:panel>
+        
+       <!-- HASTA ACA PANEL DE ACCION MODIFICA HECHO LITERAL FUNCION -->   
+        
+     
+        
+        <rich:panel id="panelActivaRegla">
+       
+	        <f:facet name="header"> Activar una regla</f:facet>
+        <h:panelGrid columns="4">
+        <h:outputText value="Regla a Activar :" />
+          <h:inputText id="reglaSelected" value="#{accionHome.getNombreRegla()}" styleClass="ancho200" disabled="true"/>
+          		<a4j:commandButton 
+					value="Buscar Regla" 
+					id="searchReglaTablaDecision" 
+					styleClass="botonnavegacion" 
+					oncomplete="return showPanelHideOtherPanel('frmPrincipal:panelReglas','frmPrincipal:panelActivaRegla');" 
+					action="#{accionHome.setModificado(true)}"
+					>
+				</a4j:commandButton>
+        </h:panelGrid>
+        
+        </rich:panel>
+	
+	<rich:panel id="panelReglas" width="400" height="300" >
+			<div id="panelBuscarReglasTablaDecision" >
+			
+				<h:panelGrid columns="2" >				
+					<s:decorate>
+						<h:outputText value="Nombre:" />
+						<h:inputText id="txtNombreReglasTablaDecision" value="#{accionHome.nombreReglaTablaDecision}" rendered="true">
+								<a4j:support 
+										event="onblur" 
+										action="#{accionHome.actualizaNombre()}" 
+										ajaxSingle="true"/>
+						</h:inputText>
+					</s:decorate>
+			  
+					<a4j:commandButton 
+							id="buscarReglasTablaDecision" 
+							action="#{accionHome.buscarReglasDecision()}" 
+							value="Buscar"
+							reRender="panelReglaTablaDecision,panelReglaPseudocodigo,txtNombreReglasTablaDecision" 
+							ajaxSingle="true"/>
+				</h:panelGrid>
+			<div>
+			
+			<rich:panel id="panelReglaTablaDecision">
+		        <f:facet name="header">Resultados de Busqueda de Reglas</f:facet>
+			    <div class="results">
+		
+					<h:outputText value="No se han encontrado resultados." 
+			               rendered="#{empty accionHome.listTablaDecision}"/>
+					               
+					<rich:dataTable id="reglaTablaDecisionList" 
+					                	var="_reglaTablaDecision"
+					              		value="#{accionHome.listTablaDecision}" 
+					           			rendered="#{not empty accionHome.listTablaDecision}"
+					           			rows="10">
+			  
+			        <h:column>
+			            <f:facet name="header">
+			                <h:outputText styleClass="columnHeader" value="Nombre" />
+			            </f:facet>
+			            <h:outputText value="#{_reglaTablaDecision.nombre}"/>
+			        </h:column>
+
+	        		<h:column>
+		            	<f:facet name="header">
+				                <h:outputText styleClass="columnHeader"
+				                             value="Descripcion" style="FONT-FAMILY: 'DejaVu Sans Condensed';"/>			                 
+					
+		            	</f:facet>
+						<h:outputText value="#{_reglaTablaDecision.descripcion}"/>
+	        		</h:column>
+			
+			        <h:column>
+			            <f:facet name="header">
+			                <h:outputText styleClass="columnHeader"
+			                             value="Dominio" />
+				
+			            </f:facet>
+			            <h:outputText value="#{_reglaTablaDecision.dominio.descripcion}" />
+			        </h:column>
+			        
+			        <h:column>
+			            <f:facet name="header">
+			                <h:outputText styleClass="columnHeader"
+			                             value="Version" />
+				
+			            </f:facet>
+			            <h:outputText value="#{_reglaTablaDecision.versionRegla}" />
+			        </h:column>		        
+	
+			        <rich:column styleClass="action">
+			            <f:facet name="header">Accion</f:facet>
+				        <h:commandLink
+				            	event="onclick"
+				            	action="#{accionHome.setReglaTablaDecision(_reglaTablaDecision)}"
+				            	ajaxSingle="true"
+				            	immediate="true"
+				            	reRender="reglaTablaDecisionList"
+				        	value="Seleccionar"
+				            styleClass="hover"			            
+				        >
+				            #{' '}
+				            <h:graphicImage value="/img/editar.png" width="15px" height="15px" styleClass="img"/>
+					
+				             
+				        </h:commandLink>
+			        </rich:column>
+		
+			        <f:facet name="footer">
+						<rich:datascroller id="datascroller" />
+					</f:facet>
+			    	</rich:dataTable>
+		   	 	</div>
+		    </rich:panel>
+		    
+		    <rich:panel id="panelReglaPseudocodigo">
+		        <f:facet name="header">Resultados de Busqueda de Reglas por Pseudocodigo</f:facet>
+			    <div class="results">
+		
+					<h:outputText value="No se han encontrado resultados." 
+			               rendered="#{empty accionHome.listRPS}"/>
+					               
+					<rich:dataTable id="reglaPseudocodigoList" 
+					                	var="_reglaPseudocodigo"
+					              		value="#{accionHome.listRPS}" 
+					           			rendered="#{not empty accionHome.listRPS}"
+					           			rows="10">
+			  
+			        <h:column>
+			            <f:facet name="header">
+			                <h:outputText styleClass="columnHeader" value="Nombre" />
+			            </f:facet>
+			            <h:outputText value="#{_reglaPseudocodigo.nombre}"/>
+			        </h:column>
+
+	        		<h:column>
+		            	<f:facet name="header">
+				                <h:outputText styleClass="columnHeader"
+				                             value="Descripcion" />			                 
+					
+		            	</f:facet>
+						<h:outputText value="#{_reglaPseudocodigo.descripcion}"/>
+	        		</h:column>
+			
+			        <h:column>
+			            <f:facet name="header">
+			                <h:outputText styleClass="columnHeader"
+			                             value="Dominio" />
+				
+			            </f:facet>
+			            <h:outputText value="#{_reglaPseudocodigo.dominio.descripcion}" />
+			        </h:column>	        
+	
+			        <rich:column styleClass="action">
+			            <f:facet name="header">Accion</f:facet>
+						<h:commandLink
+				            	event="onclick"
+				            	action="#{accionHome.setReglaPS(_reglaPseudocodigo)}"
+				            	ajaxSingle="true"
+				            	immediate="true"
+				            	reRender="reglaTablaDecisionList"
+				        	value="Seleccionar"
+				            styleClass="hover"			            
+				        >
+				            #{' '}
+				            <h:graphicImage value="/img/editar.png" width="15px" height="15px" styleClass="img"/>
+					
+				             
+				        </h:commandLink>
+			        </rich:column>
+		
+			        <f:facet name="footer">
+						<rich:datascroller id="datascroller" />
+					</f:facet>
+			    	</rich:dataTable>
+		   	 	</div>
+		    </rich:panel>
+		    
+		    </div>
+    	</div>
+						
+    		<h:panelGrid columns="1">			
+					<a4j:commandButton 
+						value="Cancelar"
+						onclick="return showPanelHideOtherPanel('frmPrincipal:panelActivaRegla','frmPrincipal:panelReglas');"
+					/>
+			</h:panelGrid>
+	</rich:panel>
+        
+      
+        
+           
+	</rich:panel> 
+        
+		
+                
+        <div class="actionButtons">
+
+            <h:commandButton id="save" 
+                          value="Guardar" 
+                         action="#{accionHome.persist}"
+                       disabled="#{!accionHome.wired}"
+                       rendered="#{!accionHome.managed}"
+                       onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+                       />  
+                          			  
+            <h:commandButton id="update" 
+                          value="Guardar" 
+                         action="#{accionHome.update}"
+                       rendered="#{accionHome.managed}"
+                       onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+            />
+                        			  
+            <h:commandButton id="delete" 
+                          value="Eliminar" 
+                         action="#{accionHome.remove}"
+                       rendered="#{accionHome.managed}"
+                       immediate="true"
+                       onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+                       
+					<a4j:support 
+                		event="onclick"
+						onsubmit="if(!confirm('Se eliminara un elemento y no podra recuperarlo, esta seguro que desea Continuar?')) {return false;}" 
+						ajaxSingle="true"
+						immediate="true"/>
+			</h:commandButton>
+      
+			
+            <h:commandButton id="cancelEdit"
+                   value="Cancelar"
+					onclick="if (_modificado) {if(!confirm('Se perderan los cambios. Esta seguro que desea Cancelar?')) {return false;}} Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300});"
+					action="#{accionHome.cancel}"
+					immediate="true"
+                >
+			</h:commandButton>
+
+        </div>
+    
+
+</ui:define>
+
+</ui:composition>

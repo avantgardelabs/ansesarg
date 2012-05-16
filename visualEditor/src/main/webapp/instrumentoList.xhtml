@@ -1,0 +1,128 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                template="layout/template.xhtml">
+
+<ui:define name="ayuda">
+		<div class="ayuda">Pantalla buscar<br />
+		<a href="" class="textoayuda">ver mas >></a>
+		</div>
+</ui:define>
+               
+<ui:define name="body">
+    
+    <![CDATA[<h:messages globalOnly="true" styleClass="message" id="globalMessages"/>]]>
+    
+    
+        <rich:simpleTogglePanel label="Busqueda de instrumentos normativos" switchType="ajax" opened="#{dominioList.abrir}">
+
+            <s:decorate template="layout/display.xhtml">
+                <ui:define name="label">Nombre</ui:define>
+                <h:inputText id="nombre" value="#{dominioList.dominio.descripcion}" styleClass="ancho300"/>
+            </s:decorate>
+
+			
+        
+        
+        <div class="actionButtons">
+            <h:commandButton id="search" value="Buscar" action="#{dominioList.setAbrir(true)}" reRender="/dominioList.xhtml"/>
+            <s:button id="reset" value="Limpiar" includePageParams="false" action='#{dominioList.limpiar()}'/>
+        </div>
+        
+        </rich:simpleTogglePanel>
+    <rich:panel>
+        <f:facet name="header">Resultados de instrumentos normativos</f:facet>
+    <div class="results" id="dominioList">
+
+    <h:outputText value="No se han encontrado resultados." 
+               rendered="#{empty dominioList.resultList and not dominioList.firstTime}"/>
+               
+   	<rich:tree 
+					style="width:300px" 
+					id="arbolInstrumentos"
+					nodeSelectListener="#{instrumentoNormativoManager.processSelection}"
+					reRender="panelInfoElemento, link, modalPanelEdit, divBotonera" 
+					ajaxSubmitSelection="true"
+					switchType="client" 
+					value="#{instrumentoNormativoManager.treeNode}"
+					var="item" 
+					ajaxKeys="#{null}" 
+					nodeFace="#{item.tipo}"
+					
+					>
+					
+					<rich:treeNode type="carpeta" icon="/img/iconFolder.gif" iconLeaf="/img/iconFolder.gif">
+		                <h:outputText value="#{item.descripcion}" />
+		            </rich:treeNode>
+
+					<rich:treeNode type="instrumento" icon="/img/iconLeaf.gif" iconLeaf="/img/iconLeaf.gif">
+						<h:outputText value="#{item.descripcion}" />
+					</rich:treeNode>
+
+				</rich:tree>
+
+    </div>
+    </rich:panel>
+    
+    <div class="tableControl">
+      
+        <s:link view="/dominioList.xhtml" 
+            rendered="#{dominioList.previousExists}" 
+               value="#{messages.left}#{messages.left} Primera Pagina"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+        
+        <s:link view="/dominioList.xhtml" 
+            rendered="#{dominioList.previousExists}" 
+               value="#{messages.left} Pagina Anterior"
+                  id="previousPage">
+            <f:param name="firstResult" 
+                    value="#{dominioList.previousFirstResult}"/>
+        </s:link>
+        
+        <s:link view="/dominioList.xhtml" 
+            rendered="#{dominioList.nextExists}" 
+               value="Next Page #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult" 
+                    value="#{dominioList.nextFirstResult}"/>
+        </s:link>
+        
+        <s:link view="/dominioList.xhtml" 
+            rendered="#{dominioList.nextExists}" 
+               value="Last Page #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult" 
+                    value="#{dominioList.lastFirstResult}"/>
+        </s:link>
+        
+    </div>
+    
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+       	 <h:outputLink value="instrumentoEdit.seam"
+			styleClass="botonnavegacion" style="color:#ffffff;">Agregar </h:outputLink>
+			   	 <h:outputLink value="instrumentoEdit.seam"
+			styleClass="botonnavegacion" style="color:#ffffff;">Ver </h:outputLink>
+			   	 <h:outputLink value="instrumentoEdit.seam"
+			styleClass="botonnavegacion" style="color:#ffffff;">Editar </h:outputLink>
+			
+       
+        <s:button view="/home.xhtml"
+                    id="salir"
+           propagation="none"
+                 value="Salir">
+        </s:button>
+    </s:div>
+    
+</ui:define>
+
+</ui:composition>
+

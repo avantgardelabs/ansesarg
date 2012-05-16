@@ -1,0 +1,184 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:a="http://richfaces.org/a4j"
+                xmlns:rich="http://richfaces.org/rich"
+                template="layout/template.xhtml">
+                       
+<ui:define name="body">
+
+    <h:form id="accion" styleClass="edit">
+    
+        <rich:panel>
+            <f:facet name="header">#{condicionHome.managed ? 'Editar' : 'Agregar'} Condicion</f:facet>
+			
+          <s:decorate id="nombre" template="layout/edit.xhtml">
+              
+              <ui:define name="label">Nombre</ui:define>
+              <h:inputText id="nombre"
+                         size="50"
+                    maxlength="100"
+                        value="#{condicionHome.instance.nombre}"
+                        required="true"
+                        requiredMessage="El nombre de la condicion es obligatorio">
+                    <a:support event="onblur" reRender="nombre" bypassUpdates="true" ajaxSingle="true"/> 
+              </h:inputText>
+        
+          </s:decorate>
+          
+          <s:decorate id="descripcion" template="layout/edit.xhtml">
+              
+              <ui:define name="label">Descripcion</ui:define>
+              <h:inputText id="descripcion"
+                         size="50"
+                    maxlength="200"
+                        value="#{condicionHome.instance.descripcion}"
+                        required="true"
+                        requiredMessage="La descripcion de la condicion es obligatorio">
+                    <a:support event="onblur" reRender="descripcion" bypassUpdates="true" ajaxSingle="true"/> 
+              </h:inputText>
+        
+          </s:decorate>
+
+          <s:decorate id="dominio" template="layout/edit.xhtml">
+              
+              <ui:define name="label">Dominio</ui:define>
+			  <h:selectOneMenu 
+			   		id="idDominio" required="true"
+			   		value="#{condicionHome.instance.dominio}"
+			   		requiredMessage="Debe seleccionar el dominio correspondiente.">
+	           <s:selectItems 
+	            var="dominio" 
+	            value="#{dominioList.resultList}"
+	            label="#{dominio.descripcion}"	                                 
+	            >
+	            
+	            </s:selectItems>
+	            <s:convertEntity/>
+      		  	</h:selectOneMenu>
+          </s:decorate>
+	
+          <s:decorate id="entidad" template="layout/edit.xhtml">
+              
+              <ui:define name="label">Entidad</ui:define>
+			  <h:selectOneMenu 
+			   		id="idEntidad" required="true"
+			   		value="#{condicionHome.instance.hecho}"
+			   		requiredMessage="Debe seleccionar la entidad correspondiente.">
+	           <s:selectItems 
+	            var="entidad" 
+	            value="#{entidadList.resultList}"
+	            label="#{entidad.nombre}"	                                 
+	            >
+	            
+	            </s:selectItems>
+	            <s:convertEntity/>
+      		  	</h:selectOneMenu>
+          </s:decorate>
+      		  	
+          <s:decorate id="literal" template="layout/edit.xhtml">
+              
+              <ui:define name="label">Agregar Literal:</ui:define>
+              <h:inputText id="literal"
+                         size="50"
+                    maxlength="200"
+                        value="#{condicionHome.instance.literal.nombre}"
+                        required="true"
+                        requiredMessage="Debe ingresar al menos un literal">
+                    <a:support event="onblur" reRender="literal" bypassUpdates="true" ajaxSingle="true"/> 
+              </h:inputText>
+        
+          </s:decorate> 
+          
+		  <a:commandButton action="#{condicionHome.addLiteral()}"
+				value="Agregar ..." reRender="tablaValores" rendered="true" />
+				
+
+            <div style="clear:both">
+                <span class="required">*</span> 
+                required fields
+            </div>
+
+        </rich:panel>
+                
+        <rich:panel>
+        		 <f:facet name="header">Valores Seleccionados</f:facet>
+   							<div class="results" id="tablaValores">
+   				<h:outputText value="No hay resultados de su busqueda de atributos"
+               rendered="#{empty condicionHome.instance.literales}"/></div>
+               
+        
+				
+               <rich:dataTable
+               			id="tablaValores"
+               			var="_literal"
+               			value="#{condicionHome.instance.literales}" 		
+    					>
+               
+            	   <rich:column>
+        				<f:facet name="header">Nombre</f:facet>
+               			<h:outputText value="#{_literal.nombre}" />	                    	
+        			</rich:column>
+        			
+        			<rich:column>
+        			<f:facet name="header">Accion</f:facet>
+					<a:commandLink id="removeLiteral"
+						ajaxSingle="true"
+						action="#{condicionHome.eliminarLiteral(_literal)}"
+						reRender="tablaValores">
+						<h:graphicImage value="/img/bin_closed.png"
+							title="Quitar" alt="Quitar" />
+					</a:commandLink>
+			</rich:column>
+               
+               </rich:dataTable>
+               
+               
+             
+        
+        
+        
+        </rich:panel>        
+                
+                
+               
+        <div class="actionButtons">
+
+            <h:commandButton id="save" 
+                          value="Guardar" 
+                         action="#{condicionHome.generarPseudoCodigo()}"
+                       disabled="#{!condicionHome.wired}"
+                       rendered="#{!condicionHome.managed}"/>  
+                          			  
+            <h:commandButton id="update" 
+                          value="Guardar" 
+                         action="#{condicionHome.generarPseudoCodigo()}"
+                       rendered="#{condicionHome.managed}"/>
+                        			  
+            <h:commandButton id="delete" 
+                          value="Eliminar" 
+                         action="#{condicionHome.remove}"
+                      immediate="true"
+                       rendered="#{condicionHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancelar"
+             propagation="end"
+                    view="/condicionList.xhtml"
+                rendered="#{condicionHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/#{empty condicionFrom ? 'condicionList' : condicionFrom}.xhtml"
+                rendered="#{!condicionHome.managed}"/>
+
+        </div>
+    </h:form>
+</ui:define>
+</ui:composition>

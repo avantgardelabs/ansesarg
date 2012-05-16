@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.0.xsd" login-required="true"
+      no-conversation-view-id="/reglaPseudocodigoList.xhtml"
+      >
+
+   <begin-conversation  join="true" flush-mode="MANUAL"/>
+
+   <action execute="#{funcionHome.wire}" />
+   
+   <param name="funcionId" value="#{funcionHome.funcionId}"/>
+   
+   <navigation from-action="#{funcionHome.irAPaso2()}">
+   	<rule>
+         <redirect view-id="/funcionAltaPaso2.xhtml"/>
+    </rule>
+   </navigation>
+   
+   <navigation from-action="#{funcionHome.exit()}">
+         <end-conversation/>
+         <redirect view-id="/FuncionList.xhtml"/>
+   </navigation>
+   
+  
+
+   
+</page>

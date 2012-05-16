@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pages xmlns="http://jboss.com/products/seam/pages"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.0.xsd" 
+       no-conversation-view-id="/home.xhtml"
+       login-view-id="/default.xhtml">
+
+    <page view-id="*">
+        <navigation>
+            <rule if-outcome="home">
+                <redirect view-id="/home.xhtml"/>
+            </rule>
+        </navigation>
+    </page> 
+	
+	
+	
+    <exception class="org.jboss.seam.framework.EntityNotFoundException">
+        <redirect view-id="/error.xhtml">
+            <message severity="warn">Registro no encontrado</message>
+        </redirect>
+    </exception>
+    
+    <exception class="javax.persistence.EntityNotFoundException">
+        <redirect view-id="/error.xhtml">
+            <message severity="warn">Registro no econtrado</message>
+        </redirect>
+    </exception>
+    
+    <exception class="javax.persistence.PersistenceException">
+        <redirect view-id="/error.xhtml">
+            <message severity="warn">Ha ocurrido un error inesperado al grabar en la base de datos.</message>
+        </redirect>
+    </exception>
+    
+    
+    <exception class="javax.persistence.EntityExistsException">
+        <redirect view-id="/error.xhtml">
+            <message severity="warn">Registro Duplicado</message>
+        </redirect>
+    </exception>
+    
+    <exception class="javax.persistence.OptimisticLockException">
+        <end-conversation/>
+        <redirect view-id="/error.xhtml">
+            <message severity="warn">Another user changed the same data, please try again</message>
+        </redirect>
+    </exception>
+    
+    <exception class="org.jboss.seam.security.AuthorizationException">
+        <redirect view-id="/error.xhtml">
+            <message severity="error">No tiene acceso a este recurso</message>
+        </redirect>
+    </exception>
+  
+    <exception class="org.jboss.seam.security.NotLoggedInException">
+        <redirect view-id="/acceso_denegado.html">
+            <message severity="warn">#{messages['org.jboss.seam.NotLoggedIn']}</message>
+        </redirect>
+    </exception>
+    
+    <exception class="javax.faces.application.ViewExpiredException">
+        <redirect view-id="/error.xhtml">
+            <message severity="warn">Su sesion ha caducado, por favor ingrese nuevamente al sistema</message>
+        </redirect>
+    </exception>
+    
+    <exception class="org.jboss.seam.ConcurrentRequestTimeoutException">
+    	<redirect view-id="/error.xhtml">
+      		<message severity="warn">El servidor esta ocupado, por favor intentelo de nuevo mas tarde</message>
+      	</redirect>
+    </exception>
+     
+    <exception>
+        <redirect view-id="/error.xhtml">
+            <message severity="error">Por favor intente nuevamente</message>
+        </redirect>
+    </exception>
+    
+</pages>

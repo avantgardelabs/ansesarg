@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.0.xsd" login-required="true"
+      no-conversation-view-id="/entidadList.xhtml"
+      >
+
+   <begin-conversation join="true" flush-mode="MANUAL"/>
+
+   <action execute="#{entidadHome.wire}"/>
+   
+   <param name="entidadFrom"/>
+   <param name="entidadId" value="#{entidadHome.entidadId}"/>
+
+
+   <navigation from-action="#{entidadHome.persist}">
+      <rule>
+         <end-conversation/>
+         <redirect view-id="/entidad.xhtml"/>
+      </rule>
+   </navigation>
+   
+   <navigation from-action="#{entidadHome.update}">
+      <rule>
+         <end-conversation/>
+         <redirect view-id="/entidad.xhtml"/>
+      </rule>
+   </navigation>
+   
+   <navigation from-action="#{entidadHome.remove}">
+      <rule>
+         <end-conversation/>
+         <redirect view-id="/entidadList.xhtml"/>
+      </rule>
+   </navigation>
+   
+   <navigation from-action="#{entidadHome.cancel}">
+      <rule>
+         <end-conversation/>
+         <redirect view-id="/entidadList.xhtml"/>
+      </rule>
+   </navigation>
+</page>

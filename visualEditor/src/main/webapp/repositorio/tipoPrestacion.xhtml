@@ -1,0 +1,71 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                template="layout/template_asistente.xhtml">
+      
+      <ui:define name="titulo">
+	<h1>Tipo de Prestación</h1>
+		</ui:define>
+	
+		<ui:define name="ayuda">
+		<div class="ayuda">Seleccione el tipo de prestación sobre la cual 
+		desea crear la nueva regla<br />
+		<a href="" style="text-align: right; cursor: pointer;">ver mas >></a></div>
+		</ui:define>
+	  
+<ui:define name="body">
+    
+   	
+            <div id="cajaformulario">
+                <h:panelGrid columns="3" rowClasses="prop" columnClasses="name,value">
+                <h:outputText value="Prestación" />
+                
+               <rich:comboBox selectFirstOnUpdate="false"
+				defaultLabel="Buscar..">
+				<s:selectItems value="#{asistente.listaTipoPrestacion}" var="item"
+					label="#item.nombre"></s:selectItems>
+			</rich:comboBox>
+            	    
+                </h:panelGrid>
+            
+            </div>
+            
+            
+         
+           
+              
+</ui:define>
+
+
+<ui:define name="preview">
+<rich:dataTable width="300px;" style="overflow:scroll;"
+			var="paso" value="#">
+			<f:facet name="header">
+				<h:outputText value="Area de Preview" />
+			</f:facet>
+			
+			<rich:column title="Paso">
+				<h:outputText value="Tipo de Prestacion" />
+			</rich:column>
+			
+			
+
+		</rich:dataTable>
+		</ui:define>
+		
+		
+<ui:define name="botonera">
+ <h:outputLink value="nuevaFuncionEditor.seam" 
+		  styleClass="botonnavegacion">Nuevo Tipo</h:outputLink>
+		
+		<div id="botonera">
+		<h:commandButton type="submit" value="Grabar" />
+		    <h:outputLink value="requisitosProbatorios.seam" styleClass="botonnavegacion">Continuar</h:outputLink>
+			 </div>
+	</ui:define>
+</ui:composition>

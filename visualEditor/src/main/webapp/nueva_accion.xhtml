@@ -1,0 +1,89 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	 template="template.xhtml" >
+
+
+<ui:define name="titulo">
+		<h1>Nueva Acci&oacute;n</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Aqui va un texto
+		de ayuda<br />
+		<a href="" class="textoayuda">ver mas >></a></div>
+	</ui:define>
+
+	<ui:define name="body">
+
+		<div id="formulario">
+		
+	<h:panelGrid columns="3"
+			
+			>
+			<h:outputText value="Nombre" />
+			<h:inputText 
+				id="nombre"
+				style=" width : 459px;"  
+				value="#{accionesAction.accion.nombre}"
+				required="true"
+				requiredMessage="Debe indicar el nombre de la accion"/>
+				<h:message for="nombre" styleClass="errors" />			
+			
+			
+			<h:outputText value="Descripcion" />
+			<h:inputTextarea 
+				id="descripcion"
+				value="#{accionesAction.accion.descripcion}"  
+				style=" width : 459px;" 
+				required="true"
+				requiredMessage="Debe indicar al menos una descripcion breve"/>	
+				<h:message for="descripcion" styleClass="errors" />		
+			
+			
+			
+			<h:outputText value="Dominio " />
+			   <h:selectOneMenu 
+			   		id="dominio"
+			   		value="#{accionesAction.accion.dominio}"
+			   		required="true"
+			   		requiredMessage="Debe indicar el dominio de aplicacion de la accion">
+	           <s:selectItems 
+	            var="dominio" 
+	            value="#{editor.dominiosRegistrados}"
+	            label="#{dominio.descripcion}"	                                 
+	            >
+	            
+	            </s:selectItems>
+	            <s:convertEntity/>
+      		  	</h:selectOneMenu>
+      		 	<h:message for="dominio" styleClass="errors" />
+      		 
+      		  
+		</h:panelGrid>
+		
+		</div>
+
+ 
+
+
+		<div style="clear: both" />
+</ui:define>
+	<ui:define name="botonera">
+
+<h:commandButton action="#{editor.llamarNuevoDominio(contextPath)}" value="Nuevo Dominio" />
+
+		
+		<div id="botonera">
+  		
+			<h:commandButton action="#{accionesAction.guardarAccion()}" value="Grabar" />
+			</div>
+	</ui:define>
+
+</ui:composition>

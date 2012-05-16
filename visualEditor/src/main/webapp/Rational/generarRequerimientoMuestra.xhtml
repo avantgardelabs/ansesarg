@@ -1,0 +1,405 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j" template="template.xhtml">
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Pantalla de Requerimiento <br />
+		<a href="" class="textoayuda">ver mas >></a></div>
+	</ui:define>
+	<ui:define name="body">
+
+		<script type="text/javascript">
+			var curDt = new Date();
+	        function disablementFunction(day){
+	            if (day.isWeekend) return false;
+	            if (curDt==undefined){
+	                curDt = day.date.getDate;
+	            }
+	            if (curDt.getTime() - day.date.getTime() &lt; 0) return true; else return false;  
+	        }
+		</script>
+
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false"
+			resizeable="false" autosized="true" zindex="2000" top="500"
+			minWidth="350" width="300">
+			<span class="waitingPanel"> <h:graphicImage
+				value="/img/wait_bar.gif" style="vertical-align: middle;" /> <h:outputText
+				style="" value="#{messages['message.pleasewait']}" /> </span>
+		</rich:modalPanel>
+
+		<br />
+		<div id="formularioblanco"
+			style="height: 750px; overflow-y: auto; background-color: #FFFFFF;">
+
+
+		<rich:simpleTogglePanel label="General" switchType="client">
+
+
+			<h:panelGrid columns="2">
+				<h:outputText value="ID :" />
+				<h:outputText value="A designar" />
+				<h:outputText value="Estado :" />
+				<h:outputText value="Pre-Ingresado" />
+
+				<h:outputText value="Fecha solicitud :" />
+				<rich:calendar datePattern="dd/MM/yyyy" readonly="true"
+					disabled="true"
+					value="#{requerimientosAction.requerimiento.fechaSolicitud}"
+					id="fechaSol" />
+				<h:outputText value="Fecha estimada de resolucion :" />
+				<rich:calendar datePattern="dd/MM/yyyy"
+					value="#{requerimientosAction.requerimiento.fechaEstimadaResolucion}"
+					id="fechaEst" isDayEnabled="disablementFunction" />
+				<h:outputText value="Asunto :" />
+				<h:outputText value="#{requerimientosAction.requerimiento.asunto}"
+					styleClass="ancho500" />
+				<h:outputText value="Regla seleccionada :"
+					rendered="#{requerimientosAction.esMuestraDeDatos() or requerimientosAction.esPasajeDeReglas()}" />
+				<h:inputText id="reglaSelected"
+					value="#{requerimientosAction.nombreRegla}" styleClass="ancho200"
+					disabled="true"
+					rendered="#{requerimientosAction.esMuestraDeDatos() or requerimientosAction.esPasajeDeReglas()}" />
+			</h:panelGrid>
+		</rich:simpleTogglePanel> <rich:simpleTogglePanel label="Atributos seleccionados"
+			switchType="client"
+			rendered="#{requerimientosAction.esAnclajeDeAtributos()}">
+			<f:facet name="header">Atributos</f:facet>
+
+			<div class="results" id="tablaValores"><rich:dataTable
+				id="tablaAtributos" styleClass="rich-table70"
+				value="#{requerimientosAction.atributos}" rows="10" var="atr"
+				rowKeyVar="nroFila">
+
+				<rich:column>
+					<f:facet name="header">
+						<h:outputText value="Nombre" />
+					</f:facet>
+					<h:outputText value="#{atr.nombre}" />
+				</rich:column>
+
+				<rich:column>
+					<f:facet name="header">
+						<h:outputText value="Descripcion" />
+					</f:facet>
+					<h:outputText value="#{atr.descripcion}" />
+				</rich:column>
+
+				<rich:column>
+					<f:facet name="header">
+						<h:outputText value="Tipo de Dato" />
+					</f:facet>
+					<h:outputText value="#{atr.tipoDato}" />
+				</rich:column>
+
+				<rich:column styleClass="ancho70">
+					<f:facet name="header">
+						<h:outputText value="Tipo de Carga" />
+					</f:facet>
+					<h:graphicImage value="/img/bbdd_borrar.png" width="20px"
+						height="20px" title="Atributo Logico"
+						alt="El atributo es cargado por una regla"
+						rendered="#{not atr.persistible}" />
+
+					<h:graphicImage title="Atributo Fisico" alt="Atributo Fisico"
+						value="/img/bbdd_nuevo.png" width="20px" height="20px"
+						rendered="#{atr.persistible}" />
+				</rich:column>
+
+				<f:facet name="footer">
+					<rich:datascroller id="datascroller" />
+				</f:facet>
+			</rich:dataTable></div>
+
+
+		</rich:simpleTogglePanel> <rich:simpleTogglePanel label="Requerimiento" switchType="client"
+			styleClass="margen5">
+			<h:panelGrid columns="3">
+				<h:outputText value="Tipo de Requerimiento :" />
+
+				<h:selectOneMenu id="comboTipoReq" required="true"
+					defaultLabel="Seleccione una opcion"
+					value="#{requerimientosAction.requerimiento.tipoRequerimiento}">
+					<f:selectItems value="#{requerimientosAction.listaTipoReq}" />
+				</h:selectOneMenu>
+			</h:panelGrid>
+
+			<rich:listShuttle id="listas"
+				sourceValue="#{requerimientosAction.listaSistemasDisponibles}"
+				targetValue="#{requerimientosAction.sistemasSeleccionados}"
+				sourceCaptionLabel="Sistemas disponibles"
+				targetCaptionLabel="Sistemas seleccionados"
+				var="sistemaInformaticoReq" removeControlLabel="Quitar"
+				removeAllControlLabel="Quitar Todos"
+				copyAllControlLabel="Copiar todos" copyControlLabel="Copiar"
+				upControlLabel="Subir" downControlLabel="Bajar"
+				fastOrderControlsVisible="false" listsHeight="200"
+				targetListWidth="450" sourceListWidth="450">
+
+				<rich:column>
+					<h:outputText value="#{sistemaInformaticoReq}"></h:outputText>
+				</rich:column>
+
+
+
+			</rich:listShuttle>
+		</rich:simpleTogglePanel> <rich:simpleTogglePanel label="Detalle" switchType="client"
+			styleClass="margen5">
+
+			<h:panelGrid>
+				<h:outputText value=" Descripcion : ">
+					<span class="required">*</span>
+				</h:outputText>
+				<h:inputTextarea
+					value="#{requerimientosAction.requerimiento.descripcion}"
+					style="height: 50px;width: 1000px" />
+			</h:panelGrid>
+			<h:panelGrid>
+				<h:outputText value=" Justificacion : ">
+					<span class="required">*</span>
+				</h:outputText>
+				<h:inputTextarea
+					value="#{requerimientosAction.requerimiento.justificacion}"
+					style="height: 50px;width: 1000px" />
+				<h:outputText value="Observaciones :" />
+
+				<h:inputTextarea
+					value="#{requerimientosAction.requerimiento.observaciones}"
+					style="height: 50px;width: 1000px" />
+				<br />
+				<br />
+			</h:panelGrid>
+		</rich:simpleTogglePanel> <rich:simpleTogglePanel label="Datos SITACI" switchType="client"
+			styleClass="margen5" opened="true" id="datosSitaci">
+			<h:panelGrid columns="2" styleClass="centrado">
+				<s:decorate id="nroSitaciField" template="/layout/edit.xhtml">
+					<ui:define name="label">Nro SITACI</ui:define>
+					<h:inputText id="nroSitaci"
+						value="#{requerimientosAction.registroSitaciEditando.nroSitaci}" >
+						<a4j:support event="onblur" reRender="nroSitaciField"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:inputText>
+				</s:decorate>
+				<s:decorate id="longitudField" template="/layout/edit.xhtml">
+					<ui:define name="label">Longitud</ui:define>
+					<h:inputText id="longitud"
+						value="#{requerimientosAction.registroSitaciEditando.longitud}" validatorMessage="Debe ingresar solo numeros enteros">
+						<a4j:support event="onblur" reRender="longitudField"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:inputText>
+				</s:decorate>
+				<s:decorate id="dnsOrigenField" template="/layout/edit.xhtml">
+					<ui:define name="label">DNS Origen</ui:define>
+					<h:inputText id="dnsOrigen"
+						value="#{requerimientosAction.registroSitaciEditando.dnsOrigen}">
+						<a4j:support event="onblur" reRender="dnsOrigenField"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:inputText>
+				</s:decorate>
+				<s:decorate id="cantRegField" template="/layout/edit.xhtml">
+					<ui:define name="label">Cant. Reg.</ui:define>
+					<h:inputText id="cantReg"
+						value="#{requerimientosAction.registroSitaciEditando.cantReg}"  validatorMessage="Debe ingresar solo numeros enteros">
+						<a4j:support event="onblur" reRender="cantRegField"
+							bypassUpdates="true" ajaxSingle="true" />
+					</h:inputText>
+				</s:decorate>
+
+
+			</h:panelGrid>
+			<br />
+			<s:div styleClass="centrado">
+				<h:outputText value="Descripcion" style="font-weight: bolder;" />
+
+				<h:inputTextarea label="Descripcion"
+					value="#{requerimientosAction.registroSitaciEditando.descripcion}"
+					rows="3" cols="150">
+					<a4j:support event="onblur" reRender="nombreField"
+						bypassUpdates="true" ajaxSingle="true" />
+				</h:inputTextarea>
+				<a4j:commandButton id="agregarSitaci"
+					action="#{requerimientosAction.guardarRegistroSitaci()}"
+					value="Agregar" reRender="datosSitaci" />
+
+			</s:div>
+
+			<rich:dataTable id="registrosAgregados"
+				style="float: right; margin-top: 1%;" var="reg"
+				value="#{requerimientosAction.registrosSitaci}"
+				rowKeyVar="numeroFila">
+				<f:facet name="header">
+					<rich:columnGroup>
+						<rich:column>
+							<h:outputText value="Nro SITACI" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="DNS Origen" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="Longitud" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="Cant. Reg." />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="Descripcion" />
+						</rich:column>
+						<rich:column>
+							<h:outputText value="Acciones" />
+						</rich:column>
+					</rich:columnGroup>
+				</f:facet>
+				<rich:column>
+					<h:outputText value="#{reg.nroSitaci}" />
+				</rich:column>
+				<rich:column>
+					<h:outputText value="#{reg.dnsOrigen}" />
+				</rich:column>
+				<rich:column>
+					<h:outputText value="#{reg.longitud}" />
+				</rich:column>
+				<rich:column>
+					<h:outputText value="#{reg.cantReg}" />
+				</rich:column>
+				<rich:column>
+					<h:outputText value="#{reg.descripcion}" />
+				</rich:column>
+				<rich:column>
+					<a4j:commandLink ajaxSingle="true" id="editlink"
+						oncomplete="#{rich:component('editPanel')}.show()">
+						<h:graphicImage value="/img/editar.png" style="border:0" />
+						<f:setPropertyActionListener value="#{reg}"
+							target="#{requerimientosAction.registroSitaciParaEditar}" />
+					</a4j:commandLink>
+					#{' '}
+					<rich:toolTip for="editlink" value="Editar" />
+					<a4j:commandLink ajaxSingle="true" id="deletelink"
+						oncomplete="#{rich:component('deletePanel')}.show()"
+						reRender="registrosAgregados">
+						<h:graphicImage value="/img/cancel.png" style="border:0" />
+						<f:setPropertyActionListener value="#{reg}"
+							target="#{requerimientosAction.registroSitaciParaEditar}" />
+					</a4j:commandLink>
+					<rich:toolTip for="deletelink" value="Borrar" />
+
+				</rich:column>
+			</rich:dataTable>
+
+			<rich:modalPanel id="editPanel" autosized="true" width="450">
+				<f:facet name="header">
+					<h:outputText value="Editar Registro SITACI" />
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/img/close.png" id="hidelink"
+							styleClass="hidelink" />
+						<rich:componentControl for="editPanel" attachTo="hidelink"
+							operation="hide" event="onclick" />
+					</h:panelGroup>
+				</f:facet>
+				<rich:messages style="color:red;"></rich:messages>
+				<h:panelGrid columns="1">
+					<a4j:outputPanel ajaxRendered="true">
+						<h:panelGrid columns="2" styleClass="centrado">
+							<s:decorate id="nroSitaciFieldEditar"
+								template="/layout/edit.xhtml">
+								<ui:define name="label">Nro SITACI</ui:define>
+								<h:inputText id="nroSitaciEditar"
+									value="#{requerimientosAction.registroSitaciParaEditar.nroSitaci}">
+									<a4j:support event="onblur" reRender="nroSitaciFieldEditar"
+										bypassUpdates="true" ajaxSingle="true"  focus="longitudEditar"/>
+								</h:inputText>
+							</s:decorate>
+							<s:decorate id="longitudFieldEditar"
+								template="/layout/edit.xhtml">
+								<ui:define name="label">Longitud</ui:define>
+								<h:inputText id="longitudEditar"
+									value="#{requerimientosAction.registroSitaciParaEditar.longitud}">
+									<a4j:support event="onblur" reRender="longitudFieldEditar"
+										bypassUpdates="true" ajaxSingle="true" focus="dnsOrigenEditar"/>
+								</h:inputText>
+							</s:decorate>
+							<s:decorate id="dnsOrigenFieldEditar"
+								template="/layout/edit.xhtml">
+								<ui:define name="label">DNS Origen</ui:define>
+								<h:inputText id="dnsOrigenEditar"
+									value="#{requerimientosAction.registroSitaciParaEditar.dnsOrigen}">
+									<a4j:support event="onblur" reRender="dnsOrigenFieldEditar"
+										bypassUpdates="true" ajaxSingle="true" focus="cantRegEditar"/>
+								</h:inputText>
+							</s:decorate>
+							<s:decorate id="cantRegFieldEditar" template="/layout/edit.xhtml">
+								<ui:define name="label">Cant. Reg.</ui:define>
+								<h:inputText id="cantRegEditar"
+									value="#{requerimientosAction.registroSitaciParaEditar.cantReg}">
+									<a4j:support event="onblur" reRender="cantRegFieldEditar"
+										bypassUpdates="true" ajaxSingle="true" focus="descripcionEditarField" />
+								</h:inputText>
+							</s:decorate>
+						</h:panelGrid>
+						<br />
+						<s:div styleClass="centrado" id="descripcionSitaciEditar">
+							<h:outputText value="Descripcion" />
+
+							<h:inputTextarea label="Descripcion" id="descripcionEditarField"
+								value="#{requerimientosAction.registroSitaciParaEditar.descripcion}"
+								rows="3" cols="150">
+								<a4j:support event="onblur" reRender="descripcionSitaciEditar"
+									bypassUpdates="true" ajaxSingle="true" focus="botonGuardar"/>
+							</h:inputTextarea>
+
+						</s:div>
+					</a4j:outputPanel>
+					<a4j:commandButton value="Guardar" id="botonGuardar"
+						action="#{requerimientosAction.guardarRegistroEditado()}"
+						reRender="registrosAgregados"
+						oncomplete="if (#{facesContext.maximumSeverity==null}) #{rich:component('editPanel')}.hide();" />
+				</h:panelGrid>
+			</rich:modalPanel>
+			<rich:modalPanel id="deletePanel" autosized="true" width="200">
+				<f:facet name="header">
+					<h:outputText value="Desea borrar este registro?"
+						style="padding-right:15px;" />
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/img/close.png" styleClass="hidelink"
+							id="hidelink2" />
+						<rich:componentControl for="deletePanel" attachTo="hidelink2"
+							operation="hide" event="onclick" />
+					</h:panelGroup>
+				</f:facet>
+				<table width="100%">
+					<tbody>
+						<tr>
+							<td align="center" width="50%"><a4j:commandButton value="Si"
+								ajaxSingle="true"
+								action="#{requerimientosAction.eliminarRegistroSitaci()}"
+								oncomplete="#{rich:component('deletePanel')}.hide();"
+								reRender="registrosAgregados" /></td>
+							<td align="center" width="50%"><a4j:commandButton
+								value="Cancelar"
+								onclick="#{rich:component('deletePanel')}.hide();return false;" />
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</rich:modalPanel>
+
+		</rich:simpleTogglePanel></div>
+	</ui:define>
+	<ui:define name="botonera">
+
+		<h:commandButton value="Enviar"
+			action="#{requerimientosAction.enviarReqByGeneratedXML()}"
+			styleClass="botonnavegacion" style="color:#ffffff;" />
+
+	</ui:define>
+
+</ui:composition>

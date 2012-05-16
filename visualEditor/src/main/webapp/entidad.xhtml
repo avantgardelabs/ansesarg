@@ -1,0 +1,141 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                template= "/layout/template.xhtml">
+
+<ui:define name="titulo">
+		<h1>Entidad</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Pantalla principal de administracion de Entidad<br />
+		<a href="" class="textoayuda">ver mas >></a></div>
+	</ui:define>
+	                       
+<ui:define name="body">
+    
+    <![CDATA[<h:messages globalOnly="true" styleClass="message" id="globalMessages"/>]]>
+    
+    <rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+		<span class="waitingPanel">
+		<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+		<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+		</span>
+	</rich:modalPanel>
+    
+   	<div id="formulario">
+		
+	<h:panelGrid columns="3" styleClass="rich-table70" style="FONT-FAMILY: 'AlBattar';">
+    
+    <rich:panel>
+        <f:facet name="header">Detalle de Entidad</f:facet>
+
+		<s:decorate id="nombre" template="/layout/display.xhtml">
+            <ui:define name="label">Nombre</ui:define>
+            <h:outputText value="#{entidadHome.instance.nombre}"/>
+        </s:decorate>
+  
+  		<s:decorate id="descripcion" template="/layout/display.xhtml">
+            <ui:define name="label">Descripcion</ui:define>
+            <h:outputText value="#{entidadHome.instance.descripcion}"/>
+        </s:decorate>
+  
+  
+        <div style="clear:both"/>
+        
+        
+     
+		<rich:dataTable 
+		styleClass="rich-table99"
+			value="#{entidadHome.instance.atributos}"
+			var="atr" rows="10"
+		>
+			
+			<rich:column width="20px">
+				<h:graphicImage value="/img/aviso.png" width="20px"
+					height="20px" title="El atributo no posee referencias a datos"
+					alt="El atributo no posee referencias a datos" rendered="#{not entidadHome.esAnclado(atr)}"/>
+				<h:graphicImage value="/img/ok.png" width="20px"
+					height="20px" title="El atributo posee referencias a datos"
+					alt="El atributo posee referencias a datos" rendered="#{entidadHome.esAnclado(atr)}"/>
+			</rich:column>
+			
+			<rich:column >
+			<f:facet name="header">
+			<h:outputText value="Nombre" />
+			</f:facet>
+			<h:outputText value="#{atr.nombre}"  />
+			</rich:column>
+			
+			<rich:column>
+			<f:facet name="header">
+			<h:outputText value="Descripcion" />
+			</f:facet>
+			<h:outputText value="#{atr.descripcion}" />
+			</rich:column>
+			
+			<rich:column>
+			<f:facet name="header">
+			<h:outputText value="Tipo de Dato" />
+			</f:facet>
+			<h:outputText value="#{atr.tipoDato}" />
+			</rich:column>
+			
+			<rich:column width="150px;">
+			<f:facet name="header">Tipo de Carga</f:facet>
+			<h:graphicImage 
+				value="/img/bbdd_borrar.png" 
+				width="20px" height="20px" 
+				title="Atributo Logico"
+				alt="Atributo Logico"
+				rendered="#{atr.tipoCarga == 'LOGICO'}"  />
+				
+				
+			<h:graphicImage 
+			title="Atributo Fisico"
+				alt="Atributo Fisico"
+			value="/img/bbdd_nuevo.png" width="20px" height="20px" rendered="#{atr.tipoCarga == 'FISICO'}" />
+			
+			
+			</rich:column>
+			
+			<f:facet name="footer">
+							<rich:datascroller id="datascroller" />
+			</f:facet>
+						
+		</rich:dataTable>
+		
+         
+        
+        
+    </rich:panel>
+    
+    </h:panelGrid>
+		
+	</div>
+    
+    <div class="actionButtons">      
+
+        <s:button view="/entidadEdit.seam" 
+                    id="edit" 
+                 value="Editar"
+                 onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+
+        <s:button view="/#{empty entidadFrom ? 'entidadList' : entidadFrom}.xhtml"
+                    id="done"
+                 value="Aceptar"
+                 onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+        
+        
+
+    </div>
+
+</ui:define>
+
+</ui:composition>

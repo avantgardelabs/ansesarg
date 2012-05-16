@@ -1,0 +1,152 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j" template="template.xhtml">
+
+
+	<ui:define name="titulo">
+		<h1>Nueva Condicion</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Aqui va un texto de ayuda<br />
+		<a href="" class="textoayuda">ver mas >></a></div>
+	</ui:define>
+
+	<ui:define name="body">
+
+		<div id="formulario"><h:panelGrid columns="3">
+			<h:outputText value="Nombre" />
+			<h:inputText id="nombre" style=" width : 275px;"
+				value="#{condicion.nombre}" 
+				requiredMessage="Debe indicar el nombre de la condicion" />
+			<h:message for="nombre" styleClass="errors" />
+
+
+			<h:outputText value="Descripcion" />
+			<h:inputTextarea id="descripcion"
+				value="#{condicion.descripcion}"
+				style=" width : 273px;" 
+				requiredMessage="Debe indicar al menos una descripcion breve de la condicion" />
+			<h:message for="descripcion" styleClass="errors" />
+
+			<h:outputText value="Dominio " />
+			<h:selectOneMenu id="dominio" style=" width : 275px;"
+				value="#{condicion.dominio}" 
+				requiredMessage="Debe indciar el dominio de aplicacion de la condicion">
+				<s:selectItems var="dominio" value="#{editor.dominiosRegistrados}"
+					label="#{dominio.descripcion}">
+
+				</s:selectItems>
+				<s:convertEntity />
+			</h:selectOneMenu>
+			<h:message for="dominio" styleClass="errors" />
+
+
+			<h:outputText value="Entidad " />
+
+
+
+			<h:selectOneMenu 
+				
+				value="#{entidad}" 
+				style=" width : 275px;">
+
+				<s:selectItems
+					noSelectionLabel="Indique la entidad de busqueda..."
+					var="entidad" 
+					value="#{entidades}"
+					label="#{entidad.nombre}">
+
+				</s:selectItems>
+
+				<a4j:support event="onchange"
+					action="#{condicionAction.filtrarHechos()}" reRender="listaHechos"
+					ajaxSingle="true" />
+
+				<s:convertEntity />
+			</h:selectOneMenu>
+
+
+			<h:outputText value=" " />
+
+
+			<h:outputText value="Hecho " />
+
+			<h:selectOneMenu value="#{condicion.hecho}"
+				style=" width : 275px;"
+				id="listaHechos">
+
+				<s:selectItems var="h" value="#{condicionAction.hechos}"
+					label="#{h.nombre}">
+
+				</s:selectItems>
+				<s:convertEntity />
+			</h:selectOneMenu>
+
+
+			<h:outputText value=" " />
+
+			<h:outputText value="Valor posible" />
+			<h:inputText value="#{literal.nombre}"
+				style=" width : 272px;" />
+
+
+			<a4j:commandButton action="#{condicionAction.guardarLiteral(literal)}"
+				value="Agregar" reRender="tablaValores" rendered="true" />
+
+
+
+			<h:outputText value="Valores Seleccionados" />
+			<rich:dataTable id="tablaValores"
+				value="#{condicion.literales}" var="valorDeLista">
+
+				<rich:column style="width:16px">
+
+
+					<a4j:commandLink
+						action="#{condicionAction.eliminarLiteral(valorDeLista)}"
+						reRender="tablaValores">
+						<h:graphicImage value="../img/bin_closed.png" styleClass="pic"
+							title="Quitar" alt="Quitar" />
+					</a4j:commandLink>
+
+
+				</rich:column>
+
+
+
+				<rich:column>
+					<f:facet name="header">
+						<h:outputText value="Valor" />
+					</f:facet>
+					<h:outputText value="#{valorDeLista.nombre}" />
+				</rich:column>
+			</rich:dataTable>
+
+
+		</h:panelGrid></div>
+
+
+
+
+		<div style="clear: both" />
+	</ui:define>
+	<ui:define name="botonera">
+		<div id="botonera"><h:commandButton
+			action="#{condicionAction.guardarCondicion()}" value="Grabar" />
+			
+			<h:commandButton
+			action="#{condicionAction.cancelar()}" value="Cancelar" />
+			
+			</div>
+	</ui:define>
+
+</ui:composition>
+

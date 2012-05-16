@@ -1,0 +1,88 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich" 
+	template="layout/template.xhtml">
+
+
+	<ui:define name="titulo">
+		<h1>Busqueda</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda" style="margin-bottom: 5px;">Aqui va un texto
+		de ayuda<br />
+		<a href="" style="text-align: right; cursor: pointer;">ver mas >></a></div>
+	</ui:define>
+
+	<ui:define name="body">
+		<div id="formulario">
+		<h:panelGrid columns="4">
+		<h3>Ambito de Aplicacion</h3>
+		<h:outputText  />
+		<h3>Instrumento Normativo</h3>
+		
+		<h:outputText  />
+		 <rich:pickList
+			removeControlLabel="Quitar"
+                 	removeAllControlLabel="Quitar Todos"
+                 	copyAllControlLabel="Copiar todos"
+                 	copyControlLabel="Copiar"
+                 
+                 	>
+            <f:selectItem itemLabel="Opcion 1" itemValue="1"/>
+            <f:selectItem itemLabel="Opcion 2" itemValue="2"/>
+            <f:selectItem itemLabel="Opcion 3" itemValue="3"/>
+            <f:selectItem itemLabel="Opcion 4" itemValue="4"/>
+            <f:selectItem itemLabel="Opcion 5" itemValue="5"/>
+        </rich:pickList>
+        
+       <h:outputText  />
+				
+			<rich:pickList
+			removeControlLabel="Quitar"
+                 	removeAllControlLabel="Quitar Todos"
+                 	copyAllControlLabel="Copiar todos"
+                 	copyControlLabel="Copiar"
+                 	
+                 	 >
+            <f:selectItem itemLabel="Opcion 1" itemValue="1"/>
+            <f:selectItem itemLabel="Opcion 2" itemValue="2"/>
+            <f:selectItem itemLabel="Opcion 3" itemValue="3"/>
+            <f:selectItem itemLabel="Opcion 4" itemValue="4"/>
+            <f:selectItem itemLabel="Opcion 5" itemValue="5"/>
+        </rich:pickList>
+        <h:outputText  />
+</h:panelGrid>
+	<h:panelGrid columns="2">
+			<h:outputText value="Frase Exacta" />
+			<h:inputText value="" styleClass="busqueda"/>
+			<h:outputText value="Alguna de las palabras" />
+			<h:inputText value="" styleClass="busqueda"/>
+			<h:outputText value="Sin palabras" />
+			<h:inputText value="" styleClass="busqueda"/>
+			<h:outputText value="Todas las palabras" />
+			<h:inputText value="" styleClass="busqueda"/>
+			
+
+
+		</h:panelGrid>
+		</div>
+
+
+	</ui:define>
+
+	<ui:define name="botonera">
+
+		<div id="botonera"><h:commandButton value="Buscar" />
+		<h:outputLink
+			value="busqueda_avanzada.seam" 
+			styleClass="botonnavegacion">Busqueda Avanzada</h:outputLink>
+		</div>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,68 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	template="layout/template_asistente.xhtml">
+
+
+
+	<ui:define name="titulo">
+		<h1>Régimen de aportes</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Seleccione el régimen de aportes para la nueva regla. Si el régimen buscado no se 
+		encuentra en la lista, puede ingresarlo presionando el boton <b>"Agregar"</b><br />
+		<a href="" style="text-align: right; cursor: pointer;">ver mas >></a></div>
+	</ui:define>
+
+	<ui:define name="body">
+
+
+		<div id="cajaformulario"><h:panelGrid columns="3"
+			rowClasses="prop" columnClasses="name,value">
+			<h:outputText value="Tipo de regimen" />
+			<rich:comboBox selectFirstOnUpdate="false" defaultLabel="Buscar..">
+				<s:selectItems value="#{asistente.listaRegimenAportes}" var="item"
+					label="#item.nombre"></s:selectItems>
+			</rich:comboBox>
+		</h:panelGrid></div>
+
+		<div style="clear: both" />
+	</ui:define>
+
+
+<ui:define name="preview">
+<rich:dataTable width="300px;" style="overflow:scroll;"
+			var="paso" value="#">
+			<f:facet name="header">
+				<h:outputText value="Area de Preview" />
+			</f:facet>
+			
+			<rich:column title="Paso">
+				<h:outputText value="Regimen de aportes" />
+			</rich:column>
+			
+			
+
+		</rich:dataTable>
+		</ui:define>
+		
+		
+		
+		
+	<ui:define name="botonera">
+		
+		  <h:outputLink value="editorRegimenAportes.seam" 
+		  styleClass="botonnavegacion">Agregar</h:outputLink>
+		<div id="botonera"><h:commandButton value="Grabar" />
+		 <h:commandButton
+			type="submit" value="Continuar"
+			action="#{asistente.establecerPaso('REGIMENAPORTE')}" /></div>
+	</ui:define>
+
+</ui:composition>

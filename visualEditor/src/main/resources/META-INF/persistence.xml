@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Persistence deployment descriptor for dev profile -->
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" 
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd" 
+             version="1.0">
+             
+   <persistence-unit name="asistente_reglas" transaction-type="JTA">
+      <provider>org.hibernate.ejb.HibernatePersistence</provider>
+      <jta-data-source>java:/asistente_reglasDS</jta-data-source>
+      
+      
+      <!-- 
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.Accion</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.AccionActivaRegla</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.AccionModificaHecho</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.AccionModificaHechoFormula</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.AccionModificaHechoFuncion</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.AccionModificaHechoLiteral</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.AccionReglaPseudocodigo</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.Ambito</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.Clausula</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.Condicion</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.CondicionAtributo</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.CondicionFormula</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.CondicionReglaPseudocodigo</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.Descisor</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.Dominio</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.EntidadFila</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.Escenario</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.EscenarioFila</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.FilaTablaDecision</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.Formula</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.Funcion</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.Incognita</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.Instrumento</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.Literal</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.NodoCondicionReglaPseudocodigo</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.Parametro</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.Regla</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.ReglaFilaPseudocodigo</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.ReglaPseudocodigo</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.SubRegla</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.TablaDecision</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.Universo</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.Usuario</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.ValoresSimples</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.ValorParametro</class>
+      
+     
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.modelosemantico.Atributo</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.modelosemantico.Entidad</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.entity.modelosemantico.Relacion</class>
+      
+      
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.seam.action.cq.AnclajeRequerimientoInformatico</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.seam.action.cq.MuestraRequerimientoInformatico</class>
+      <class>ar.gob.anses.prissa.mi.asistente_reglas.seam.action.cq.RequerimientoInformatico</class>
+       -->
+      
+      <properties>      	  	
+         <property name="hibernate.hbm2ddl.auto" value="update"/>         
+         <property name="hibernate.show_sql" value="true"/>
+         <property name="hibernate.format_sql" value="true"/>
+         
+         
+         <property name="hibernate.cache.use_second_level_cache" value="false"/>
+         <property name="hibernate.transaction.manager_lookup_class" value="org.hibernate.transaction.JBossTransactionManagerLookup"/> 	 	  		  		  
+      </properties>
+   </persistence-unit>
+  
+  <persistence-unit name="mmx" transaction-type="JTA">
+      <provider>org.hibernate.ejb.HibernatePersistence</provider>
+      <jta-data-source>java:/mmxDS</jta-data-source>
+      <properties>      	  	
+         <property name="hibernate.hbm2ddl.auto" value="update"/>         
+         <property name="hibernate.show_sql" value="true"/>
+         <property name="hibernate.format_sql" value="true"/>
+         <!-- <property name="hibernate.dialect" value="com.metamatrix.hibernate.MetaMatrixDialect"/> -->
+         <property name="hibernate.cache.use_second_level_cache" value="false"/>
+         <property name="hibernate.transaction.manager_lookup_class" value="org.hibernate.transaction.JBossTransactionManagerLookup"/> 	 	  		  		  
+      </properties>
+   </persistence-unit>
+   
+  <!-- 
+   <persistence-unit name="mmx" transaction-type="JTA">
+      <provider>org.hibernate.ejb.HibernatePersistence</provider>
+      <jta-data-source>java:/mmxDS</jta-data-source>
+      <properties>                      
+         <property name="hibernate.hbm2ddl.auto" value="none"/>         
+         <property name="hibernate.show_sql" value="true"/>
+         <property name="hibernate.format_sql" value="true"/>
+         <property name="hibernate.dialect" value="com.metamatrix.hibernate.MetaMatrixDialect"/>
+         <property name="hibernate.cache.use_second_level_cache" value="false"/>
+         <property name="hibernate.transaction.manager_lookup_class" value="org.hibernate.transaction.JBossTransactionManagerLookup"/>                                            
+      </properties>
+   </persistence-unit>
+    --> 
+    
+</persistence>
+

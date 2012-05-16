@@ -1,0 +1,221 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	 template="layout/template.xhtml" >
+
+
+<ui:define name="titulo">
+		<h1>Paso 2 de 4 - Parametros</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Aqui va un texto
+		de ayuda<br />
+		<a href="" class="textoayuda">ver mas >></a></div>
+	</ui:define>
+
+	<ui:define name="body">
+	
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+			<span class="waitingPanel">
+			<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+			<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+			</span>
+		</rich:modalPanel>
+	
+		<div id="formularioblanco" style="FONT-SIZE: xx-small;">
+		<rich:panel>
+		<f:facet name="header">
+		Agregar Parametro</f:facet>
+		<h:panelGrid columns="2">
+		<h:outputText value="Nombre" />
+		<h:inputText id="txtNombreParametro" value="#{funcionHome.parametro.nombre}" styleClass="ancho300">
+			<a4j:support event="onblur"
+					reRender="txtNombreParametro"
+					ajaxSingle="true"
+					action="#{funcionHome.setModificado(true)}"
+					/>
+		</h:inputText>
+		<h:outputText value="Descripcion" />
+		<h:inputTextarea id="txtDescriParametro" value="#{funcionHome.parametro.descripcion}" styleClass="ancho300" >
+			<a4j:support event="onblur"
+					reRender="txtDescriParametro"
+					ajaxSingle="true" 
+					action="#{funcionHome.setModificado(true)}"
+					/>
+		</h:inputTextarea>
+		<h:outputText value="Entidad" />
+		<h:selectOneMenu 
+			  		id="idEntidad"
+			   		value="#{funcionHome.parametro.entidad}"
+			   		styleClass="ancho300"
+	   		  		onblur="_modificado = true"
+	   		  		
+			   		>
+			  
+			<s:selectItems 
+						var="entidad" 
+		noSelectionLabel="Indique una entidad..."
+		           value="#{entidadList.myResultList}"
+		           label="#{entidad.nombre}"                                 
+								>
+
+           </s:selectItems>
+			<a4j:support event="onchange"
+					reRender="cancelEdit, listaAtributos"
+					ajaxSingle="true" 
+					action="#{funcionHome.setModificado(true)}"
+					/>
+					
+			<s:convertEntity />		 
+      		</h:selectOneMenu>
+          
+		<h:outputText value="Atributo" />
+			  <h:selectOneMenu 
+			  		onblur="_modificado=true"
+			   		id="listaAtributos"
+			   		value="#{funcionHome.parametro.atributo}"
+			   		styleClass="ancho300"
+			   		immediate="true"
+			   		>
+			   		
+	           <s:selectItems 
+				noSelectionLabel="Indique El atributo para la condicion..."
+	            var="atributo" 
+	            value="#{funcionHome.atributos}"
+	            label="#{atributo.nombre}"	                                 
+	            >
+	           </s:selectItems>
+	           	<s:convertEntity />
+	           	
+	           	<a4j:support event="onchange"
+					reRender="cancelEdit, listaAtributos"
+					ajaxSingle="true" 
+					action="#{funcionHome.setModificado(true)}"
+					/>
+			   </h:selectOneMenu>
+				
+				
+		 <h:commandButton
+			styleClass="botonnavegacion" style="color:#ffffff;"
+			action="#{funcionHome.agregarParametro()}"
+			value="Agregar" 
+			onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+		 />
+			
+		
+		</h:panelGrid>
+		<rich:panel>
+		<f:facet name="header">
+		Parametros de Entrada</f:facet>
+		 <rich:dataTable id="parametrosList" 
+	           styleClass="margen5"    
+	           rows="10"
+	           value="#{funcionHome.instance.parametros}"
+	           var="_parametro"
+	           >
+	
+	        
+	        <h:column>
+	            <f:facet name="header">
+	               <h:outputText value="Nombre" />
+	            </f:facet>
+	            <h:outputText value="#{_parametro.nombre}" />
+	        </h:column>
+	
+	        <h:column>
+	            <f:facet name="header">
+	                <h:outputText value="Descripcion" />
+	            </f:facet>
+	           <h:outputText value="#{_parametro.descripcion}" />
+	        </h:column>
+	        
+	        <h:column>
+	            <f:facet name="header">
+	                <h:outputText value="Entidad/Atributo" />
+	            </f:facet>
+	            <h:outputText value="#{_parametro.atributo.entidad.nombre}.#{_parametro.atributo.nombre}" />
+	        </h:column>
+	        
+	        <h:column>
+	            <f:facet name="header">
+	                <h:outputText value="Tipo de Dato" />
+	            </f:facet>
+	            <h:outputText value="#{_parametro.atributo.tipoDato}" />
+	        </h:column>
+	 
+	        <rich:column styleClass="ancho150">
+	            <f:facet name="header">Accion</f:facet>
+	        
+	        
+	        <h:commandLink id="removeLiteral"
+			onclick="if(!confirm('Se eliminara un parametro y no podra recuperarlo, esta seguro que desea Continuar?')) {return false;} else {Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})}"
+			action="#{funcionHome.eliminarParametro(_parametro)}" styleClass="hover"
+			>
+			<h:graphicImage value="/img/bin_closed.png"
+				title="#{messages['buttons.eliminar']}" alt="#{messages['buttons.eliminar']}"  styleClass="img" />
+	        <h:outputText value="Eliminar" />
+			</h:commandLink>   
+	           
+	        </rich:column>
+	        
+	        <f:facet name="footer">
+							<rich:datascroller id="datascroller" />
+			</f:facet>
+			
+	    </rich:dataTable>
+	
+		</rich:panel>
+		</rich:panel>
+		
+	
+		<div style="clear: both" />
+</div>
+
+	</ui:define>
+	<ui:define name="botonera">
+		
+		<div id="botonera">
+			
+			<h:commandButton
+				id="atras"
+				action="#{funcionHome.atras()}" 
+				value=" Atras" 
+				styleClass="botoncancelar" 
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+				/>	
+		
+			<h:commandButton
+				id="cancelEdit"
+				propagation="end"
+				action="#{funcionHome.exit()}" 
+				view="/funcionList.xhtml" 
+				value="Cancelar" 
+				styleClass="botoncancelar" 
+				immediate="true"
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+			>
+				<a4j:support 
+					event="onclick"
+					onsubmit="javascript:return confirm('Esta seguro que desea cancelar la operacion?')"
+				/>
+			</h:commandButton>
+				
+			
+		 <h:commandButton value="Continuar >>"
+		 	action="#{funcionHome.irAPaso3()}"
+			styleClass="botonnavegacion" style="color:#ffffff;" 
+			onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+
+		
+		</div>
+	</ui:define>
+</ui:composition>
+

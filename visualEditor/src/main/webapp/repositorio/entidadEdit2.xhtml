@@ -1,0 +1,258 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:s="http://jboss.com/products/seam/taglib"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:a="http://richfaces.org/a4j"
+  xmlns:rich="http://richfaces.org/rich"
+  template="layout/template.xhtml">
+
+<ui:define name="body">
+
+  <rich:modalPanel id="atributoEditWizard"
+      minHeight="200"
+      minWidth="600"
+      autosized="true">
+      
+      <f:facet name="header"><h:outputText value="Editar Atributo..." /></f:facet>
+      <f:facet name="controls">
+       <h:graphicImage value="/img/cancel.png"
+            styleClass="linkImage"
+               onclick="#{rich:component('atributoEditWizard')}.hide()" />
+      </f:facet>
+     
+   <h:form id="atributoEditForm" styleClass="edit">
+
+ 		<h:messages/>
+
+          <s:decorate id="atributoNombreField" template="layout/edit.xhtml">
+          <ui:define name="label">Nombre del atributo</ui:define>      
+              <h:inputText id="atributoNombre"
+                     	required="true"
+                        value="#{currentlySelectedAtributo.nombre}">
+                  <s:validate/>      
+                  <a:support event="onblur" reRender="atributoNombreField" bypassUpdates="true" ajaxSingle="true" /> 
+              </h:inputText>
+          </s:decorate>
+
+          <s:decorate id="atributoDescriptionField" template="layout/edit.xhtml">
+            <ui:define name="label">Descricion Atributo</ui:define>   
+              <h:inputText id="atributoDescription"
+                     required="true"
+                         size="100"
+                    maxlength="100"
+                        value="#{currentlySelectedAtributo.descripcion}">
+                  <a:support event="onblur" reRender="atributoDescriptionField" bypassUpdates="true" ajaxSingle="true"/>
+              </h:inputText>
+          </s:decorate>
+          
+         
+          <s:decorate id="atributoTipoDatoField" template="layout/edit.xhtml">
+            <ui:define name="label">Tipo de Dato</ui:define>   
+         			    <rich:comboBox value="#{currentlySelectedAtributo.tipoDato}"
+						id="tipoDato" enableManualInput="false"
+						required="true"
+						requiredMessage="El tipo de dato es obligatorio">
+						<f:selectItem itemValue="TEXTO" itemLabel="Texto" />
+						<f:selectItem itemValue="NUMERO" itemLabel="Numeros" />
+						<f:selectItem itemValue="FECHA" itemLabel="Fecha" />
+						<f:selectItem itemValue="BOOLEANO" itemLabel="Booleano" />
+					</rich:comboBox>
+                  <a:support  event="onblur" reRender="atributoTipoDatoField" bypassUpdates="true" ajaxSingle="true"/>
+          </s:decorate>
+         
+         
+           <s:decorate id="atributoPorReglaField" template="layout/edit.xhtml">
+            <ui:define name="label">Se graba en la Base?</ui:define>   
+				<h:selectBooleanCheckbox
+						value="#{currentlySelectedAtributo.persistible}" />
+                  <a:support event="onblur" reRender="atributoPorRegla" bypassUpdates="true" ajaxSingle="true"/>
+         
+          </s:decorate>
+
+	       <div class="actionButtons" style="clear:both">
+	
+	        <a:commandButton  id="atributoEditMPClose"
+	         onclick="#{rich:component('atributoEditWizard')}.hide()"
+	         reRender="atributoListTable"
+	         value="Cerrar" />
+	
+	        <a:commandButton id="atributoEditMPCancel"
+	         onclick="#{rich:component('atributoEditWizard')}.hide()"
+	         reRender="atributoListTable"
+	         value="Cancelar" />
+	      
+	       </div>
+      </h:form>
+
+  </rich:modalPanel>
+
+
+
+  <h:form id="master" styleClass="edit">
+
+      <rich:panel>
+          <f:facet name="header">#{entidadHome.managed ? 'Edit' : 'Add'} Entidad</f:facet>
+
+          <s:decorate id="masterDescriptionField" template="layout/edit.xhtml">
+              
+              <ui:define name="label">Nombre de entidad</ui:define>
+              <h:inputText id="masterDescription"
+                         size="100"
+                    maxlength="100"
+                        value="#{entidadHome.instance.nombre}"
+                        required="true">
+                    <a:support event="onblur" reRender="masterDescriptionField" bypassUpdates="true" ajaxSingle="true"/> 
+              </h:inputText>
+        
+          </s:decorate>
+              
+          <div style="clear:both">
+              <span class="required">*</span>
+              required fields
+          </div>
+
+      </rich:panel>
+
+
+  <!--  atributo section -->
+  <rich:panel>
+      <f:facet name="header">Atributos</f:facet>
+   <div class="results" id="atributoList">
+
+    <h:outputText value="No hay resultados de su busqueda de atributos"
+               rendered="#{empty atributoListFromEntidad}"/>
+               
+               
+
+    <rich:dataTable id="atributoListTable"
+                var="_atributo"
+              value="#{atributoListFromEntidad}"
+           rendered="#{not empty atributoListFromEntidad}">
+           
+        <h:column>
+            <f:facet name="header">Nombre
+               <!--  <ui:include>
+                    <ui:param name="propertyLabel" value="Id"/>
+                </ui:include>   -->
+            </f:facet>
+            <h:outputText value="#{_atributo.nombre}"/>
+        </h:column>
+     
+     
+        <h:column>
+            <f:facet name="header">Descripcion
+               <!-- <ui:include>
+                    <ui:param name="propertyLabel" value="atributo description"/>
+                </ui:include>   -->
+            </f:facet>
+            <h:outputText value="#{_atributo.descripcion}"/>
+        </h:column>
+        
+          <h:column>
+            <f:facet name="header">Tipo de Dato
+               <!-- <ui:include>
+                    <ui:param name="propertyLabel" value="atributo description"/>
+                </ui:include>   -->
+            </f:facet>
+            <h:outputText value="#{_atributo.tipoDato}"/>
+        </h:column>
+        
+        
+        <rich:column width="150px">
+							<h:graphicImage value="img/bbdd_borrar.png" width="20px"
+								height="20px" title="El atributo es cargado por una regla"
+								alt="El atributo es cargado por una regla"
+								rendered="#{_atributo.persistible==true}" />
+
+
+							<h:graphicImage
+								title="El atributo es cargado desde la base de datos"
+								alt="El atributo es cargado desde la base de datos"
+								value="img/bbdd_nuevo.png" width="20px" height="20px"
+								rendered="#{_atributo.persistible==false}" />
+
+
+		</rich:column>
+       
+        
+        
+        <rich:column styleClass="action">
+            <f:facet name="header">Accion</f:facet>
+   
+		   <h:graphicImage value="/img/editar.png" width="15px" height="15px" />  
+		   <a:commandLink id="editatributoMP"
+		    	    action="#{entidadHome.setCurrentlySelectedAtributo(_atributo)}"
+		            oncomplete="javascript:Richfaces.showModalPanel('atributoEditWizard')"
+			        ajaxSingle="true"
+		            reRender="atributoEditForm"
+		            value="Editar">
+		    <s:conversationId />
+		         </a:commandLink>
+		         #{' '}
+  
+		   <h:graphicImage value="/img/cancel.png" width="15px" height="15px" />  
+		   <a:commandLink id="removeAtributo"
+	         ajaxSingle="true"
+		      action="#{entidadHome.removeAtributo(_atributo)}"
+		            reRender="atributoListTable"
+		            value="Eliminar">
+		    <s:conversationId />
+		         </a:commandLink>
+
+        </rich:column>
+    </rich:dataTable>
+
+   </div>
+   <s:div styleClass="actionButtons" rendered="#{empty from}">
+ 		
+ 		<a:commandLink id="crearAtributoMP"
+          oncomplete="javascript:Richfaces.showModalPanel('atributoEditWizard')"
+       		 action="#{entidadHome.createNewAtributo}"
+   	         ajaxSingle="true"
+          reRender="atributoEditForm"
+          value="Nuevo atributo...">
+  		<s:conversationId />
+       </a:commandLink>
+   </s:div>
+  </rich:panel>
+
+      <div class="actionButtons">
+
+            <h:commandButton id="save" 
+                          value="Guardar" 
+                         action="#{entidadHome.persist}"
+                       disabled="#{!entidadHome.wired}"
+                       rendered="#{!entidadHome.managed}"/>  
+                          			  
+            <h:commandButton id="update" 
+                          value="Guardar" 
+                         action="#{entidadHome.update}"
+                       rendered="#{entidadHome.managed}"/>
+                        			  
+            <h:commandButton id="delete" 
+                          value="Eliminar" 
+                         action="#{entidadHome.remove}"
+                      immediate="true"
+                       rendered="#{entidadHome.managed}"/>
+
+            <s:button id="cancelEdit"
+                   value="Cancel"
+             propagation="end"
+                    view="/entidad.xhtml"
+                rendered="#{entidadHome.managed}"/>
+
+            <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/#{empty entidadFrom ? 'entidadList' : entidadFrom}.xhtml"
+                rendered="#{!entidadHome.managed}"/>
+      </div>
+
+  </h:form>
+
+</ui:define>
+
+</ui:composition>

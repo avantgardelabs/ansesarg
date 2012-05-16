@@ -1,0 +1,87 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	template="layout/TemplateConceptos.xhtml">
+	
+	<ui:define name="titulo">
+		<h1>Requisitos para Computo y Derecho</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Indique el/los requisito/s probatorio/s requeridos segun los parametros ingresados
+		en los pasos anteriores<br />
+		<a href="" style="text-align: right; cursor: pointer;">ver mas >></a></div>
+	</ui:define>
+	
+
+	<ui:define name="body">
+
+		
+	
+		<div id="cajaformulario">
+		<h:panelGrid columns="2"
+			rowClasses="prop" columnClasses="name,value">
+
+			<rich:listShuttle sourceValue="#{asistente.listaRequisitos}"
+				targetValue="#{regla.requisitosProbatorios}"
+				sourceCaptionLabel="Requisitos disponibles"
+				targetCaptionLabel="Requisitos seleccionados"
+				converter="subReglaConverter" var="requisito"
+					removeControlLabel="Quitar"
+                 	removeAllControlLabel="Quitar Todos"
+                 	copyAllControlLabel="Copiar todos"
+                 	copyControlLabel="Copiar"
+                 	upControlLabel="Subir"
+                 	downControlLabel="Bajar"
+                 	fastOrderControlsVisible="false">
+
+				<rich:column>
+
+					<h:outputText value="#{requisito.nombre}">
+					</h:outputText>
+				</rich:column>
+
+
+			</rich:listShuttle>
+			
+
+		</h:panelGrid></div>
+
+
+
+
+		<div style="clear: both" />
+	</ui:define>
+	
+	
+	<ui:define name="preview">
+<rich:dataTable width="300px;" style="overflow:scroll;"
+			var="paso" value="#">
+			<f:facet name="header">
+				<h:outputText value="Area de Preview" />
+			</f:facet>
+			
+			<rich:column title="Paso">
+				<h:outputText value="Se vera reflejado los requisitos probatorios que usted seleccione y en el orden que usted indique." />
+			</rich:column>
+			
+			
+
+		</rich:dataTable>
+		</ui:define>
+		
+	<ui:define name="botonera">
+		
+		<div id="botonera">
+		<h:commandButton value="Grabar" /> 
+		
+		<h:outputLink
+			value="conceptosLiquidacion.seam" styleClass="botonnavegacion">Continuar</h:outputLink>
+		</div>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,110 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<!-- <parent>
+		<artifactId>arg</artifactId>
+		<groupId>ar.gov.anses.prissa.asistente</groupId>
+		<version>3.0</version>
+		<relativePath>..</relativePath>
+	</parent> -->
+	
+	<repositories>
+
+		<repository>
+			<id>jboss</id>
+			<url>http://repository.jboss.org/nexus/content/groups/public-jboss</url>
+		</repository>
+
+
+	</repositories>
+	
+	<pluginRepositories>
+		<pluginRepository>
+			<id>JBoss Repo</id>
+			<url>https://repository.jboss.org/nexus/content/repositories/releases</url>
+			<name>JBoss Repo</name>
+		</pluginRepository>
+	</pluginRepositories>
+	
+	<artifactId>books</artifactId>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.jboss.maven.plugins</groupId>
+				<artifactId>maven-jdocbook-plugin</artifactId>
+				<version>2.3.6</version>
+				<extensions>true</extensions>
+				<executions>
+					<execution>
+						<phase>pre-site</phase>
+						<goals>
+							<goal>resources</goal>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.jboss.pressgang</groupId>
+						<artifactId>pressgang-xslt-ns</artifactId>
+						<version>2.0.0</version>
+					</dependency>
+					<dependency>
+						<groupId>org.jboss.pressgang</groupId>
+						<artifactId>pressgang-jdocbook-style</artifactId>
+						<type>jdocbook-style</type>
+						<version>2.0.0</version>
+					</dependency>
+				</dependencies>
+
+				<configuration>
+
+					<sourceDocumentName>book.xml</sourceDocumentName>
+					<!-- <masterTranslation>en-US</masterTranslation> -->
+					<imageResource>
+						<directory>${basedir}/src/main/docbook</directory>
+						<includes>
+							<include>images/</include>
+						</includes>
+					</imageResource>
+					<formats>
+						<format>
+							<formatName>html_single</formatName>
+							<stylesheetResource>classpath:/xslt/org/jboss/xhtml-single.xsl</stylesheetResource>
+
+							<finalName>index.html</finalName>
+							<!-- <profilingTypeName>two_pass</profilingTypeName> -->
+						</format>
+						<format>
+							<formatName>html</formatName>
+							<stylesheetResource>classpath:/xslt/org/jboss/xhtml.xsl</stylesheetResource>
+
+							<finalName>index.html</finalName>
+							<!-- <profilingTypeName>two_pass</profilingTypeName> -->
+						</format>
+
+					</formats>
+					<injections>
+						<injection>
+							<name>project.version</name>
+							<value>${project.version}</value>
+						</injection>
+					</injections>
+					<options>
+						<xmlTransformerType>saxon</xmlTransformerType>
+						<xincludeSupported>true</xincludeSupported>
+						<useRelativeImageUris>true</useRelativeImageUris>
+						<!-- TODO Probably obsolete after the upgrade to maven-jdocbook-plugin 
+							2.3.0 -->
+						<docbookVersion>1.72.0</docbookVersion>
+						<!-- <localeSeparator>-</localeSeparator> -->
+					</options>
+				</configuration>
+			</plugin>
+		</plugins>
+
+	</build>
+	<groupId>ar.gov.anses.prissa.asistente</groupId>
+	<version>3.0</version>
+</project>

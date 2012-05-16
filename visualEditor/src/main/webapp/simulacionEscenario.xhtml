@@ -1,0 +1,135 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                template="layout/template.xhtml">
+                       
+<ui:define name="ayuda">
+		<div class="ayuda">Pantalla buscar reglas y visualizar las que ya contiene el sistema. <br />
+		<a href="" class="textoayuda">ver mas >></a>
+		</div>
+</ui:define>
+
+<ui:define name="body">
+    
+    <h:messages globalOnly="true" styleClass="message" id="globalMessages"/> 
+    
+    <rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+			<span class="waitingPanel">
+			<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+			<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+			</span>
+	</rich:modalPanel>
+        
+        
+        
+        
+    
+  	<h3> Regla a simular: <strong> <h:outputText value="#{tablaSeleccionada.nombre}" /></strong> - Version: <h:outputText value="#{tablaSeleccionada.versionRegla}" /></h3> 
+  	<br/>
+  	
+  	<rich:panel rendered="#{!empty listaMensajes}">
+  		<f:facet name="header">Resultado  de la simulacion</f:facet>
+  		
+  		<rich:dataTable value="#{listaMensajes}" var="mensaje">
+  			<h:column><f:facet name="header">Regla</f:facet>
+  				
+  				<h:outputText value="#{mensaje.mensaje}" />
+  				
+  			</h:column>
+  			
+  			<h:column>
+  				<f:facet name="header">Condiciones Evaluadas</f:facet>
+  				<h:outputText value="#{mensaje.condicionesEvaluadas}" />
+  			</h:column>
+
+  			
+  			<h:column><f:facet name="header">Msg de sistema</f:facet> 
+  				<h:outputText value="#{mensaje.observacion}" escape="false" />
+  			</h:column>
+  			
+  			
+  		
+  		</rich:dataTable>
+  		
+  		<br/>
+  		
+  	</rich:panel>
+  	
+  	<rich:panel>
+  	<f:facet name="header">Hechos plausibles a ser simulados</f:facet>
+	  	<rich:dataTable value="#{personas}" var="p">
+	  	
+	  	<h:column>
+	  		<f:facet name="header">Accion</f:facet>
+	  		<h:commandLink action="#{simuladorEscenario.simular(p)}" value="Simular" />
+	  	</h:column>
+	  	
+	  	<h:column>
+	  		<f:facet name="header">CUIL</f:facet>
+	  		<h:outputText value="#{p.cuil}" />
+	  	</h:column>
+	  	
+	  	<h:column>
+	  		<f:facet name="header">Sexo</f:facet>
+	  		<h:outputText value="#{p.sexo}" />
+	  	</h:column>
+	  	
+	  	<h:column>
+	  		<f:facet name="header">Tipo de Documento</f:facet>
+	  		<h:outputText value="#{p.tipodocumento}" />
+	  	</h:column>
+	  	
+	  	<h:column>
+	  		<f:facet name="header">Tipo de domicilio</f:facet>
+	  		<h:outputText value="#{p.tipodomicilio}" />
+	  	</h:column>
+	  	
+	  	<h:column>
+	  		<f:facet name="header">Estado de acreditacion</f:facet>
+	  		<h:outputText value="#{p.estado_acreditado}" />
+	  	</h:column>
+	  	
+	  	<h:column>
+	  		<f:facet name="header">UDAI datos modificados</f:facet>
+	  		<h:outputText value="#{p.udai_modifica_datos}" />
+	  	</h:column>
+	  	
+  	</rich:dataTable>
+  	
+  		</rich:panel>
+  		
+  		
+  		<rich:panel>
+	  		<f:facet name="header">Datos de la persona a buscar</f:facet>
+	  		<h:panelGrid columns="4">
+	  		
+	  		<h:outputText value="CUIL" />
+	  		<h:inputText  value="#{persona.cuil}"  />
+	  		
+	  		<h:outputText value="Fecha de solicitud" />
+	  		<rich:calendar id="literalFecha" 
+						 size="50"
+						value="#{solicitud_rti.fecha_solicitud}" styleClass="ancho300"
+						datePattern="dd/MM/yyyy"
+						locale="ES">  	 
+			  </rich:calendar>
+	  		
+	  		<h:commandButton action="#{simuladorEscenario.agregarPersona()}" value="Agregar" onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+	  		<s:button id="edit" action="#{simuladorEscenario.volver()}" value="Volver" onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+	  		
+	  		<h:outputText value="" />
+	  		<h:outputText value="" />
+	  		
+	  		</h:panelGrid>
+  		</rich:panel>
+    
+</ui:define>
+
+</ui:composition>

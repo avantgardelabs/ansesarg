@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.0.xsd" login-required="true">
+   
+   <begin-conversation join="true" flush-mode="MANUAL"/>
+   
+	<navigation from-action="#{instrumentoNormativoManager.exit()}">
+         <end-conversation/>
+         <redirect view-id="/home.xhtml"/>
+   </navigation>
+
+	<navigation from-action="#{instrumentoNormativoManager.rescueCurrentNodeOnMainTree()}">
+   	<rule>
+         <redirect view-id="/moverInstrumentos.xhtml"/>
+    </rule>
+   </navigation>
+</page>

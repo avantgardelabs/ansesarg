@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<datasources>
+   
+   <local-tx-datasource>
+      <jndi-name>mmxDS</jndi-name>
+     	<connection-url>jdbc:metamatrix:ANSES_VIRTUAL@mm://10.2.16.40:31000;version=1</connection-url>
+	 <driver-class>com.metamatrix.jdbc.MMDriver</driver-class>
+      <user-name>root</user-name>
+      <password>root</password>
+   </local-tx-datasource>
+    
+</datasources>
+

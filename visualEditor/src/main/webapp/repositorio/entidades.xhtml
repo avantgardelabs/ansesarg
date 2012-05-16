@@ -1,0 +1,97 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" template="layout7template.xhtml">
+
+
+	<ui:define name="titulo">
+		<h1>Entidades del modelo semantico</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Aqui va un texto de ayuda<br />
+		<a href="" class="textoayuda">ver mas >></a></div>
+	</ui:define>
+
+	<ui:define name="body">
+
+		<div id="formulario"><h:panelGrid columns="3">
+			<h:outputText value="Nombre" />
+			<h:inputText style=" width : 250px;" id="nombre"
+				value="#{entidad.nombre}"
+				required="true" 
+				requiredMessage="El de la entidad es obligatorio">
+
+
+			</h:inputText>
+			<h:message for="nombre" styleClass="errors" />
+		</h:panelGrid> <br />
+
+
+
+	<h3>Entidades Registradas</h3>
+		<h:panelGrid columns="1" style="width:450px">
+			<rich:dataTable id="tablaResultdo"
+				value="#{entidadesAction.entidadesRegistradas}" var="entidad"
+				style="width=60%" rows="5">
+
+		<rich:column width="20px">
+			<h:graphicImage value="../img/aviso.png" width="20px" height="20px" 
+			title="La entidad posee atributos que no tienen referencias a datos" 
+			alt="La entidad posee atributos que no tienen referencias a datos"
+			/>
+			</rich:column>
+			
+				<rich:column width="20px">
+					<h:commandLink
+						action="#{entidadesAction.seleccionarEntidad(entidad)}">
+						<h:graphicImage value="../img/editar.png" title="Agregar/Eliminar atributos de #{entidad.nombre}" alt="Agregar/Eliminar atributos de #{entidad.nombre}">
+							
+						</h:graphicImage>
+					</h:commandLink>
+				</rich:column>
+
+
+
+				<rich:column width="50px">
+					<f:facet name="header">
+						<h:outputText value="ID" />
+					</f:facet>
+					<h:outputText value="#{entidad.id}" />
+				</rich:column>
+
+				<rich:column>
+					<f:facet name="header">
+						<h:outputText value="Nombre" />
+					</f:facet>
+					<h:outputText value="#{entidad.nombre}" />
+				</rich:column>
+
+
+
+				<f:facet name="footer">
+					<rich:datascroller id="datascroller" />
+				</f:facet>
+
+			</rich:dataTable>
+		</h:panelGrid>
+
+
+		<div style="clear: both" />
+		</div>
+
+	</ui:define>
+
+	<ui:define name="botonera">
+
+		<div id="botonera"><h:commandButton
+			action="#{entidadesAction.registrar()}" value="Guardar" /></div>
+	</ui:define>
+
+</ui:composition>

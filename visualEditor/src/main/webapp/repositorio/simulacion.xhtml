@@ -1,0 +1,143 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	template="layout/template.xhtml" xmlns:a4j="http://richfaces.org/a4j">
+
+
+	<ui:define name="titulo">
+		<h1>RTI</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Descripcion de la regla de simulacion<br />
+		<a href="" style="text-align: right; cursor: pointer;">ver mas >></a></div>
+	</ui:define>
+	<br />
+	<br />
+
+	<ui:define name="body">
+
+		<div id="cajaformulario" style="margin-top: 40px;"><h:panelGrid columns="3">
+			<h:panelGrid columns="3">
+				<h:outputText value="CUIL" />
+				<h:inputText value="#{simulador_beneficiario.cuil}" />
+				<h:outputText value="00-00000000-0" styleClass="etiqueta" />
+
+				<h:outputText value="Apellido" />
+				<h:inputText value="#{simulador_beneficiario.apellido}" />
+				<h:outputText />
+
+				<h:outputText value="Fecha de Nacimiento" />
+				<h:inputText value="#{simulador_beneficiario.fechaNacimiento}">
+					<f:convertDateTime type="date" pattern="dd/MM/yyyy" />
+				</h:inputText>
+				<h:outputText value="dd/mm/aaaa" styleClass="etiqueta" />
+
+				<h:outputText value="Es autonomo" />
+				<h:selectBooleanCheckbox value="#{simulador_beneficiario.autonomo}" />
+				<h:outputText />
+
+
+				<h:outputText value="Relación de dependencia" />
+				<h:selectBooleanCheckbox
+					value="#{simulador_beneficiario.relacionDependencia}" />
+				<h:outputText />
+
+				<h:outputText value="Monto" />
+				<h:inputText value="#{simulador_remuneracion.monto}" />
+				<h:outputText />
+
+				<h:outputText value="Periodo" />
+				<h:inputText value="#{simulador_remuneracion.periodo}" />
+				<h:outputText value="aaaamm" styleClass="etiqueta" />
+
+				<h:outputText value="Fecha Inicial de pago" />
+				<h:inputText value="#{simulador_beneficiario.fechaInicialPago}">
+					<f:convertDateTime type="date" dateStyle="medium"
+						pattern="dd/MM/yyyy"  />
+				</h:inputText>
+				<h:outputText value="dd/mm/aaaa" styleClass="etiqueta" />
+
+				<h:outputText value="Tipo deRegularidad" />
+
+				<h:selectOneMenu value="#{simulador_beneficiario.regularidad}">
+					<f:selectItem itemValue="REGULAR" itemLabel="REGULAR_CON_DERECHO" />
+					<f:selectItem itemValue="IRREGULAR_CON_DERECHO"
+						itemLabel="IRREGULAR_CON_DERECHO" />
+
+					<f:selectItem itemValue="IRREGULAR_SIN_DERECHO"
+						itemLabel="IRREGULAR_SIN_DERECHO" />
+				</h:selectOneMenu>
+				<h:outputText />
+
+				<h:outputText value="Accidente laboral" />
+				<h:selectBooleanCheckbox
+					value="#{simulador_beneficiario.accidenteLaboral}" />
+				<h:outputText />
+
+				<h:outputText value="Acredita identidad" />
+				<h:selectBooleanCheckbox
+					value="#{simulador_beneficiario.identidadAcreditada}" />
+				<h:outputText />
+
+				<h:outputText value="Incompatibilidad" />
+				<h:selectBooleanCheckbox
+					value="#{simulador_beneficiario.incompatibilidad}" />
+				<h:outputText value="con otras prestaciones" styleClass="etiqueta"/>
+
+				<h:outputText value="Sentencia firme" />
+				<h:selectBooleanCheckbox
+					value="#{simulador_beneficiario.sentenciaFirme}" />
+				<h:outputText />
+
+				<h:outputText value="En actividad" />
+				<h:selectBooleanCheckbox
+					value="#{simulador_beneficiario.trabajadorActivo}" />
+				<h:outputText />
+
+
+				<h:outputText value="Porcentaje de invalidez" />
+				<h:inputText
+					value="#{simulador_beneficiario.resultadoInformeMedico}" />
+				<h:outputText />
+
+			</h:panelGrid>
+			
+			
+			<div style="height: 327px; width: 400px; overflow: scroll;"><object
+				type="application/pdf" data="Regla_RTI_Borrador.pdf" width="650"
+				height="500"> </object></div>
+
+
+		</h:panelGrid></div>
+
+		<div class="message">Resultado de la ejecución: <h:outputText
+			value="#{simulador.resultado}" /></div>
+
+
+
+		<div style="clear: both" />
+	</ui:define>
+
+<ui:define name="botoneraComandos">
+		<div id="botonera">
+		<h:commandButton value="Firma digital carga" />
+		<h:commandButton value="Aprobacion" />
+		<h:commandButton value="Control" />
+		<h:commandButton value="Auditoria" />
+		</div>
+	</ui:define>
+
+	<ui:define name="botonera">
+		<h:commandButton type="submit" value="Simular"
+			action="#{simulador.simular()}" />
+
+		<div id="botonera"><h:commandButton value="Salir" /></div>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,45 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j" template="template.xhtml">
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Prueba Lote<br/>
+	
+		<a href="" class="textoayuda">ver mas >></a></div>
+	</ui:define>
+	
+	<ui:define name="body">
+	 
+	 	<rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+			<span class="waitingPanel">
+			<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+			<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+			</span>
+		</rich:modalPanel>
+	 
+	 	<h:outputText value="#{requerimientosAction.instance.resultado}" />
+       
+	</ui:define>
+	
+	<ui:define name="botonera">
+		
+		<h:commandButton value="Generar y Enviar XML"
+			action="#{requerimientosAction.enviarReqByGeneratedXML()}"
+			styleClass="botonnavegacion" style="color:#ffffff; width : 132px;" 
+			onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+			
+		<h:commandButton value="Muestra Datos"
+		 	action="#{requerimientosAction.solicitudMuestraDatos()}"
+			styleClass="botonnavegacion" style="color:#ffffff; width : 141px;" />
+			
+			
+	</ui:define>
+
+</ui:composition>

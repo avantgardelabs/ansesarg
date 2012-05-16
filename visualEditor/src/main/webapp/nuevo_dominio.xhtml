@@ -1,0 +1,57 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	 template="template.xhtml" >
+
+
+<ui:define name="titulo">
+		<h1>Nuevo Dominio</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Aqui va un texto
+		de ayuda<br />
+		<a href="" class="textoayuda">ver mas >></a></div>
+	</ui:define>
+
+	<ui:define name="body">
+
+		<div id="formulario">
+		
+		<h:panelGrid columns="3" >
+			<h:outputText value="Nombre" />
+			<h:inputText 
+				style=" width : 250px;" 
+				id="descripcion"
+				value="#{dominioAction.dominio.descripcion}" 
+				required="true"
+				requiredMessage="El nombre de dominio es obligatorio"
+				>
+				
+                    
+			</h:inputText>	
+			<h:message for="descripcion" styleClass="errors"/>	
+		</h:panelGrid>
+		
+		
+		
+		
+		<div style="clear: both" />
+</div>
+
+	</ui:define>
+
+	<ui:define name="botonera">
+
+		<div id="botonera">
+  <h:commandButton action="#{dominioAction.guardarDominio()}" value="Guardar"/></div>
+	</ui:define>
+
+</ui:composition>
+

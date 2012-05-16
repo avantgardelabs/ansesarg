@@ -1,0 +1,326 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                template= "layout/template_ajax.xhtml"
+                xmlns:a4j="http://richfaces.org/a4j">
+
+<ui:define name="titulo">
+<a4j:loadScript src="js/jquery.maskedinput-1.2.2.min.js"></a4j:loadScript>
+		<h1>Detalle - Paso 2</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">
+		<h:outputText value="Regla a simular: #{simulacionReglaPorAsistenteAction.tabla.nombre}"/>
+		<a href="" class="textoayuda">ver mas >></a>
+		</div>
+	</ui:define>
+	                       
+<ui:define name="body">
+    
+    <![CDATA[<h:messages globalOnly="true" styleClass="message" id="globalMessages"/>]]>
+    
+    <rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+		<span class="waitingPanel">
+		<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+		<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+		</span>
+	</rich:modalPanel>
+	
+   	<div id="formulario" >
+	
+	<h:panelGrid columns="3" >
+    <h:outputLabel value="Entidad:" style="font-weight:bold"/>
+    <h:outputText value=""/>
+    <h:outputText value="#{simulacionReglaPorAsistenteAction.escenarioSelected.entidad.nombre}"/>
+    <h:outputLabel value="Atributo:" style="font-weight:bold"/>
+    <h:outputText value=""/>
+    <h:outputText value="#{simulacionReglaPorAsistenteAction.escenarioSelected.atributo.nombre}"/>
+        
+    <h:outputText value=""/>
+    <h:outputText value=""/>
+    
+    </h:panelGrid>
+	<br/>
+	<rich:panel>
+	<f:facet name="header">Universo</f:facet>
+	<a4j:region>
+	<h:panelGrid columns="5" styleClass="rich-table70" rendered="#{simulacionReglaPorAsistenteAction.tipoAccion!=0}">
+	<a4j:outputPanel id="panelUniverso">
+<!--	SI ES TEXTO	-->
+	<h:panelGrid columns="6" styleClass="rich-table70" rendered="#{simulacionReglaPorAsistenteAction.escenarioSelected.atributo.esTexto()}">
+	<h:outputLabel value="Valor" style="font-weight:bold"/> 
+	<h:inputText id="d1" value="#{simulacionReglaPorAsistenteAction.uDesde}" required="true" requiredMessage="El campo Desde es obligatorio" />
+		<h:message for="d1" styleClass="error errors"/> 
+	</h:panelGrid>
+<!--	SI ES NUMERO	-->	
+	<h:panelGrid columns="6" styleClass="rich-table70" rendered="#{simulacionReglaPorAsistenteAction.escenarioSelected.atributo.esNumero()}">
+	<h:outputLabel value="Desde" style="font-weight:bold"/> 
+	<h:inputText id="NDU" value="#{simulacionReglaPorAsistenteAction.uDesde}" required="true" requiredMessage="El campo Desde es obligatorio" validatorMessage="Debe indicar un valor numérico">
+		<f:validateDoubleRange maximum="999999999999"/>
+	</h:inputText> 
+		<h:message for="NDU" styleClass="error errors"/>
+	<h:outputLabel value="Hasta" style="font-weight:bold"/>
+	<h:inputText id="NHU" value="#{simulacionReglaPorAsistenteAction.uHasta}" required="true" requiredMessage="El campo Hasta es obligatorio" validatorMessage="Debe indicar un valor numérico">
+		<f:validateDoubleRange maximum="999999999999"/>
+	</h:inputText>
+		<h:message for="NHU" styleClass="error errors"/>
+	</h:panelGrid>
+<!--	SI ES FECHA	-->
+	<h:panelGrid columns="6" styleClass="rich-table70" rendered="#{simulacionReglaPorAsistenteAction.escenarioSelected.atributo.esFecha()}">
+	<h:outputLabel value="Desde" style="font-weight:bold"/> 
+	<h:inputText id = "FDU" value="#{simulacionReglaPorAsistenteAction.uDesde}" required="true" requiredMessage="El campo Desde es obligatorio">
+		<rich:jQuery selector="#FDU" query="mask('99/99/9999')" timing="onload"/>
+	</h:inputText>
+		<h:message for="FDU" styleClass="error errors"/>
+	<h:outputLabel value="Hasta" style="font-weight:bold"/>
+	<h:inputText id = "FHU" value="#{simulacionReglaPorAsistenteAction.uHasta}" required="true" requiredMessage="El campo Hasta es obligatorio">
+		<rich:jQuery selector="#FHU" query="mask('99/99/9999')" timing="onload"/>
+	</h:inputText> 
+		<h:message for="FHU" styleClass="error errors"/>
+	</h:panelGrid>
+<!--	SI ES BOOLEANO	-->
+	<h:panelGrid columns="6" styleClass="rich-table70" rendered="#{simulacionReglaPorAsistenteAction.escenarioSelected.atributo.esBooleano()}">
+	<h:outputLabel value="Valor" style="font-weight:bold"/> 
+		
+		<h:selectOneMenu value="#{simulacionReglaPorAsistenteAction.uDesde}" required="true" id="BDU" enableManualInput="false"
+			   		requiredMessage="Debe indicar el valor">
+			    <f:selectItem itemLabel="Seleccione un Valor" />
+	            <f:selectItem itemValue="true" itemLabel="Verdadero" />
+	            <f:selectItem itemValue="false" itemLabel="Falso"/>
+	      
+			</h:selectOneMenu>
+	<h:message for="BDU" styleClass="error errors"/>
+	<h:outputText value="" />
+	<h:outputText value="" />
+	<h:outputText value="" />
+	<a4j:outputPanel ajaxRendered="true">
+	</a4j:outputPanel>
+	</h:panelGrid>
+
+	</a4j:outputPanel>
+	<a4j:commandButton value="Agregar" id="asf" action="#{simulacionReglaPorAsistenteAction.agregarUniverso()}" reRender="tablaUniverso,panelUniverso"/>
+	</h:panelGrid>
+	</a4j:region>
+	<br/>
+		<a4j:outputPanel id="tablaUniverso">
+		<rich:dataTable  value="#{simulacionReglaPorAsistenteAction.escenarioSelected.universo}" var="var" rows="10" rendered="#{!(simulacionReglaPorAsistenteAction.escenarioSelected.atributo.esTexto() or simulacionReglaPorAsistenteAction.escenarioSelected.atributo.esBooleano())}">
+    	<rich:column>
+                <f:facet name="header">
+                    Desde
+                </f:facet>
+                    <h:outputText value="#{var.universoDesde}"/>
+                    
+        </rich:column>
+    
+    	  	<rich:column>
+                <f:facet name="header">
+                    Hasta
+                </f:facet>
+                    <h:outputText value="#{var.universoHasta}"/>
+                    
+        </rich:column>
+        
+          	<rich:column>
+                <f:facet name="header">
+                    Acción
+                </f:facet>
+                   <a4j:commandLink action="#{simulacionReglaPorAsistenteAction.escenarioSelected.universo.remove(var)}" ajaxSingle="true"
+                   style = "color: black" reRender="tablaUniverso" limitToList="true" rendered="#{simulacionReglaPorAsistenteAction.tipoAccion!=0}">
+	
+						<h:graphicImage value="/img/bin_closed.png" styleClass="img"/>
+						<h:outputText value="Quitar"/>
+					</a4j:commandLink>  
+                    	
+                    
+        </rich:column>
+        
+        <f:facet name="footer">
+							<rich:datascroller id="datascroller" />
+			</f:facet>
+   
+    </rich:dataTable>
+    
+    <rich:dataTable  value="#{simulacionReglaPorAsistenteAction.escenarioSelected.universo}" var="var" rows="10" rendered="#{simulacionReglaPorAsistenteAction.escenarioSelected.atributo.esTexto() or simulacionReglaPorAsistenteAction.escenarioSelected.atributo.esBooleano()}">
+    	<rich:column>
+                <f:facet name="header">
+                    Valor
+                </f:facet>
+                    <h:outputText value="#{var.universoDesde}" rendered="#{simulacionReglaPorAsistenteAction.escenarioSelected.atributo.esTexto()}"/>
+                    <h:outputText value="Falso" rendered="#{(simulacionReglaPorAsistenteAction.escenarioSelected.atributo.esBooleano() and var.universoDesde == 'false')}"/>
+                    <h:outputText value="Verdadero" rendered="#{(simulacionReglaPorAsistenteAction.escenarioSelected.atributo.esBooleano() and var.universoDesde == 'true')}"/>
+                    
+        </rich:column>
+    
+         
+          	<rich:column>
+                <f:facet name="header">
+                    Acción
+                </f:facet>
+                   <a4j:commandLink action="#{simulacionReglaPorAsistenteAction.escenarioSelected.universo.remove(var)}" ajaxSingle="true"
+                   style = "color: black" reRender="tablaUniverso" limitToList="true" rendered="#{simulacionReglaPorAsistenteAction.tipoAccion!=0}">
+	
+						<h:graphicImage value="/img/bin_closed.png" styleClass="img"/>
+						<h:outputText value="Quitar"/>
+					</a4j:commandLink>  
+                    	
+                    
+        </rich:column>
+        
+        <f:facet name="footer">
+							<rich:datascroller id="datascroller" />
+			</f:facet>
+   
+    </rich:dataTable>
+    </a4j:outputPanel>
+    </rich:panel>
+    
+    <rich:panel>
+    <f:facet name="header">Valores Simples</f:facet>
+    <a4j:region>
+    <h:panelGrid columns="5" styleClass="rich-table70" rendered="#{simulacionReglaPorAsistenteAction.tipoAccion!=0}">
+	
+    <a4j:outputPanel id="panelValoresSimples">	
+	
+<!--	SI ES TEXTO	-->
+	<h:panelGrid columns="6" styleClass="rich-table70" rendered="#{simulacionReglaPorAsistenteAction.escenarioSelected.atributo.esTexto()}">
+	<h:outputLabel value="Valor" style="font-weight:bold"/> 
+	<h:inputText id = "d2" value="#{simulacionReglaPorAsistenteAction.vDesde}" required="true" requiredMessage="El campo Desde es obligatorio"/>
+		<h:message for="d2" styleClass="error errors"/>
+
+	</h:panelGrid>
+
+<!--	SI ES NUMERO	-->
+	<h:panelGrid columns="6" styleClass="rich-table70" rendered="#{simulacionReglaPorAsistenteAction.escenarioSelected.atributo.esNumero()}">
+	<h:outputLabel value="Desde" style="font-weight:bold"/> 
+	<h:inputText id= "NDVS" value="#{simulacionReglaPorAsistenteAction.vDesde}" required="true" requiredMessage="El campo Desde es obligatorio" validatorMessage="Debe indicar un valor numérico">
+		<f:validateDoubleRange maximum="999999999999"/>
+	</h:inputText>
+		<h:message for="NDVS" styleClass="error errors"/>
+	<h:outputLabel value="Hasta" style="font-weight:bold"/>
+	<h:inputText id= "NHVS" value="#{simulacionReglaPorAsistenteAction.vHasta}" required="true" requiredMessage="El campo Hasta es obligatorio" validatorMessage="Debe indicar un valor numérico">
+		<f:validateDoubleRange maximum="999999999999"/>
+	</h:inputText>
+		<h:message for="NHVS" styleClass="error errors"/>
+	</h:panelGrid>
+	
+<!--	SI ES FECHA	-->
+	<h:panelGrid columns="6" styleClass="rich-table70" rendered="#{simulacionReglaPorAsistenteAction.escenarioSelected.atributo.esFecha()}">
+	<h:outputLabel value="Desde" style="font-weight:bold"/> 
+	<h:inputText id="FDVS" value="#{simulacionReglaPorAsistenteAction.vDesde}" required="true" requiredMessage="El campo Desde es obligatorio">
+		<rich:jQuery selector="#FDVS" query="mask('99/99/9999')" timing="onload"/>
+	</h:inputText>
+		<h:message for="FDVS" styleClass="error errors"/>
+	<h:outputLabel value="Hasta" style="font-weight:bold"/>
+	<h:inputText id= "FHVS" value="#{simulacionReglaPorAsistenteAction.vHasta}" required="true" requiredMessage="El campo Hasta es obligatorio">
+		<rich:jQuery selector="#FHVS" query="mask('99/99/9999')" timing="onload" />
+	</h:inputText>
+		<h:message for="FHVS" styleClass="error errors"/>
+	</h:panelGrid>
+
+<!--	SI ES BOOLEANO	-->
+	<h:panelGrid columns="6" styleClass="rich-table70" rendered="#{simulacionReglaPorAsistenteAction.escenarioSelected.atributo.esBooleano()}">
+	<h:outputLabel value="Valor" style="font-weight:bold"/> 
+		<h:selectOneMenu value="#{simulacionReglaPorAsistenteAction.vDesde}" required="true" id="BDVS" 
+			   		requiredMessage="Debe indicar el valor">
+			   	<f:selectItem itemLabel="Seleccione un Valor"  />
+	            <f:selectItem itemLabel="Verdadero" itemValue="true"/>
+	            <f:selectItem itemLabel="Falso" itemValue="false"/>
+	           
+	    </h:selectOneMenu>
+	<h:message for="BDVS" styleClass="error errors"/>
+	</h:panelGrid>
+	
+	
+	</a4j:outputPanel>
+	
+	<a4j:commandButton value="Agregar" action="#{simulacionReglaPorAsistenteAction.agregarValoresSimples()}" reRender="tablaValoresSimples,panelValoresSimples"/> 
+	
+	</h:panelGrid>
+	</a4j:region>
+	
+	<br/>
+		<a4j:outputPanel id="tablaValoresSimples">
+		<rich:dataTable  value="#{simulacionReglaPorAsistenteAction.escenarioSelected.valoresSimples}" var="var2" rows="10" rendered="#{!(simulacionReglaPorAsistenteAction.escenarioSelected.atributo.esTexto() or simulacionReglaPorAsistenteAction.escenarioSelected.atributo.esBooleano())}">
+    	<rich:column>
+                <f:facet name="header">
+                    Desde
+                </f:facet>
+                    <h:outputText value="#{var2.valoresSimplesDesde}"/>
+	     </rich:column>
+    
+    	  	<rich:column>
+                <f:facet name="header">
+                    Hasta
+                </f:facet>
+                    <h:outputText value="#{var2.valoresSimplessHasta}"/>
+            </rich:column>
+        
+          	<rich:column>
+                <f:facet name="header">
+                    Acción
+                </f:facet>
+                    <a4j:commandLink action="#{simulacionReglaPorAsistenteAction.escenarioSelected.valoresSimples.remove(var2)}" ajaxSingle="true"
+                   style = "color: black"  reRender="tablaValoresSimples" limitToList="true" rendered="#{simulacionReglaPorAsistenteAction.tipoAccion!=0}">
+	
+						<h:graphicImage value="/img/bin_closed.png" styleClass="img"/>
+						<h:outputText value="Quitar" />
+					</a4j:commandLink>                 
+        </rich:column>
+        
+        <f:facet name="footer">
+							<rich:datascroller id="datascroller" />
+			</f:facet>
+          	    
+    </rich:dataTable>
+    
+    <rich:dataTable  value="#{simulacionReglaPorAsistenteAction.escenarioSelected.valoresSimples}" var="var2" rows="10" rendered="#{simulacionReglaPorAsistenteAction.escenarioSelected.atributo.esTexto() or simulacionReglaPorAsistenteAction.escenarioSelected.atributo.esBooleano()}">
+    	<rich:column>
+                <f:facet name="header">
+                    Desde
+                </f:facet>
+                    <h:outputText value="#{var2.valoresSimplesDesde}" rendered="#{simulacionReglaPorAsistenteAction.escenarioSelected.atributo.esTexto()}"/>
+                    <h:outputText value="Falso" rendered="#{(simulacionReglaPorAsistenteAction.escenarioSelected.atributo.esBooleano() and var2.valoresSimplesDesde == 'false')}"/>
+                    <h:outputText value="Verdadero" rendered="#{(simulacionReglaPorAsistenteAction.escenarioSelected.atributo.esBooleano() and var2.valoresSimplesDesde == 'true')}"/>
+	     </rich:column>
+    
+    	  	        
+          	<rich:column>
+                <f:facet name="header">
+                    Acción
+                </f:facet>
+                    <a4j:commandLink action="#{simulacionReglaPorAsistenteAction.escenarioSelected.valoresSimples.remove(var2)}" ajaxSingle="true"
+                   style = "color: black"  reRender="tablaValoresSimples" limitToList="true" rendered="#{simulacionReglaPorAsistenteAction.tipoAccion!=0}">
+	
+						<h:graphicImage value="/img/bin_closed.png" styleClass="img"/>
+						<h:outputText value="Quitar" />
+					</a4j:commandLink>                 
+        </rich:column>
+        
+        <f:facet name="footer">
+							<rich:datascroller id="datascroller" />
+			</f:facet>
+          	    
+    </rich:dataTable>
+    </a4j:outputPanel>
+    </rich:panel>
+    
+    <br/>
+    
+	</div>
+    
+    <div class="actionButtons">      
+        
+        <h:commandButton value="Cancelar" action="#{simulacionReglaPorAsistenteAction.irAPaso2DesdeDetalle()}" immediate="true"/>
+	    <h:commandButton value="Continuar" action="#{simulacionReglaPorAsistenteAction.volverAPaso2DesdeDetalle()}" immediate="true"/>        
+    </div>
+
+</ui:define>
+
+</ui:composition>

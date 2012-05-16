@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.0.xsd" login-required="true"
+      no-conversation-view-id="/reglaPseudocodigoEditAcciones.xhtml"
+      >
+
+   <begin-conversation join="true" flush-mode="MANUAL"/>
+
+   <action execute="#{reglaPseudocodigoHome.wire()}"/>
+   
+   <param name="from"/>
+   <param name="reglaPseudocodigoId" value="#{reglaPseudocodigoHome.reglaPseudocodigoId}"/>
+   
+
+
+	<navigation from-action="#{reglaPseudocodigoHome.exit()}">
+		<rule>
+         <end-conversation/>
+         <redirect view-id="/reglaPseudocodigoList.xhtml"/>
+        </rule>
+   	</navigation>
+	
+	<navigation from-action="#{reglaPseudocodigoHome.persist()}">
+		<rule>
+         <end-conversation/>
+         <redirect view-id="/reglaPseudocodigoList.xhtml"/>
+        </rule>
+   	</navigation>
+	
+
+	<navigation from-action="#{reglaPseudocodigoHome.remove}">
+      <rule>
+         <end-conversation/>
+         <redirect view-id="/reglaPseudocodigoList.xhtml"/>
+      </rule>
+   </navigation>
+   
+</page>

@@ -1,0 +1,279 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+	
+
+	<ui:define name="body">
+		<script type="text/javascript">
+
+		function validacionLongCamposBusqueda(){
+			if( (document.getElementById("frmPrincipal:dominio").value.length &lt; 3 
+				&amp;&amp; document.getElementById("frmPrincipal:dominio").value.length &gt; 0)
+				||
+				(document.getElementById("frmPrincipal:nombre").value.length &lt; 3 
+				&amp;&amp; document.getElementById("frmPrincipal:nombre").value.length &gt; 0)
+				){
+				alert("Todos los campos de busqueda debe tener al menos 3 caracteres.");
+				return false;
+			}
+
+			
+
+			return true;
+		}
+
+		window.onload = function() {
+			if (#{not tablaDecisionList.firstTime and not empty tablaDecisionList.resultList})
+				document.getElementById("frmPrincipal:pnlLista").style.display="block";
+
+			if (#{tablaDecisionList.order != null})
+				document.getElementById("frmPrincipal:pnlLista").style.display="block";
+		}
+		
+	</script>
+		<br />
+
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false"
+			resizeable="false" autosized="true" zindex="2000" top="500"
+			minWidth="350" width="300">
+			<span class="waitingPanel"> <h:graphicImage
+					value="/img/wait_bar.gif" style="vertical-align: middle;" /> <h:outputText
+					style="" value="#{messages['message.pleasewait']}" /> </span>
+		</rich:modalPanel>
+
+		<rich:panel id="funcionSearch" styleClass="edit">
+
+			<rich:simpleTogglePanel label="Busqueda de reglas"
+				switchType="client" opened="true">
+
+				<h:panelGrid columns="8" style=" width : 1080px;">
+
+					<h:outputText value="Nombre" style="font-weight:bold" />
+					<h:inputText id="nombre" styleClass="ancho400"
+						value="#{tablaDecisionList.tablaDecision.nombre}"
+						onblur="javascript:this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');"
+						style=" width : 256px;" />
+					<h:outputText value="Dominio" style="font-weight:bold" />
+					<h:inputText id="dominio"
+						value="#{tablaDecisionList.tablaDecision.dominio}"
+						styleClass="ancho200"
+						onblur="javascript:this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');" />
+
+					<div class="actionButtons">
+						<h:commandButton id="search" value="Buscar"
+							action="#{tablaDecisionList.searchWrap()}"
+							styleClass="btnForm"
+							onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+							reRender="margen5" />
+						<s:button id="reset" value="Limpiar" includePageParams="false"
+							onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+								styleClass="btnForm" />
+					</div>
+				</h:panelGrid>
+
+			</rich:simpleTogglePanel>
+
+		</rich:panel>
+
+		<rich:panel>
+			<f:facet name="header">Resultados de Busqueda de Regla</f:facet>
+			<div class="results">
+
+				<h:outputText value="No se han encontrado resultados."
+					rendered="#{empty tablaDecisionList.resultList and not tablaDecisionList.firstTime}" />
+
+				<h:panelGroup id="pnlLista" style="display:none">
+
+					<rich:dataTable id="tablaDecisionList" var="_tablaDecision"
+						value="#{tablaDecisionList.resultList}" rows="10">
+
+
+						<h:column>
+							<f:facet name="header">
+								<s:link styleClass="columnHeader"
+									value="Nombre #{tablaDecisionList.order=='nombre asc' ? 'Desc.' : ( tablaDecisionList.order=='nombre desc' ? 'Asc.' : '' )}">
+									<f:param name="order"
+										value="#{tablaDecisionList.order=='nombre asc' ? 'nombre desc' : 'nombre asc'}" />
+								</s:link>
+							</f:facet>
+							<h:outputText value="#{_tablaDecision.nombre}" />
+						</h:column>
+
+						<h:column>
+							<f:facet name="header">
+								<s:link styleClass="columnHeader"
+									value="Dominio #{tablaDecisionList.order=='dominio asc' ? 'Desc.' : ( tablaDecisionList.order=='dominio desc' ? 'Asc.' : '' )}">
+									<f:param name="order"
+										value="#{tablaDecisionList.order=='dominio asc' ? 'dominio desc' : 'dominio asc'}" />
+								</s:link>
+							</f:facet>
+							<h:outputText value="#{_tablaDecision.dominio.descripcion}" />
+						</h:column>
+
+						<rich:column styleClass="action" style="width:50px;">
+							<f:facet name="header">
+	            		Version
+	            </f:facet>
+							<h:outputText value="#{_tablaDecision.versionRegla}" />
+						</rich:column>
+						<rich:column styleClass="action" style="width:50px;">
+							<f:facet name="header">
+	            		Estado
+	            </f:facet>
+							<h:outputText value="#Borrador" />
+						</rich:column>
+
+						<rich:column styleClass="action" style="width:50px;">
+							<f:facet name="header">
+	            		Escenario
+	            </f:facet>
+							<s:link value="Escenario"
+								view="/simulacionPaso1ReglaPorAsistente.xhtml"
+								styleClass="hover">
+								<f:param name="regla1" value="#{_tablaDecision.id}" />
+							</s:link>
+						</rich:column>
+
+
+						<rich:column styleClass="action" style="width:50px;text-align: center;">
+							<f:facet name="header">Historial</f:facet>
+
+
+							
+							<s:link view="/reglaHistorialList.xhtml" 
+								id="historialViewId" style="color:#000000;"
+								action="#{reglaHistorialList.init()}"
+								onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+								<h:graphicImage value="/img/ver.png" width="15px" height="15px" title="ver" />
+								<f:param name="reglaId" value="#{_tablaDecision.id}" />
+								<f:param name="tipoRegla" value="tabladecision" />
+							</s:link>
+
+						</rich:column>
+
+						<rich:column styleClass="action" style="width:50px;text-align: center;">
+							<f:facet name="header">
+	            		Simular
+	           				</f:facet>
+	           					<s:link value="Simular"
+	           							view="/simulacionVirtualPaso1ReglaPorLote.xhtml"	
+										styleClass="hover">
+									<f:param name="regla1" value="#{_tablaDecision.id}" />
+								</s:link>	
+						</rich:column>
+
+						<rich:column styleClass="action" style="width:50px;text-align: center;">
+							<f:facet name="header">Accion</f:facet>
+
+							
+							<h:commandLink  action="#{editor.reglaAEditar(_tablaDecision)}"
+								 styleClass="hover"
+								onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})" >
+								<h:graphicImage value="/img/editar.png" width="15px" title="Editar"
+								height="15px" />
+								</h:commandLink>
+						</rich:column>
+
+						<rich:column styleClass="action" style="width:50px;text-align: center;">
+							<f:facet name="header">Ficha</f:facet>
+
+							
+							<h:commandLink action="#{fichaRegla.init(_tablaDecision)}"
+								 styleClass="hover"
+								onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})" >
+								<h:graphicImage value="/img/ficha.png" width="15px"
+								height="15px" title="ficha" />
+								</h:commandLink>
+						</rich:column>
+
+						<rich:column styleClass="action"
+							style="width:50px; text-align: center;">
+							<f:facet name="header">Mapa detallado</f:facet>
+
+						<h:commandLink action="#{graficador.graficar(_tablaDecision)}"
+								 styleClass="hover" >
+								 	<h:graphicImage value="/img/jpg.jpg" width="16px" height="16px" title="JPG" />
+							</h:commandLink>
+						</rich:column>
+
+						<rich:column styleClass="action"
+							style="width:50px; text-align: center;">
+							<f:facet name="header">Mapa resumido</f:facet>
+
+							<h:commandLink
+								action="#{graficador.graficarMapaResumido(_tablaDecision)}"
+								styleClass="hover" >
+									<h:graphicImage value="/img/jpg.jpg" width="16px" height="16px"  title="JPG"/>
+							</h:commandLink>
+						</rich:column>
+						
+						<rich:column styleClass="action"
+							style="width:50px; text-align: center;">
+							<f:facet name="header">DRL File</f:facet>
+
+							
+							<h:commandLink action="#{editor.getDRLFile(_tablaDecision)}"
+								value=" DRL" styleClass="hover" />
+						</rich:column>
+
+
+						<f:facet name="footer">
+							<rich:datascroller id="datascroller" />
+						</f:facet>
+
+					</rich:dataTable>
+				</h:panelGroup>
+			</div>
+		</rich:panel>
+
+		<div class="tableControl">
+
+			<s:link view="/tablaDecisionList.xhtml"
+				rendered="#{tablaDecisionList.previousExists}"
+				value="#{messages.left}#{messages.left} Primera Pagina"
+				id="firstPage">
+				<f:param name="firstResult" value="0" />
+			</s:link>
+
+			<s:link view="/tablaDecisionList.xhtml"
+				rendered="#{tablaDecisionList.previousExists}"
+				value="#{messages.left} Pagina Anterior" id="previousPage">
+				<f:param name="firstResult"
+					value="#{tablaDecisionList.previousFirstResult}" />
+			</s:link>
+
+			<s:link view="/tablaDecisionList.xhtml"
+				rendered="#{tablaDecisionList.nextExists}"
+				value="Next Page #{messages.right}" id="nextPage">
+				<f:param name="firstResult"
+					value="#{tablaDecisionList.nextFirstResult}" />
+			</s:link>
+
+			<s:link view="/tablaDecisionList.xhtml"
+				rendered="#{tablaDecisionList.nextExists}"
+				value="Last Page #{messages.right}#{messages.right}" id="lastPage">
+				<f:param name="firstResult"
+					value="#{tablaDecisionList.lastFirstResult}" />
+			</s:link>
+
+		</div>
+
+		<s:div styleClass="actionButtons" rendered="#{empty from}">
+			<s:button action="#{editor.init()}" id="create" propagation="none"
+				value="Crear Regla"
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+				<f:param name="tablaDecisionId" />
+			</s:button>
+		</s:div>
+
+	</ui:define>
+
+</ui:composition>

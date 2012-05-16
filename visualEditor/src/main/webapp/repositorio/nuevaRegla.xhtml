@@ -1,0 +1,171 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	template="layout/template.xhtml">
+
+
+	<ui:define name="titulo">
+		<h1>Nueva Regla</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Cargue los datos solicitados para comenzar la carga de una nueva regla.
+		Cuando presione el boton <b>"Continuar"</b> podra cargar las condiciones especificas de la regla ingresada<br />
+		<a href="" style="text-align: right; cursor: pointer;">ver mas >></a></div>
+	</ui:define>
+
+<ui:define name="formulario2">
+ 
+                <h:panelGrid columns="2" >
+               
+                <h:outputText value="Nombre" />
+                <h:inputText value="" style="width:200px;" />
+                <h:outputText value="Descripcion" />
+                <h:inputTextarea value=""   />
+                	<h:outputText value="Ambito de aplicacion" />
+			<rich:comboBox defaultLabel="Buscar">
+            <f:selectItem itemValue="opcion 1"/>
+            <f:selectItem itemValue="opcion  2"/>
+            <f:selectItem itemValue="opcion  3"/>
+            <f:selectItem itemValue="opcion  4"/>
+            <f:selectItem itemValue="opcion  5"/>
+      </rich:comboBox>
+
+                
+               
+            	    
+                </h:panelGrid>
+               
+         
+	</ui:define>
+	<ui:define name="bodyInstrumento">
+
+		
+		 <rich:panel bodyClass="inpanelBody"
+			style="height: 200px;overflow:scroll;">
+			<f:facet name="header">
+                    Instrumentos disponibles
+                </f:facet>
+
+
+			<div style="overflow: true;"><rich:tree style="width:300px"
+				nodeSelectListener="#{instrumentoNormativoManager.processSelection}"
+				reRender="tablaInstrumento" ajaxSubmitSelection="true"
+				switchType="client" value="#{instrumentoNormativoManager.treeNode}"
+				var="item" ajaxKeys="#{null}">
+			</rich:tree></div>
+
+		</rich:panel>
+		 <rich:panel bodyClass="inpanelBody"
+			style="height: 200px; overflow:scroll; margin-top:10px;">
+			<f:facet name="header">
+                    Instrumentos seleccionados
+                </f:facet>
+
+
+			<rich:dataTable
+				value="#{instrumentoNormativoManager.instrumentosSeleccionados}"
+				id="tablaInstrumento" var="instrumento">
+				<f:facet name="header">
+					<h:outputText value="Ud ha seleccionado..." />
+				</f:facet>
+
+				<rich:column>
+					<h:graphicImage value="img/bin_closed.png" />
+				</rich:column>
+
+				
+
+				<rich:column>
+					<h:outputText value="#{instrumento.descripcion}" id="descripcion" />
+				</rich:column>
+
+				<rich:column>
+					<h:outputText value="#{instrumento.fechaFirma}">
+						<f:convertDateTime type="date" dateStyle="medium"
+							pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</rich:column>
+
+				<rich:column>
+					<h:outputText value="#{instrumento.fechaVigencia}">
+						<f:convertDateTime type="date" dateStyle="medium"
+							pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</rich:column>
+
+				<rich:column>
+					<h:outputText value="#{instrumento.fechaAplicacion}">
+						<f:convertDateTime type="date" dateStyle="medium"
+							pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</rich:column>
+
+
+
+			</rich:dataTable>
+		</rich:panel> 
+		
+
+		
+
+		<rich:modalPanel id="modalPanel" width="350" height="150">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="Modal Panel"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="img/bt_exit.png" styleClass="hidelink"
+						id="hidelink" />
+					<rich:componentControl for="modalPanel" attachTo="hidelink"
+						operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+
+
+			<h:panelGrid columns="2">
+				<h:outputText value="Grupo" />
+				<rich:comboBox selectFirstOnUpdate="false" defaultLabel="Buscar..">
+					<f:selectItem itemValue="Ley" itemLabel="Ley" />
+					<f:selectItem itemValue="Decreto" itemLabel="Decreto" />
+
+				</rich:comboBox>
+				<h:outputText value="Nombre del Instrumento" />
+				<h:inputText />
+				<h:outputText value="F. Vigencia" />
+				<h:inputText />
+				<h:outputText value="F. Firma" />
+				<h:inputText />
+				<h:outputText value="F. Aplicación" />
+				<h:inputText />
+
+			</h:panelGrid>
+
+
+		</rich:modalPanel>
+
+
+
+		<div style="clear: both" />
+			</ui:define>
+	
+	
+
+	<ui:define name="botonera">
+
+		
+		<div id="botonera">
+		
+		<h:commandButton value="Grabar" />
+		  <h:outputLink value="editor.seam" styleClass="botonnavegacion">Continuar</h:outputLink>
+         </div>
+         </ui:define>
+	
+</ui:composition>

@@ -1,0 +1,157 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h:form id="entidad" styleClass="edit">
+
+			<rich:panel>
+				<f:facet name="header">#{entidadHome.managed ? 'Editar' : 'Agregar'} Entidad</f:facet>
+
+				<h:outputText value="Nombre" />
+				<h:inputText style=" width : 100px;" id="nombre"
+					value="#{entidadHome.instance.nombre}" required="true"
+					requiredMessage="El nombre de la entidad es obligatorio">
+				</h:inputText>
+				<h:message for="nombre" styleClass="errors" />
+
+				<br />
+
+				<h:panelGrid columns="3">
+
+					<h:outputText value="Atributos" />
+
+					<h:outputText value="Nombre" />
+					<h:inputText style=" width : 250px;" id="nombreAtributo"
+						value="#{atributoHome.instance.nombre}" 
+						required="true"
+						requiredMessage="El nombre del atributo es obligatorio" />
+					<h:message for="nombreAtributo" styleClass="errors" />
+
+					<h:outputText value="Descripcion del atributo" />
+					<h:inputTextarea style=" width : 250px; height : 42px;"
+						id="descripcionAtributo"
+						value="#{atributoHome.instance.descripcion}"
+						required="true"
+						requiredMessage="La descripcion del atributo es obligatorio" />
+					<h:message for="descripcionAtributo" styleClass="errors" />
+
+					<h:outputText value="Es cargado por otra regla" />
+					<h:selectBooleanCheckbox
+						value="#{atributoHome.instance.persistible}" />
+
+					<h:message for="descripcionAtributo" styleClass="errors" />
+
+					<h:outputText value="Tipo de Dato" />
+					<rich:comboBox value="#{atributoHome.instance.tipoDato}"
+						id="tipoDato" enableManualInput="false"
+						required="true"
+						requiredMessage="El tipo de dato es obligatorio">
+						<f:selectItem itemValue="TEXTO" itemLabel="Texto" />
+						<f:selectItem itemValue="NUMERO" itemLabel="Numeros" />
+						<f:selectItem itemValue="FECHA" itemLabel="Fecha" />
+						<f:selectItem itemValue="BOOLEANO" itemLabel="Booleano" />
+					</rich:comboBox>
+
+					<h:message for="tipoDato" styleClass="errors" />
+
+					<br />
+
+					<h:commandButton id="agregarAtributo" value="Agregar atributo"
+						action="#{entidadHome.agregarAtributo(atributoHome)}" />
+
+				</h:panelGrid>
+
+				<br />
+
+
+				<h:panelGrid columns="1" style="width:450px">
+					<rich:dataTable id="tablaAtributos"
+						value="#{entidadHome.instance.atributos}" rows="5" var="atr">
+
+						<rich:column width="20px">
+							<h:graphicImage value="/img/aviso.png" width="20px"
+								height="20px" title="El atributo no posee referencias a datos"
+								alt="El atributo no posee referencias a datos" />
+						</rich:column>
+
+						<rich:column>
+							<f:facet name="header">
+								<h:outputText value="Nombre" />
+							</f:facet>
+							<h:outputText value="#{atr.nombre}" />
+						</rich:column>
+
+						<rich:column>
+							<f:facet name="header">
+								<h:outputText value="Descripcion" />
+							</f:facet>
+							<h:outputText value="#{atr.descripcion}" />
+						</rich:column>
+
+						<rich:column>
+							<f:facet name="header">
+								<h:outputText value="Tipo de Dato" />
+							</f:facet>
+							<h:outputText value="#{atr.tipoDato}" />
+						</rich:column>
+
+						<rich:column width="150px">
+							<h:graphicImage value="/img/bbdd_borrar.png" width="20px"
+								height="20px" title="El atributo es cargado por una regla"
+								alt="El atributo es cargado por una regla"
+								rendered="#{atr.persistible==true}" />
+
+
+							<h:graphicImage
+								title="El atributo es cargado desde la base de datos"
+								alt="El atributo es cargado desde la base de datos"
+								value="/img/bbdd_nuevo.png" width="20px" height="20px"
+								rendered="#{atr.persistible==false}" />
+
+
+						</rich:column>
+
+						<f:facet name="footer">
+							<rich:datascroller id="datascroller" />
+						</f:facet>
+					</rich:dataTable>
+				</h:panelGrid>
+
+
+
+
+
+				<div style="clear: both"><span class="required">*</span>
+				required fields</div>
+
+			</rich:panel>
+
+			<div class="actionButtons"><h:commandButton id="save"
+				value="Guardar" action="#{entidadHome.persist}"
+				disabled="#{!entidadHome.wired}" rendered="#{!entidadHome.managed}" />
+
+			<h:commandButton id="update" value="Guardar"
+				action="#{entidadHome.update}" rendered="#{entidadHome.managed}" />
+
+			<h:commandButton id="delete" value="Eliminar"
+				action="#{entidadHome.remove}" immediate="true"
+				rendered="#{entidadHome.managed}" /> <s:button id="cancelEdit"
+				value="Cancelar" propagation="end" view="/entidad.xhtml"
+				rendered="#{entidadHome.managed}" /> <s:button id="cancelAdd"
+				value="Cancelar" propagation="end"
+				view="/#{empty entidadFrom ? 'entidadList' : entidadFrom}.xhtml"
+				rendered="#{!entidadHome.managed}" /></div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

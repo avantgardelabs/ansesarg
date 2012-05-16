@@ -1,0 +1,58 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                template="layout/template.xhtml">
+
+<ui:define name="body">
+
+
+<script>
+
+window.onload = function(){
+	var erroresCuerpo = document.getElementById("mensajesError");
+	var erroresArribaDelMenu = document.getElementById("errorMess");
+
+	
+	erroresCuerpo.innerHTML = erroresCuerpo.innerHTML.replace('""', ' '); 
+	erroresCuerpo.innerHTML = erroresCuerpo.innerHTML.replace(/Transaction Failed/i, ' ');
+	erroresArribaDelMenu.innerHTML = erroresArribaDelMenu.innerHTML.replace('""', ' '); 
+	erroresArribaDelMenu.innerHTML = erroresArribaDelMenu.innerHTML.replace(/Transaction Failed/i, ' ');
+	/*
+	var listArriba = erroresArribaDelMenu.getElementsByTagName('li');
+	alert(listArriba);
+	
+	for(var i=0;listArriba.length;i++){
+		if(listArriba[i].value == "Transaction failed")
+			listArriba.splice(i,1);
+	}
+
+	alert(listArriba);
+
+	alert(listAbajo);
+	var listAbajo = erroresCuerpo.getElementsByTagName('li');
+	for(var i=0;listAbajo.length;i++){
+		if(listAbajo[i].value == "Transaction failed")
+			listAbajo.remove(i);
+	}
+	alert(listAbajo);
+	*/
+};
+
+</script>
+
+    <h1>Error</h1>
+    <p>Ha ocurrido el siguiente error inesperado:</p>
+    
+    <div id="mensajesError">
+    <h:messages styleClass="message" lang="es"/>
+    </div>
+    
+    <br/><br/>
+    <input type="button" onclick="javascript:history.back()" value="Volver" />
+        
+</ui:define> 
+</ui:composition>

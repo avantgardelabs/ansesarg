@@ -1,0 +1,233 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                template="layout/template.xhtml">
+                       
+<ui:define name="ayuda">
+		<div class="ayuda">Pantalla buscar reglas y visualizar las que ya contiene el sistema. <br />
+		<a href="" class="textoayuda">ver mas >></a>
+		</div>
+</ui:define>
+
+<ui:define name="body">
+		<script type="text/javascript" >
+
+		function validacionLongCamposBusqueda(){
+			if( (document.getElementById("frmPrincipal:nombre").value.length &lt; 3 
+				&amp;&amp; document.getElementById("frmPrincipal:nombre").value.length &gt; 0)){
+				alert("Todos los campos de busqueda debe tener al menos 3 caracteres.");
+				return false;
+			}
+			Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300});
+			return true;
+		}
+
+
+		window.onload = function() {
+			if (#{not reglaPseudocodigoList.firstTime and not empty reglaPseudocodigoList.resultList})
+				document.getElementById("frmPrincipal:pnlLista").style.display="block";
+
+			if (#{reglaPseudocodigoList.order != null})
+				document.getElementById("frmPrincipal:pnlLista").style.display="block";
+		}
+	</script>
+	
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+			<span class="waitingPanel">
+			<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+			<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+			</span>
+		</rich:modalPanel>
+        
+    <rich:panel id="funcionSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Busqueda de reglas" switchType="client" opened="true">
+
+            <h:panelGrid columns="8" style=" width : 1080px;">
+            
+            <h:outputText value="Nombre" style="font-weight:bold" />
+            <h:inputText id="nombre" styleClass="ancho400" value="#{reglaPseudocodigoList.reglaPseudocodigo.nombre}"          
+            onblur="javascript:this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');" style=" width : 256px;"/>
+            <h:outputText value="Dominio" style="font-weight:bold" />
+            <h:inputText id="dominio" value="#{reglaPseudocodigoList.reglaPseudocodigo.dominio}" styleClass="ancho200"
+            onblur="javascript:this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');"/>
+            
+		        <div class="actionButtons">
+		            <h:commandButton id="search" 
+		            				value="Buscar" 
+		            				action="#{reglaPseudocodigoList.searchWrap()}" 
+		            				onclick="return validacionLongCamposBusqueda()"
+		            				reRender="margen5"/>
+            		<s:button id="reset" value="Limpiar" includePageParams="false" action="#{reglaPseudocodigoList.limpiar()}" onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+		        </div>    
+            </h:panelGrid>
+            
+        </rich:simpleTogglePanel>
+        
+    </rich:panel>
+          
+    <rich:panel styleClass="margen5">
+        <f:facet name="header">Resultados de Busqueda de Regla</f:facet>
+	    <div class="results" >
+	
+		  <h:outputText value="No se han encontrado resultados." 
+	               rendered="#{empty reglaPseudocodigoList.resultList and not reglaPseudocodigoList.firstTime}"/> 
+	    <h:panelGroup id="pnlLista" style="display:none">           
+	    <rich:dataTable id="reglaPseudocodigoList" 
+	                var="_reglaPseudocodigo"
+	              value="#{reglaPseudocodigoList.resultList}" 
+	           rows="10">
+	
+	        
+	        <h:column>
+	            <f:facet name="header">
+	                <s:link styleClass="columnHeader"
+	                         style="color:#000000;"  value="nombre #{reglaPseudocodigoList.order=='nombre asc' ? 'Asc.' : ( reglaPseudocodigoList.order=='nombre desc' ? 'Desc.' : '' )}">
+	                    <f:param name="order" value="#{reglaPseudocodigoList.order=='nombre asc' ? 'nombre desc' : 'nombre asc'}"/>
+	                </s:link>
+	            </f:facet>
+	            <h:outputText value="#{_reglaPseudocodigo.nombre}"/>
+	        </h:column>
+	
+	        <h:column>
+	            <f:facet name="header">
+	                <s:link styleClass="columnHeader"
+	                              value="Dominio #{reglaPseudocodigoList.order=='dominio asc' ? 'Asc.' : ( reglaPseudocodigoList.order=='dominio desc' ? 'Desc.' : '' )}" style="color:#000000;">
+	                    <f:param name="order" value="#{reglaPseudocodigoList.order=='dominio asc' ? 'dominio desc' : 'dominio asc'}"/>
+	                </s:link>
+	            </f:facet>
+	            <h:outputText value="#{_reglaPseudocodigo.dominio.descripcion}"/>
+	        </h:column>
+	        
+	        <rich:column styleClass="action" style="width:50px;">
+	            <f:facet name="header">
+	            		Version
+	            </f:facet>
+	            <h:outputText value="#{_reglaPseudocodigo.versionRegla}" />
+			</rich:column>	
+			<rich:column styleClass="action" style="width:50px;">
+	            <f:facet name="header">
+	            		Estado
+	            </f:facet>
+	            <h:outputText value="#Borrador" />
+			</rich:column>
+			<rich:column styleClass="action" style="width:50px;">
+	            <f:facet name="header">
+	            		Simular
+	            </f:facet>
+	             <s:link value="Simular" view="/simulacionPaso1.xhtml" styleClass="hover">
+	             <f:param name="regla"
+	                        value="#{_reglaPseudocodigo.id}"/>
+	             </s:link>
+			</rich:column>
+			        
+	        <rich:column styleClass="action" style="width:50px;">
+	            <f:facet name="header">Historial</f:facet>
+	        
+	        
+	        <h:graphicImage value="/img/ver.png" width="15px" height="15px" />  
+	        <s:link 
+	        	view="/reglaHistorialList.xhtml"
+	            value="Ver"
+	            id="historialViewId"
+				style="color:#000000;"
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+				>
+	            <f:param 
+	            	name="reglaId" 
+	                value="#{_reglaPseudocodigo.id}"
+	            />
+	            <f:param 
+	            	name="tipoRegla" 
+	                value="pseudocodigo"
+	            />
+	            </s:link>
+	            
+	        </rich:column>
+	        
+	
+	        <rich:column styleClass="action" style="width:50px;">
+	            <f:facet name="header">Accion</f:facet>
+	        
+	        
+	            <h:graphicImage value="/img/editar.png" width="15px" height="15px" />
+	            <s:link view="/reglaPseudocodigoEdit.xhtml"
+	                   value=" Editar "
+	                    style="color:#000000;"
+	               propagation="none" 
+	                 id="reglaPseudocodigoEdit"
+	                 rendered="#{empty from}"
+	                 onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+	                <f:param name="reglaPseudocodigoId"
+	                        value="#{_reglaPseudocodigo.id}"/>
+	               <f:param 
+	            	name="reglaPseudocodigofrom" 
+	                value="reglaPseudocodigoList"
+	            />
+	            </s:link>
+	        </rich:column>
+	        
+	        <f:facet name="footer">
+							<rich:datascroller id="datascroller" />
+			</f:facet>
+			
+	    </rich:dataTable>
+		</h:panelGroup>
+   	 </div>
+    </rich:panel>
+    
+    <div class="tableControl">
+      
+        <s:link view="/reglaPseudocodigoList.xhtml" 
+            rendered="#{reglaPseudocodigoList.previousExists}" 
+               value="#{messages.left}#{messages.left} Primera Pagina"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+        
+        <s:link view="/reglaPseudocodigoList.xhtml" 
+            rendered="#{reglaPseudocodigoList.previousExists}" 
+               value="#{messages.left} Pagina Anterior"
+                  id="previousPage">
+            <f:param name="firstResult" 
+                    value="#{reglaPseudocodigoList.previousFirstResult}"/>
+        </s:link>
+        
+        <s:link view="/reglaPseudocodigoList.xhtml" 
+            rendered="#{reglaPseudocodigoList.nextExists}" 
+               value="Next Page #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult" 
+                    value="#{reglaPseudocodigoList.nextFirstResult}"/>
+        </s:link>
+        
+        <s:link view="/reglaPseudocodigoList.xhtml" 
+            rendered="#{reglaPseudocodigoList.nextExists}" 
+               value="Last Page #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult" 
+                    value="#{reglaPseudocodigoList.lastFirstResult}"/>
+        </s:link>
+        
+    </div>
+    
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button 	action="#{reglaPseudocodigoHome.init()}"
+                    id="create"
+           propagation="none"
+                 value="Crear Regla"
+                 onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+            <f:param name="tablaDecisionId"/>
+        </s:button>
+    </s:div>
+    
+</ui:define>
+
+</ui:composition>

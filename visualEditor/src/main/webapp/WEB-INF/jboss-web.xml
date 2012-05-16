@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<jboss-web>
+<context-root>/asistente_reglas</context-root>  
+  <class-loading java2ClassLoadingCompliance="false">
+    <loader-repository>
+      seam.jboss.org:loader=asistente_reglas
+      <loader-repository-config>java2ParentDelegation=false</loader-repository-config>
+    </loader-repository>
+  </class-loading>
+</jboss-web>

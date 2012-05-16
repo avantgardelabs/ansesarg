@@ -1,0 +1,139 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich" 
+	xmlns:a4j="http://richfaces.org/a4j" template="layout/template.xhtml">
+
+	
+
+	<ui:define name="body">
+	
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+			<span class="waitingPanel">
+			<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+			<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+			</span>
+		</rich:modalPanel>
+
+		<rich:panel styleClass="margen5" id="panelHistoria">
+			<f:facet name="header">
+				<h:outputText
+					value="Historial regla #{reglaHistorialList.selected.nombre}" />
+			</f:facet>
+			<div class="results" id="reglaHistorialDiv">
+			<h:outputText
+				value="No se han encontrado resultados."
+				rendered="#{empty reglaHistorialList.historialList}" /> 
+			<rich:dataTable
+				id="tablaHistorialDecisionTable" var="_historico"
+				value="#{reglaHistorialList.historialList}"
+				rendered="#{not empty reglaHistorialList.historialList}"
+				rows="10">
+				<rich:column>
+					<f:facet name="header">
+	            		Version
+	            </f:facet>
+					<h:outputText value="#{_historico.versionRegla}" />
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">
+	            		Sel
+	            </f:facet>
+	            	<h:selectBooleanCheckbox id="check_sel" value="#{_historico.selectedForDiff}">
+	            		
+	            	</h:selectBooleanCheckbox>
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">
+	            		Autor
+	            </f:facet>
+					<h:outputText value="#{_historico.autor}" />
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">
+	            		Fecha
+	            </f:facet>
+					<h:outputText value="#{_historico.fechaFormat}" />
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">
+	            		Observaciones
+	            </f:facet>
+					<h:outputText value="#{_historico.observaciones}" />
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">
+	            		Acciones
+	            </f:facet>
+					<s:link view="/reglaPseudocodigoRead.xhtml"
+	                   	
+	                    style="color:#000000;"
+	               		propagation="none" 
+	                 	id="reglaPseudocodigoView"
+	                 	rendered="#{reglaHistorialList.tipoRegla=='pseudocodigo'}"
+	                 	onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+	                	<f:param name="reglaPseudocodigoId"
+	                         value="#{_historico.id}"/>
+	               		<f:param name="reglaPseudocodigofrom" 
+	                		value="reglaHistorialList"/>
+	                		<h:graphicImage value="/img/ver.png" width="15px" height="15px" />
+					
+	            	</s:link>
+	            	<h:commandLink action="#{editor.reglaAVer(_historico)}"
+	                   
+	                    style="color:#000000;"
+	               		propagation="none" 
+	                 	id="tablaDecisionView"
+	                 	rendered="#{reglaHistorialList.tipoRegla=='tabladecision'}"
+	                 	onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+	                 	>	
+	                 	<h:graphicImage value="/img/ver.png" width="15px" height="15px"  title="Ver"/>
+					                	
+	            	</h:commandLink>
+					<s:link view="/reglaPseudocodigoEdit.xhtml"
+	                  
+	                    style="color:#000000;"
+	               		propagation="none" 
+	                 	id="reglaPseudocodigoEdit"
+	                 	rendered="#{reglaHistorialList.tipoRegla=='pseudocodigo'}"
+	                 	onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+	                	<f:param name="reglaPseudocodigoId"
+	                         value="#{_historico.id}"/>
+	               		<f:param name="reglaPseudocodigofrom" 
+	                		value="reglaHistorialList"/>
+	                		<h:graphicImage value="/img/editar.png" width="15px" height="15px" title="Editar" />
+					
+	            	</s:link>
+	            	<h:commandLink  action="#{editor.reglaAEditar(_historico)}"
+	                   	
+	                    style="color:#000000;"
+	               		propagation="none" 
+	                 	id="tablaDecisionEdit"
+	                 	rendered="#{reglaHistorialList.tipoRegla=='tabladecision'}"
+	                 	onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+	                 	>
+	                 	<h:graphicImage value="/img/editar.png" width="15px" height="15px" />
+						                	
+	            	</h:commandLink>
+				</rich:column>
+				<f:facet name="footer">
+					<rich:datascroller id="datascroller" />
+				</f:facet>
+
+			</rich:dataTable></div>
+			<br />
+				</rich:panel>
+			<div class="actionButtons">
+			<s:button id="edit" action="#{reglaHistorialList.comeBack()}" value="Atras" onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/> 
+			<h:commandButton id="diferencia" action="#{reglaHistorialList.validateDiferences()}" value="Diferencia" onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+			</div>
+	
+	</ui:define>
+
+</ui:composition>

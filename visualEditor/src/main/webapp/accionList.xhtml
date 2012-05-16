@@ -1,0 +1,234 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                template="layout/template.xhtml">
+             
+<ui:define name="ayuda">
+		<div class="ayuda">Pantalla buscar acciones y visualizar las acciones que ya contiene el sistema. <br />
+		<a href="" class="textoayuda">ver mas >></a>
+		</div>
+</ui:define>
+          
+<ui:define name="body">
+    
+    <![CDATA[<h:messages globalOnly="true" styleClass="message" id="globalMessages"/>]]>
+
+    
+    <script type="text/javascript" >
+
+		function validacionLongCamposBusqueda(){
+			if( (document.getElementById("frmPrincipal:dominio").value.length &lt; 3 
+				&amp;&amp; document.getElementById("frmPrincipal:dominio").value.length &gt; 0)
+				||
+				(document.getElementById("frmPrincipal:nombre").value.length &lt; 3 
+				&amp;&amp; document.getElementById("frmPrincipal:nombre").value.length &gt; 0)
+				||
+				(document.getElementById("frmPrincipal:descripcion").value.length &lt; 3 
+				&amp;&amp; document.getElementById("frmPrincipal:descripcion").value.length &gt; 0)
+				){
+				alert("Todos los campos de busqueda debe tener al menos 3 caracteres.");
+				return false;
+			}
+			Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300});
+			return true;
+		}
+
+		window.onload = function() {
+			if (#{not accionList.firstTime and not empty accionList.resultList})
+				document.getElementById("frmPrincipal:pnlLista").style.display="block";
+
+			if (#{accionList.order != null})
+				document.getElementById("frmPrincipal:pnlLista").style.display="block";
+		}
+		
+	</script>
+    
+    <rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+		<span class="waitingPanel">
+		<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+		<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+		</span>
+	</rich:modalPanel>
+	
+    <rich:panel id="accionSearch" styleClass="edit">
+
+        <rich:simpleTogglePanel label="Busqueda de accion" switchType="client" opened="true">
+
+             <h:panelGrid columns="9" style="border:none;">
+             
+                 <h:outputText value="Nombre" style="font-weight:bold" />
+                <h:inputText id="nombre" value="#{accionList.accion.nombre}" styleClass="ancho150" onblur="javascript:this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');"/>
+          
+               <h:outputText value="Descripcion" style="font-weight:bold" />
+                <h:inputText id="descripcion" value="#{accionList.accion.descripcion}" styleClass="ancho300" onblur="javascript:this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');" />
+            
+                 <h:outputText value="Dominio" style="font-weight:bold" />
+                <h:inputText id="dominio" value="#{accionList.accion.dominio.descripcion}" styleClass="ancho150" onblur="javascript:this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');"/>
+        
+           
+	        	<div class="actionButtons">
+	            	<h:commandButton id="search" value="Buscar" action="#{accionList.searchWrap()}" onclick="return validacionLongCamposBusqueda()"/>
+	            	<s:button id="reset" value="Limpiar" includePageParams="false" action='#{accionList.limpiar()}' onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+	        	</div>
+         </h:panelGrid>
+                       
+        </rich:simpleTogglePanel>
+        
+        
+        
+    </rich:panel>
+    
+    <rich:panel styleClass="margen5">
+        <f:facet name="header">Resultados de Busqueda de Acciones</f:facet>
+    <div class="results">
+
+    <h:outputText value="No se han encontrado resultados." 
+               rendered="#{empty accionList.resultList and not accionList.firstTime}"/>
+             
+    <h:panelGroup id="pnlLista" style="display:none">        
+    <rich:dataTable id="accionList" 
+                var="_accion"
+              value="#{accionList.resultList}" 
+           rows="10">
+
+        
+        <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="Nombre #{accionList.order=='nombre asc' ? 'Asc.' : ( accionList.order=='nombre desc' ? 'Desc.' : '' )}"
+                             style="color:#000000;">
+                    <f:param name="order" value="#{accionList.order=='nombre asc' ? 'nombre desc' : 'nombre asc'}"/>
+                </s:link>
+            </f:facet>
+            <h:outputText value="#{_accion.nombre}"/>
+        </h:column>
+ 
+         <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="Descripcion #{accionList.order=='descripcion asc' ? 'Asc.' : ( accionList.order=='descripcion desc' ? 'Desc.' : '' )}"
+                             style="color:#000000;">
+                    <f:param name="order" value="#{accionList.order=='descripcion asc' ? 'descripcion desc' : 'descripcion asc'}"/>
+                </s:link>
+            </f:facet>
+            <h:outputText value="#{_accion.descripcion}"/>
+        </h:column> 
+        
+         <h:column>
+            <f:facet name="header">
+                <s:link styleClass="columnHeader"
+                             value="Dominio #{accionList.order=='dominio asc' ? 'Asc.' : ( accionList.order=='dominio desc' ? 'Desc.' : '' )}"
+                             style="color:#000000;">
+                    <f:param name="order" value="#{accionList.order=='dominio asc' ? 'dominio desc' : 'dominio asc'}"/>
+                </s:link>
+            </f:facet>
+            <h:outputText value="#{_accion.dominio.descripcion}"/>
+        </h:column>               
+        
+        <rich:column styleClass="ancho150">
+            <f:facet name="header">Accion</f:facet>
+        
+        
+        <h:graphicImage value="/img/ver.png" width="15px" height="15px" styleClass="img" />    
+        <s:link view="/#{empty from ? 'accion' : from}.xhtml"
+                   value="#{empty from ? 'Ver' : 'Select'}"
+             propagation="#{empty from ? 'none' : 'default'}"
+                      id="accionViewId"
+                      style="color:#000000;"
+                      onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+                <f:param name="accionId" 
+                        value="#{_accion.id}"/>
+            </s:link>
+        
+           
+        
+            #{' '}
+            <h:graphicImage value="/img/editar.png" width="15px" height="15px" styleClass="img" align="texttop" />  
+            <s:link view="/accionEdit.xhtml"
+                   value="Editar"
+                   
+               propagation="none" 
+                 id="accionEdit"
+                rendered="#{empty from}"
+                style="color:#000000;"
+                onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+                >
+                
+                <f:param name="accionId"
+                        value="#{_accion.id}"/>
+            </s:link>
+        </rich:column>
+        
+        <f:facet name="footer">
+				<rich:datascroller id="datascroller" />
+		</f:facet>
+    
+    </rich:dataTable>
+	</h:panelGroup>
+    </div>
+    </rich:panel>
+    
+    <div class="tableControl">
+      
+        <s:link view="/accionList.xhtml" 
+            rendered="#{accionList.previousExists}" 
+               value="#{messages.left}#{messages.left} Primera Pagina"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+        
+        <s:link view="/accionList.xhtml" 
+            rendered="#{accionList.previousExists}" 
+               value="#{messages.left} Pagina Anterior"
+                  id="previousPage">
+            <f:param name="firstResult" 
+                    value="#{accionList.previousFirstResult}"/>
+        </s:link>
+        
+        <s:link view="/accionList.xhtml" 
+            rendered="#{accionList.nextExists}" 
+               value="Next Page #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult" 
+                    value="#{accionList.nextFirstResult}"/>
+        </s:link>
+        
+        <s:link view="/accionList.xhtml" 
+            rendered="#{accionList.nextExists}" 
+               value="Last Page #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult" 
+                    value="#{accionList.lastFirstResult}"/>
+        </s:link>
+        
+    </div>
+    
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/accionEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Crear accion"
+                 onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+            <f:param name="accionId"/>
+        </s:button>
+        
+        <s:button view="/home.xhtml"
+                    id="salir"
+           propagation="none"
+                 value="Salir"
+                 onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+        </s:button>
+        
+    </s:div>
+    
+</ui:define>
+
+</ui:composition>
+

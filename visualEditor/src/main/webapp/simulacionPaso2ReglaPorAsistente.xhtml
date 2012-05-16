@@ -1,0 +1,131 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                template= "layout/template.xhtml"
+                xmlns:a4j="http://richfaces.org/a4j">
+
+<ui:define name="titulo">
+		<h1> Generación de Escenario</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">
+		<h:outputText value="Regla a simular: #{simulacionReglaPorAsistenteAction.tabla.nombre}"/>
+		<a href="" class="textoayuda">ver mas >></a>
+		
+		</div>
+	</ui:define>
+	                       
+<ui:define name="body">
+    
+    <![CDATA[<h:messages globalOnly="true" styleClass="message" id="globalMessages"/>]]>
+    
+    <rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+		<span class="waitingPanel">
+		<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+		<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+		</span>
+	</rich:modalPanel>
+	
+   	<div id="formulario">
+	
+	<a4j:outputPanel id="panelNombre">
+	<h:panelGrid columns="1"  styleClass="rich-table70">
+    <s:decorate template="layout/edit.xhtml">
+    <ui:define name="label">Nombre:</ui:define>
+  		<h:inputText  value = "#{simulacionReglaPorAsistenteAction.escenario.nombre}" required="true" disabled="#{simulacionReglaPorAsistenteAction.tipoAccion != 1}"
+  		requiredMessage="El Campo Nombre es obligatorio"/>
+    </s:decorate>
+    	
+    <s:decorate template="layout/edit.xhtml">
+    	<ui:define name="label">Descripción:</ui:define>
+    	<h:inputText value = "#{simulacionReglaPorAsistenteAction.escenario.descripcion}" required="true" disabled="#{simulacionReglaPorAsistenteAction.tipoAccion == 0}"
+    	requiredMessage="El Campo Descripción es obligatorio"/>
+    </s:decorate>
+   
+    <br/>
+    
+    </h:panelGrid>
+    <h:panelGrid columns="5" rendered="#{simulacionReglaPorAsistenteAction.tipoAccion != 0}">
+    <h:outputLabel value="Visibilidad" style="font-weight:bold"/>
+    
+    	<h:selectOneRadio value="#{simulacionReglaPorAsistenteAction.escenario.visibilidad}">
+    		<f:selectItem  itemLabel="Confidencial" itemValue="false"/>
+    		<f:selectItem  itemLabel="Datos Públicos" itemValue="true"/>
+    	</h:selectOneRadio>
+    	  	<h:outputText value="" />
+    	  	<h:outputText value="" />
+    	  	<h:outputText value="" />
+    	  	<h:outputText value="" />
+    </h:panelGrid>
+	</a4j:outputPanel>
+		
+	<rich:panel>
+	<f:facet name="header">Simulación</f:facet>
+	
+	<rich:dataTable value="#{simulacionReglaPorAsistenteAction.listaEscenario}" var="var" rows="10">
+    	<rich:column>
+                <f:facet name="header">
+                    Entidad
+                </f:facet>
+                    <h:outputText value="#{var.entidad.nombre}"/>
+        </rich:column>
+    
+    	  	<rich:column>
+                <f:facet name="header">
+                    Atributo
+                </f:facet>
+                    <h:outputText value="#{var.atributo.nombre}"/>
+                    
+        </rich:column>
+        
+          	<rich:column>
+                <f:facet name="header">
+                    Acción
+                </f:facet>
+                    <a4j:commandLink action="#{simulacionReglaPorAsistenteAction.irADetalle(var)}"
+                   style = "color: black"  reRender="panelNombre">
+	
+						<h:graphicImage value="/img/application_view_detail.png" styleClass="img"/>
+						<h:outputText value="Detalle" />
+					</a4j:commandLink>
+        </rich:column>
+        
+          	<rich:column>
+                <f:facet name="header">
+                    Estado
+                </f:facet>
+                    <h:outputText value="Con datos" rendered = "#{!(((var.universo.isEmpty()) and (var.valoresSimples.isEmpty()) or ((var.universo == null) and (var.valoresSimples == null))))}"/>
+                    <h:outputText value="Sin datos" rendered = "#{((var.universo.isEmpty()) and (var.valoresSimples.isEmpty()) or ((var.universo == null) and (var.valoresSimples == null)))}"/>
+
+        </rich:column>
+    
+    <f:facet name="footer">
+		<rich:datascroller id="datascroller" />
+	</f:facet>
+    
+    </rich:dataTable>
+    
+	
+	</rich:panel>	
+	</div>
+    
+    <div class="actionButtons">      
+		
+		<s:button value ="Atrás" view ="/simulacionPaso1ReglaPorAsistente.xhtml"/>
+        <h:commandButton value="Cancelar" action="#{simulacionReglaPorAsistenteAction.cancelar()}" immediate="true"/>
+        <h:commandButton value ="Guardar" action="#{simulacionReglaPorAsistenteAction.guardarEscenario()}" rendered = "#{simulacionReglaPorAsistenteAction.tipoAccion!= 0}"/>
+                       
+        
+
+    </div>
+
+</ui:define>
+
+</ui:composition>

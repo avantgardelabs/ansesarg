@@ -1,0 +1,195 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j" template="layout/template.xhtml">
+
+
+	<ui:define name="titulo">
+		<h1>Nueva fila</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Aqui va un texto de ayuda<br />
+		<a href="" class="textoayuda">ver mas >></a></div>
+	</ui:define>
+
+	<ui:define name="body">
+	
+		<script type="text/javascript">
+			var __emptyMsg = true;
+			function confirmar() {
+				if (document.getElementById("frmPrincipal:observaciones").value == "" &amp;&amp; document.getElementById("frmPrincipal:mensajesUdai").value == "" &amp;&amp; document.getElementById("frmPrincipal:mensajesWeb").value == "") 
+					return confirm("Desea continuar sin haber agregado ningun mensaje?");
+				return true;
+			}
+				 
+		</script>
+		
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+			<span class="waitingPanel">
+			<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+			<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+			</span>
+		</rich:modalPanel>
+
+		<div id="formulario"><h:panelGrid columns="1" style="width:99%">
+
+			<div id="DIV100">
+			
+			
+			<rich:dataTable value="#{fakeFila}">
+				<rich:columns value="#{filaAAgregar.valores}"
+					var="descisor" index="idx">
+					<f:facet name="header">
+						<h:outputText value="#{descisor.condicion.nombre}" />
+					</f:facet>
+
+
+
+					<h:selectOneMenu defaultLabel="Valor?"
+						value="#{descisor.valor}">
+						<s:selectItems 
+							noSelectionLabel="N/A"
+							var="literal" 
+							value="#{descisor.condicion.literales}"
+							label="#{literal.nombre}" />
+						<s:convertEntity />
+					</h:selectOneMenu>
+
+				</rich:columns>
+
+			</rich:dataTable></div>
+
+
+
+			<rich:separator height="2" lineType="solid" />
+			<h:panelGrid columns="2">
+
+
+				<rich:listShuttle
+					sourceValue="#{reglaPseudocodigoHome.accionesSeleccionadasFila}"
+					targetValue="#{reglaPseudocodigoHome.reglaFilaPseudocodigoActual.acciones}"
+					sourceCaptionLabel="Acciones esperadas disponibles"
+					targetCaptionLabel="Acciones esperadas seleccionados"
+					required="true" var="accion" removeControlLabel="Quitar"
+					removeAllControlLabel="Quitar Todos"
+					copyAllControlLabel="Agregar todos" copyControlLabel="Agregar"
+					upControlLabel="Subir" downControlLabel="Bajar"
+					fastOrderControlsVisible="false" listsHeight="100"
+					targetListWidth="400" sourceListWidth="400">
+
+					<rich:column>
+						<f:facet name="header">
+							<h:outputText value="Dominio" styleClass="columna" />
+						</f:facet>
+						<h:outputText value="#{accion.dominio.descripcion}"></h:outputText>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">
+							<h:outputText value="Accion" styleClass="columna" />
+						</f:facet>
+						<h:outputText value="#{accion.nombre}"></h:outputText>
+					</rich:column>
+					
+					<a4j:support event="onlistchanged" action="#{reglaPseudocodigoHome.actualizar()}" />
+            		<a4j:support event="onorderchanged" action="#{reglaPseudocodigoHome.actualizar()}" />
+
+					<s:convertEntity />
+
+				</rich:listShuttle>
+
+
+			</h:panelGrid>
+			<h:message for="tipoAccion" styleClass="errors" />
+
+			<rich:separator height="2" lineType="solid" />
+
+
+
+
+			<h:panelGrid columns="3" style="height : 21px; width : 1024px;">
+				<h:outputText value="Mensaje para operador de UDAI" />
+				<h:outputText value="Mensaje para Ciudadano" />
+				<h:outputText value="Observacion general" />
+			</h:panelGrid>
+			<h:panelGrid columns="3">
+
+				<h:inputTextarea 
+					id="mensajesWeb" width="300" height="70"
+					value="#{reglaPseudocodigoHome.reglaFilaPseudocodigoActual.mensajeOperadorUdai}" style=" width : 347px; height : 76px;">
+					<s:validate />
+				</h:inputTextarea>
+
+				<h:inputTextarea  id="mensajesUdai" width="300" height="70"
+					value="#{reglaPseudocodigoHome.reglaFilaPseudocodigoActual.mensajeUsuarioWEB}" style=" width : 347px;height : 76px;">
+					<s:validate />
+				</h:inputTextarea>
+				
+				<h:inputTextarea id="observaciones" width="300" height="70"
+					value="#{reglaPseudocodigoHome.reglaFilaPseudocodigoActual.observacion}" style=" width : 347px;height : 76px;">
+					<s:validate />
+				</h:inputTextarea>
+				
+				<h:message for="mensajesWeb" styleClass="error errors" style="width: 336px;" />
+				<h:message for="mensajesUdai" styleClass="error errors" style="width: 336px;"/>
+				<h:message for="observaciones" styleClass="error errors" style="width: 336px;"/>
+
+			</h:panelGrid>
+
+		</h:panelGrid>
+		
+		</div>
+
+
+
+
+		<div style="clear: both" />
+	</ui:define>
+	<ui:define name="botonera">
+
+
+		<div id="botonera">
+		
+		<h:commandButton action="#{reglaPseudocodigoHome.irALista()}"
+						styleClass="botonnavegacion"
+						value="Cancelar" 
+						style="color:#ffffff;"
+						onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+						
+						<a4j:support 
+							event="onclick"
+							onsubmit="javascript:return confirm('Esta seguro que desea cancelar la operacion?')"
+						/>
+		</h:commandButton>
+		
+		 		
+		<h:commandButton action="#{reglaPseudocodigoHome.atras()}"
+						styleClass="botonnavegacion"
+						value="Atras" 
+						style="color:#ffffff;"
+						onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+		
+			 
+		<h:commandButton
+				value="Continuar >>"
+				style="color:#ffffff;" 
+				styleClass="botonnavegacion"
+				action="#{reglaPseudocodigoHome.irAPasoFinal()}"
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+			>
+			<a4j:support 
+					event="onclick"
+					onsubmit="return confirmar();"
+				/>
+		</h:commandButton>
+		</div>
+	</ui:define>
+
+</ui:composition>

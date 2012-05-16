@@ -1,0 +1,137 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.ajax4jsf.org/rich">
+
+	<rich:toolBar height="30" itemSeparator="grid" styleClass="encab_Menu">
+		<rich:toolBarGroup location="right">
+			<h:graphicImage value="/img/bt_home.png" styleClass="pic"
+				onclick="document.location.href='/asistente_reglas/home.seam'" />
+			<h:graphicImage value="/img/bt_help.png" styleClass="pic" />
+			<h:graphicImage value="/img/bt_exit.png" styleClass="pic" />
+		</rich:toolBarGroup>
+	</rich:toolBar>
+	<rich:toolBar>
+
+		<style>
+.pic {
+	margin-bottom: -4px;
+	margin-right: 2px;
+}
+</style>
+
+	  
+		<rich:dropDownMenu>
+			<f:facet name="label">
+				<h:panelGroup>
+					<h:outputText value="Reglas/Funciones " />
+				</h:panelGroup>
+			</f:facet>
+			
+
+				<rich:menuItem value="Reglas Por Asistente" submitMode="none" 
+					onclick="document.location.href='/asistente_reglas/tablaDecisionList.seam'" />
+
+			
+				<rich:menuItem submitMode="none" value="Reglas Por PseudoCodigo" 
+				 onclick="document.location.href='/asistente_reglas/reglaPseudocodigoList.seam'" />
+				 
+				 <rich:menuItem submitMode="none" value="Funciones" disabled="false"
+				 onclick="document.location.href='/asistente_reglas/FuncionList.seam'"/> 
+
+		</rich:dropDownMenu>
+
+		<rich:dropDownMenu>
+			<f:facet name="label">
+				<h:panelGroup>
+					<h:outputText value="Revision de Reglas" />
+				</h:panelGroup>
+			</f:facet>
+			<rich:menuItem submitMode="none" value="Aprobar" disabled="true"
+				 onclick="document.location.href='/asistente_reglas/construccion.seam'"/> 
+				 
+			<rich:menuItem submitMode="none" value="Controlar" disabled="true"
+				 onclick="document.location.href='/asistente_reglas/construccion.seam'" />
+				 
+			<rich:menuItem submitMode="none" value="Auditar" disabled="true"
+				 onclick="document.location.href='/asistente_reglas/construccion.seam'"/>
+				  
+		</rich:dropDownMenu>
+
+		<rich:dropDownMenu>
+			<f:facet name="label">
+				<h:panelGroup>
+					<h:outputText value="Derogar Regla" />
+				</h:panelGroup>
+			</f:facet>
+
+		</rich:dropDownMenu>
+
+
+
+
+		<rich:dropDownMenu>
+			<f:facet name="label">
+				<h:panelGroup>
+					<h:outputText value="Simulador" />
+				</h:panelGroup>
+			</f:facet>
+
+			<rich:menuGroup value="Simular Reglas">
+				<rich:menuItem submitMode="none" value="R.T.I" disabled="true"
+					onclick="document.location.href='/asistente_reglas/simulacion.seam'" />
+
+			</rich:menuGroup>
+
+
+		</rich:dropDownMenu> 
+
+
+		<rich:dropDownMenu>
+			<f:facet name="label">
+				<h:panelGroup>
+					<h:outputText value="Mantenimiento" />
+				</h:panelGroup>
+			</f:facet>
+			
+				
+			<rich:menuItem submitMode="none" value="Instrumentos Normativos" disabled="false"
+				 onclick="document.location.href='/asistente_reglas/instrumentoEdit.seam'"/> 
+	
+		 
+				<rich:menuItem submitMode="none" value="Dominios"
+					onclick="document.location.href='/asistente_reglas/dominioList.seam'" />
+					
+				<rich:menuItem submitMode="none" value="Entidades"
+					onclick="document.location.href='/asistente_reglas/entidadList.seam'"/>
+
+				<rich:menuItem submitMode="none" value="Relación entre entidades"
+					onclick="document.location.href='/asistente_reglas/relacionList.seam'"/>
+
+				<rich:menuItem submitMode="none" value="Condiciones"
+					onclick="document.location.href='/asistente_reglas/condicionList.seam'" />
+
+				<rich:menuItem submitMode="none" value="Acciones"
+					onclick="document.location.href='/asistente_reglas/accionList.seam'" />
+				
+				<rich:menuItem submitMode="none" value="Fórmulas"
+					onclick="document.location.href='/asistente_reglas/formulas.seam'" />
+					
+				<rich:menuGroup value="Requerimientos Informaticos">
+					<rich:menuItem submitMode="none" value="Muestra de Datos" 
+						onclick="document.location.href='/asistente_reglas/Rational/buscarRegla.seam'" />
+					<rich:menuItem submitMode="none" value="Anclaje de atributos" 
+						onclick="document.location.href='/asistente_reglas/Rational/buscarEntidad.seam'" />
+					<rich:menuItem submitMode="none" value="Pasaje de Reglas" 
+						onclick="document.location.href='/asistente_reglas/Rational/buscarReglaPasaje.seam'" />
+				</rich:menuGroup>
+
+
+		</rich:dropDownMenu>
+
+
+
+	</rich:toolBar>
+</ui:composition>

@@ -1,0 +1,97 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<!-- Librerias que debera contener todas las paginas -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich" template="template.xhtml">
+
+	<!-- Seccion del titulo -->
+	<ui:define name="titulo">
+		<h1>Alta y Modificacion</h1>
+	</ui:define>
+
+
+	<!-- Ayuda -->
+	<ui:define name="ayuda">
+		<div class="ayuda">Texto simulado</div>
+	</ui:define>
+
+
+
+	<!-- Inicio del Body -->
+	<ui:define name="body">
+
+
+		<!-- Inicio del Formulario -->
+
+
+		<div id="cajaformulario"><h:panelGrid columns="2">
+
+			<h:outputText value="Codigo" />
+			<h:inputText value="" styleClass="codigo" />
+
+			<h:outputText value="Descripcion" />
+			<h:inputTextarea value="" styleClass="descripcion" />
+		</h:panelGrid> <rich:dataTable value="">
+			<f:facet name="header">
+				<h:outputText value="Ud ha seleccionado..." />
+			</f:facet>
+
+			<rich:column>
+				<h:graphicImage value="../../img/bin_closed.png" />
+			</rich:column>
+
+			<rich:column>
+				<h:selectBooleanCheckbox />
+			</rich:column>
+
+
+
+			<rich:column>
+				<h:outputText value="texto " id="descripcion" />
+			</rich:column>
+
+			<rich:column>
+				<h:outputText value="15/12/2009">
+					<f:convertDateTime type="date" dateStyle="medium"
+						pattern="dd/MM/yyyy" />
+				</h:outputText>
+			</rich:column>
+
+
+		</rich:dataTable></div>
+
+
+
+	</ui:define>
+
+
+
+
+
+
+
+
+
+
+	<!-- Inicio de la seccion de botonera -->
+	<ui:define name="botonera">
+
+		<!-- etiqueta utilizadas como hiperlinks -->
+
+		<h:commandButton value="Agregar" />
+		<h:commandButton value="Modificar" disabled="true" />
+
+
+		<div id="botonera"><h:commandButton value="siguiente" /></div>
+
+	</ui:define>
+
+
+
+</ui:composition>

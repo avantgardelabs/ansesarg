@@ -1,0 +1,258 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                xmlns:a4j="http://richfaces.org/a4j"
+                template="layout/template.xhtml">
+
+<ui:define name="ayuda">
+		<div class="ayuda">Pantalla editar o crear acciones. <br />
+		<a href="" class="textoayuda">ver mas >></a>
+		</div>
+</ui:define>
+
+<ui:define name="body">
+
+	<script language="javascript" type="text/javascript">
+	function limitText(limitFieldId, limitCountId, limitNum) {
+		var limitField = document.getElementById(limitFieldId);
+		var limitCount = document.getElementById(limitCountId);
+		if (limitField.value.length > limitNum) {
+			limitField.value = limitField.value.substring(0, limitNum);
+		} else {
+			limitCount.value = limitNum - limitField.value.length;
+		}
+	}
+	</script>
+
+	<rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+		<span class="waitingPanel">
+		<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+		<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+		</span>
+	</rich:modalPanel>
+
+<rich:panel id="panelEdit">
+
+		<div style="width: 100%; float:left;">
+		
+			<div style="width: 50%; float:left;">
+				<rich:panel bodyClass="inpanelBody"
+					style="height: 255px; overflow:scroll;">
+					
+					<f:facet name="header">
+		                    Datos del instrumento normativo 
+					</f:facet>
+							
+					<h:panelGrid columns="2">
+						<h:outputText value="Nombre del Instrumento *" />
+								<h:inputText 
+									styleClass="ancho200"
+									value="#{nombreInstrumento}"
+									id="txtNombreInstrumentoEdit"
+									maxlength="50"
+									onblur="javascript:this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');"
+									>
+									<a4j:support  
+										event="onblur" 
+										reRender="txtNombreInstrumentoEdit"
+										action="#{instrumentoNormativoManager.actualizaNombre()}" 
+										bypassUpdates="true" 
+										ajaxSingle="true"
+									/>
+								</h:inputText>
+							
+					</h:panelGrid>
+						
+						
+					<h:panelGrid columns="2">
+						
+								
+						<h:outputText value="F. Firma *"/>
+							<rich:calendar id="txtFechaFirmaEdit" 
+										value="#{fechaFirma}"
+										datePattern="dd/MM/yyyy"
+										locale="ES"
+										>
+									<a4j:support  
+										event="onblur" 
+										reRender="txtFechaFirmaEdit"
+										action="#{instrumentoNormativoManager.actualizaNombre()}" 
+										bypassUpdates="true" 
+										ajaxSingle="true"
+									/>
+							</rich:calendar>
+						
+						<h:outputText value="F. Vigencia *"/>
+						<rich:calendar id="txtFechaVigenciaEdit" 
+										value="#{fechaVigencia}"
+										datePattern="dd/MM/yyyy"
+										locale="ES"
+										>
+							
+									<a4j:support  
+										event="onblur" 
+										reRender="txtFechaVigenciaEdit"
+										action="#{instrumentoNormativoManager.actualizaNombre()}" 
+										bypassUpdates="true" 
+										ajaxSingle="true"
+									/>
+						</rich:calendar>
+								
+						<h:outputText value="F. Aplicacion *"/>
+							<rich:calendar id="txtFechaAplicacionEdit"
+										value="#{fechaAplicacion}"
+										datePattern="dd/MM/yyyy"
+										locale="ES"
+										>
+									<a4j:support  
+										event="onblur" 
+										reRender="txtFechaAplicacionEdit"
+										action="#{instrumentoNormativoManager.actualizaNombre()}" 
+										bypassUpdates="true" 
+										ajaxSingle="true"
+									/>
+							</rich:calendar>
+							
+						<h:outputText value="Texto Explicativo *"/>
+									
+							<h:inputTextarea  value="#{textoExplicativo}"
+									id="txtTextoExplicativoEdit"
+									styleClass="ancho300" 
+									onkeydown="limitText('frmPrincipal:txtTextoExplicativoEdit','frmPrincipal:countdown',100);"
+									onkeyup="limitText('frmPrincipal:txtTextoExplicativoEdit','frmPrincipal:countdown',100);"
+									>
+									<a4j:support  
+										event="onblur" 
+										reRender="txtTextoExplicativoEdit"
+										action="#{instrumentoNormativoManager.actualizaNombre()}" 
+										bypassUpdates="true" 
+										ajaxSingle="true"
+									/>
+							</h:inputTextarea>
+							<br/>
+							<h:outputText value="(Cantidad maxima permitida: 100 caracteres.)"/>
+							<h:outputText value="" />
+							<h:inputText id="countdown" size="1" value="100" readonly="true"><h:outputText value="Restan"/></h:inputText>
+					</h:panelGrid>
+				</rich:panel>		
+				
+				    			
+						<rich:fileUpload 
+							fileUploadListener="#{instrumentoNormativoManager.listener}" 
+							addControlLabel="Adjuntar archivo"
+							maxFilesQuantity="#{instrumentoNormativoManager.cantFilesAllowed}" 
+							progressLabel="Subiendo..."
+							uploadControlLabel="Subir"
+							stopControlLabel="Detener la carga" 
+							stopEntryControlLabel="Cancelar la carga"
+							cancelEntryControlLabel="cancel" 
+							doneLabel="carga realizada exitosamente" 
+							clearAllControlLabel="Limpiar todo"
+							clearControlLabel="Limpiar"
+							id="upload"	
+							acceptedTypes="*" 
+							listHeight="200" 
+							immediate="true"
+							immediateUpload="true"
+							ajaxSingle="true"
+							
+							>
+							
+							<a4j:support event="onupload"/>
+							<f:facet name="label">
+								<h:outputText value="{_KB}KB from {KB}KB uploaded --- {mm}:{ss}" />
+							</f:facet>
+							
+							<a4j:support event="onuploadcomplete" reRender="listFilesUploaded"/>
+						</rich:fileUpload>
+						
+				
+				
+				</div>
+			
+				<rich:panel bodyClass="inpanelBody"
+				style="height: 400px;overflow:scroll; width :45%;">
+					<f:facet name="header">
+	                    Archivos adjuntos 
+	                </f:facet>
+	                
+	                <rich:dataTable id="listFilesUploaded" 
+					                	var="_fileUploaded"
+					              		value="#{instrumentoNormativoManager.namesAttachs}" 
+					           			rows="10">
+			  	 
+			        <h:column>
+			            <f:facet name="header">
+			                <h:outputText styleClass="columnHeader" value="Nombre archivo" />
+			            </f:facet>
+			            <h:outputText value="#{_fileUploaded == null?'-':instrumentoNormativoManager.soloNombre(_fileUploaded)}"/>
+			        </h:column>
+			        
+			        <rich:column styleClass="action">
+			            <f:facet name="header">Accion</f:facet>
+			            
+			            <h:panelGrid columns="1">
+					        <a4j:commandLink id="linkEliminarArchivo"
+									ajaxSingle="true"
+									action="#{instrumentoNormativoManager.deleteFileUploaded(_fileUploaded)}"
+									reRender="listFilesUploaded"
+									value=""
+									onclick="if(!confirm('Se eliminara un archivo adjunto a este instrumento normativo y no podra recuperarlo, esta seguro que desea Continuar?')) {return false;} else {_modificado=true;}"
+									styleClass="hover"
+									><h:graphicImage value="/img/bin_closed.png"
+									title="Quitar" alt="Quitar" styleClass="img"/>
+									Eliminar
+							</a4j:commandLink >
+							
+							<h:commandLink />
+							
+							<h:commandLink value="" action="#{instrumentoNormativoManager.abrirArchivo(_fileUploaded)}"
+								styleClass="hover">
+								<h:graphicImage value="/img/ver.png" title="Abrir" alt="Abrir" styleClass="img"/> 
+							Abrir</h:commandLink>
+				        </h:panelGrid>
+					</rich:column>
+					
+					</rich:dataTable>
+				</rich:panel>
+				
+			</div>
+			
+			<h:panelGrid columns="2" style="display: inline;">			
+					<h:commandButton 
+						id="aceptarAltaInstrumento"
+						value="Aceptar" 
+						action="#{instrumentoNormativoManager.addInstrumento()}" 
+						styleClass="botonnavegacion"
+						onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+						<f:param name="instrumentoNormativoId"
+	                       		value=""/>
+					</h:commandButton>
+					
+					<h:commandButton
+						value="Cancelar" 
+						id="cancelAltaInstrumento" 
+						styleClass="botonnavegacion" 
+						action="#{instrumentoNormativoManager.cancelEdit()}"
+						onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+						<a4j:support 
+                			event="onclick"
+							onsubmit="if(!confirm('Se perderán los datos ingresados y no podra recuperarlos, ¿esta seguro que desea continuar?')) {return false;}" 
+							ajaxSingle="true"
+							immediate="true"/>
+					</h:commandButton>
+				</h:panelGrid>
+			
+</rich:panel>
+
+
+
+</ui:define>
+
+</ui:composition>

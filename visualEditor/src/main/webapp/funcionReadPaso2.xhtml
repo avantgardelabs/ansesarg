@@ -1,0 +1,128 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	 template="layout/template.xhtml" >
+
+
+<ui:define name="titulo">
+		<h1>Paso 2 de 2 - Parametros y Codigo</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Aqui va un texto
+		de ayuda<br />
+		<a href="" class="textoayuda">ver mas >></a></div>
+	</ui:define>
+
+	<ui:define name="body">
+	
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+			<span class="waitingPanel">
+			<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+			<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+			</span>
+		</rich:modalPanel>
+	
+		<div id="formularioblanco" style="FONT-SIZE: xx-small;">
+		<rich:panel>
+		<f:facet name="header">
+		Parametros de Entrada</f:facet>
+		 <rich:dataTable id="parametrosList" 
+	           styleClass="margen5"    
+	           rows="10"
+	           value="#{funcionHome.instance.parametros}"
+	           var="_parametro"
+	           >
+	
+	        
+	        <h:column>
+	            <f:facet name="header">
+	               <h:outputText value="Nombre" />
+	            </f:facet>
+	            <h:outputText value="#{_parametro.nombre}" />
+	        </h:column>
+	
+	        <h:column>
+	            <f:facet name="header">
+	                <h:outputText value="Descripcion" />
+	            </f:facet>
+	           <h:outputText value="#{_parametro.descripcion}" />
+	        </h:column>
+	        
+	        <h:column>
+	            <f:facet name="header">
+	                <h:outputText value="Entidad/Atributo" />
+	            </f:facet>
+	            <h:outputText value="#{_parametro.atributo.entidad.nombre}.#{_parametro.atributo.nombre}" />
+	        </h:column>
+	        
+	        <h:column>
+	            <f:facet name="header">
+	                <h:outputText value="Tipo de Dato" />
+	            </f:facet>
+	            <h:outputText value="#{_parametro.atributo.tipoDato}" />
+	        </h:column>
+	 
+	        
+	        <f:facet name="footer">
+							<rich:datascroller id="datascroller" />
+			</f:facet>
+			
+	    </rich:dataTable>
+	
+		</rich:panel>
+		
+		<rich:panel bodyClass="inpanelBody"
+			style="height:420px;overflow:scroll;">	
+				<f:facet name="header">
+                    Referencias
+                </f:facet>
+				<h:panelGrid columns="2" >
+
+				<h:inputTextarea id="txtCuerpo" value="#{funcionHome.instance.cuerpo}" styleClass="ancho300" style="height: 320px;width: 1150px"
+				readonly="true" disabled="true">
+					<s:validate />
+				</h:inputTextarea>
+				
+
+		</h:panelGrid>
+				
+			</rich:panel>
+	
+		<div style="clear: both" />
+</div>
+
+	</ui:define>
+	<ui:define name="botonera">
+		
+		<div id="botonera">
+			
+			<s:button
+				id="atras"
+				view="/funcionRead.xhtml" 
+				value=" Atras" 
+				styleClass="botoncancelar" 
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+				/>	
+		
+			<s:button
+				id="cancelEdit"
+				propagation="end"
+				view="/FuncionList.xhtml" 
+				value="Cancelar" 
+				styleClass="botoncancelar" 
+				immediate="true"
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+			/>
+		
+		</div>
+	</ui:define>
+</ui:composition>
+

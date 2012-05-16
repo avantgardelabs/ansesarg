@@ -1,0 +1,237 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j" template="template.xhtml">
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Pantalla de Solicitud de Muestra de Datos.
+		Buscar Regla <br />
+		<a href="" class="textoayuda">ver mas >></a></div>
+	</ui:define>
+	<ui:define name="body">
+
+		<script type="text/javascript">
+		
+	    function showPanelHideOtherPanel(idPanelToShow, idPanelToHide){
+	    	var ctrlFuncion = document.getElementById(idPanelToHide);
+
+	    	if(ctrlFuncion != null){
+				ctrlFuncion.style.visibility = 'hidden';
+				ctrlFuncion.style.display = 'none';
+	    	}else
+		    	return false;
+			
+			var panelBusquedaFunciones = document.getElementById(idPanelToShow);
+
+			if(panelBusquedaFunciones != null){
+				panelBusquedaFunciones.style.visibility = 'visible';
+				panelBusquedaFunciones.style.display = 'list-item';
+			}else
+				return false;
+
+			return true;
+	    }
+
+	    window.onload=function(){
+
+			var panelBusquedaFunciones = document.getElementById("frmPrincipal:panelBuscaRegla");
+
+			if(panelBusquedaFunciones){
+				panelBusquedaFunciones.style.visibility = 'hidden';
+				panelBusquedaFunciones.style.display = 'none';			
+	    	}
+	    };	    
+	</script>
+
+		<br />
+		<div id="formularioblanco"
+			style="height: 750px; overflow-y: auto; background-color: #FFFFFF;">
+
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false"
+			resizeable="false" autosized="true" zindex="2000" top="500"
+			minWidth="350" width="300">
+			<span class="waitingPanel"> <h:graphicImage
+				value="/img/wait_bar.gif" style="vertical-align: middle;" /> <h:outputText
+				style="" value="#{messages['message.pleasewait']}" /> </span>
+		</rich:modalPanel> <rich:panel id="panelBuscaRegla">
+
+			<f:facet name="header">Buscar una regla</f:facet>
+			<h:panelGrid columns="4">
+				<h:outputText value=" Regla :">
+					<span class="required">*</span>
+				</h:outputText>
+				<h:inputText id="reglaSelected"
+					value="#{requerimientosAction.nombreRegla}" styleClass="ancho200"
+					disabled="true" />
+				<a4j:commandButton value="Buscar Regla"
+					id="searchReglaTablaDecision" styleClass="botonnavegacion"
+					oncomplete="return showPanelHideOtherPanel('frmPrincipal:panelReglas','frmPrincipal:panelBuscaRegla');"
+					action="#{requerimientosAction.setModificado(true)}">
+				</a4j:commandButton>
+			</h:panelGrid>
+
+		</rich:panel> <rich:panel id="panelReglas" width="400" height="300">
+			<div id="panelBuscarReglasTablaDecision"><h:panelGrid
+				columns="3">
+				<h:column>
+					<s:decorate>
+						<h:outputText value="Nombre:" />
+						<h:inputText id="txtNombreReglasTablaDecision"
+							value="#{requerimientosAction.nombreReglaTablaDecision}"
+							rendered="true">
+							<a4j:support event="onblur"
+								action="#{requerimientosAction.actualizaNombre()}"
+								ajaxSingle="true" />
+						</h:inputText>
+					</s:decorate>
+				</h:column>
+				<h:column>
+
+					<a4j:commandButton id="buscarReglasTablaDecision"
+						action="#{requerimientosAction.buscarReglasDecision()}"
+						value="Buscar"
+						reRender="panelReglaTablaDecision,panelReglaPseudocodigo,txtNombreReglasTablaDecision"
+						ajaxSingle="true" />
+				</h:column>
+				<h:column id="reglaSeleccionada">
+					<s:div rendered="#{requerimientosAction.nombreReglaSeleccionada != null}"><h:outputText
+						value="Regla seleccionada: " style="font-weight: bolder;" /> <h:outputText
+						value="#{requerimientosAction.nombreReglaSeleccionada}" />
+					</s:div>
+				</h:column>
+			</h:panelGrid>
+			<div><rich:panel id="panelReglaTablaDecision">
+				<f:facet name="header">Resultados de Busqueda de Reglas</f:facet>
+				<div class="results"><h:outputText
+					value="No se han encontrado resultados."
+					rendered="#{empty requerimientosAction.listTablaDecision}" /> <rich:dataTable
+					id="reglaTablaDecisionList" var="_reglaTablaDecision"
+					value="#{requerimientosAction.listTablaDecision}"
+					rendered="#{not empty requerimientosAction.listTablaDecision}"
+					rows="10">
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText styleClass="columnHeader" value="Nombre" />
+						</f:facet>
+						<h:outputText value="#{_reglaTablaDecision.nombre}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText styleClass="columnHeader" value="Descripcion" />
+
+						</f:facet>
+						<h:outputText value="#{_reglaTablaDecision.descripcion}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText styleClass="columnHeader" value="Dominio" />
+
+						</f:facet>
+						<h:outputText value="#{_reglaTablaDecision.dominio.descripcion}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText styleClass="columnHeader" value="Version" />
+
+						</f:facet>
+						<h:outputText value="#{_reglaTablaDecision.versionRegla}" />
+					</h:column>
+
+					<rich:column styleClass="action">
+						<f:facet name="header">Accion</f:facet>
+						<h:commandLink event="onclick"
+							action="#{requerimientosAction.setReglaAsistenteMuestra(_reglaTablaDecision)}"
+							ajaxSingle="true" immediate="true"
+							reRender="reglaTablaDecisionList, reglaSeleccionada"
+							value="Seleccionar" styleClass="hover">
+				            #{' '}
+				            <h:graphicImage value="/img/editar.png" width="15px"
+								height="15px" styleClass="img" />
+
+
+						</h:commandLink>
+					</rich:column>
+
+					<f:facet name="footer">
+						<rich:datascroller id="datascroller" />
+					</f:facet>
+				</rich:dataTable></div>
+			</rich:panel> <rich:panel id="panelReglaPseudocodigo">
+				<f:facet name="header">Resultados de Busqueda de Reglas por Pseudocodigo</f:facet>
+				<div class="results"><h:outputText
+					value="No se han encontrado resultados."
+					rendered="#{empty requerimientosAction.listRPS}" /> <rich:dataTable
+					id="reglaPseudocodigoList" var="_reglaPseudocodigo"
+					value="#{requerimientosAction.listRPS}"
+					rendered="#{not empty requerimientosAction.listRPS}" rows="10">
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText styleClass="columnHeader" value="Nombre" />
+						</f:facet>
+						<h:outputText value="#{_reglaPseudocodigo.nombre}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText styleClass="columnHeader" value="Descripcion" />
+
+						</f:facet>
+						<h:outputText value="#{_reglaPseudocodigo.descripcion}" />
+					</h:column>
+
+					<h:column>
+						<f:facet name="header">
+							<h:outputText styleClass="columnHeader" value="Dominio" />
+
+						</f:facet>
+						<h:outputText value="#{_reglaPseudocodigo.dominio.descripcion}" />
+					</h:column>
+
+					<rich:column styleClass="action">
+						<f:facet name="header">Accion</f:facet>
+						<h:commandLink event="onclick"
+							action="#{requerimientosAction.setReglaPseudocodigoMuestra(_reglaPseudocodigo)}"
+							ajaxSingle="true" immediate="true"
+							reRender="reglaTablaDecisionList, reglaSeleccionada"
+							value="Seleccionar" styleClass="hover">
+				            #{' '}
+				            <h:graphicImage value="/img/editar.png" width="15px"
+								height="15px" styleClass="img" />
+
+
+						</h:commandLink>
+					</rich:column>
+
+					<f:facet name="footer">
+						<rich:datascroller id="datascroller" />
+					</f:facet>
+				</rich:dataTable></div>
+			</rich:panel></div>
+			</div>
+
+			<h:panelGrid columns="1">
+				<a4j:commandButton value="Cancelar"
+					onclick="return showPanelHideOtherPanel('frmPrincipal:panelBuscaRegla','frmPrincipal:panelReglas');" />
+			</h:panelGrid>
+		</rich:panel> <s:div styleClass="actionButtons" rendered="#{empty from}">
+
+			<h:commandButton id="muestra" value="Solicitar Muestra"
+				propagation="join"
+				action="#{requerimientosAction.solicitudMuestraDatos()}"
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})" />
+
+		</s:div></div>
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,291 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	 template="layout/template.xhtml">
+
+	<style>
+.col1
+,
+{
+width
+
+
+
+
+
+
+
+
+:
+
+
+
+
+
+
+
+
+20
+px
+
+
+
+
+
+
+;
+height
+
+
+
+
+
+
+
+
+:
+
+
+
+
+
+
+
+
+300
+px
+
+
+
+
+
+
+;
+vertical-align
+
+
+
+
+
+
+
+
+:top
+
+
+
+
+
+
+
+
+;
+}
+.col2
+,
+{
+width
+
+
+
+
+
+
+
+
+:
+
+
+
+
+
+
+
+
+200
+px
+
+
+
+
+
+
+;
+height
+
+
+
+
+
+
+
+
+:
+
+
+
+
+
+
+
+
+300
+px
+
+
+
+
+
+
+;
+vertical-align
+
+
+
+
+
+
+
+
+:top
+
+
+
+
+
+
+
+
+;
+}
+.area {
+	width: 500px;
+	height: 100px;
+}
+</style>
+
+
+	<ui:define name="titulo">
+		<h1>Reglas de Concepto</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Aqui va un texto
+		de ayuda<br />
+		<a href="" style="text-align: right; cursor: pointer;">ver mas >></a></div>
+	</ui:define>
+
+	<ui:define name="body">
+
+		<div style="width: 100%; float: left;">
+		<h:panelGrid columns="6">
+			<h:outputText value="Nombre" />
+			<h:inputText style="width:200px;" />
+			<h:outputText value="Descripcion" />
+			<h:inputTextarea value=""  style="width:500px;height: 30px; " />
+
+
+		</h:panelGrid></div>
+		
+<div style="width: 100%; float: left;">
+		<h:panelGrid columns="3" width="100%">
+
+			<rich:panel bodyClass="inpanelBody"
+				style="height: 370px; overflow:scroll;">
+				<f:facet name="header">
+                    Entidades
+                </f:facet>
+				<rich:tree style="width:300px"
+					nodeSelectListener="#{toolkit.processSelection}"
+					reRender="selectedNode" ajaxSubmitSelection="true"
+					switchType="client" value="#{toolkit.treeNode}" var="item"
+					ajaxKeys="#{null}">
+				</rich:tree>
+			</rich:panel>
+
+			<rich:panel bodyClass="inpanelBody" style="height: 370px;">
+				<f:facet name="header">
+                    Operadores
+                </f:facet>
+				<rich:panel bodyClass="inpanelBody" style="height: 120px;">
+
+					<f:facet name="header">
+                    Operadores Matematicos
+                </f:facet>
+
+					<h:selectManyListbox title="Operadores Matemáticos"
+						style="border:none;">
+						<f:selectItem itemValue="Suma" itemLabel="Suma" />
+						<f:selectItem itemValue="Resta" itemLabel="Resta" />
+						<f:selectItem itemValue="Multiplicacion"
+							itemLabel="Multiplicacion" />
+						<f:selectItem itemValue="Division" itemLabel="Division" />
+
+					</h:selectManyListbox>
+
+
+
+				</rich:panel>
+				<rich:panel bodyClass="inpanelBody" style="height: 200px;">
+
+					<f:facet name="header">
+                    Operadores Logicos
+                </f:facet>
+					<h:selectManyListbox title="Operadores Lógicos"
+						style="border:none;">
+						<f:selectItem itemValue="Igual" itemLabel="Igual" />
+						<f:selectItem itemValue="Mayor" itemLabel="Mayor" />
+						<f:selectItem itemValue="Mayor o igual" itemLabel="Mayor o igual" />
+						<f:selectItem itemValue="Menor" itemLabel="Menor o igual" />
+						<f:selectItem itemValue="Verdadero" itemLabel="Verdadero" />
+
+						<f:selectItem itemValue="Falso" itemLabel="Falso" />
+
+						<f:selectItem itemValue="And" itemLabel="And" />
+						<f:selectItem itemValue="Or" itemLabel="Or" />
+						<f:selectItem itemValue="Not" itemLabel="Not" />
+
+
+
+
+					</h:selectManyListbox>
+				</rich:panel>
+			</rich:panel>
+
+
+			<rich:panel bodyClass="inpanelBody"
+				style="height: 370px; overflow:scroll;">
+				<f:facet name="header">
+                    Edición
+                </f:facet>
+
+				<h:outputText value="Si existe la condición de que" />
+				<h:inputTextarea rendered="true" styleClass="area"
+					style="width:98%;height:150px;" value="#{toolkit.nodeTitle}"
+					id="selectedNode" />
+
+				<h:outputText value="Entonces" />
+				<h:inputTextarea styleClass="area" style="width:98%;height:120px;" />
+
+
+			</rich:panel>
+
+		</h:panelGrid>
+
+</div>
+	</ui:define>
+
+	<ui:define name="botonera">
+
+		<div id="botonera"><h:commandButton value="Agregar otra" /> <h:commandButton
+			value="Grabar" /> <h:outputLink value="final_regla.seam"
+			styleClass="botonnavegacion">Continuar</h:outputLink></div>
+	</ui:define>
+
+</ui:composition>
+

@@ -1,0 +1,13 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>arg</artifactId>
+    <groupId>ar.gov.anses.prissa.asistente</groupId>
+    <version>3.0</version>
+    <relativePath>..</relativePath>
+  </parent>
+  <artifactId>formula</artifactId>
+  <groupId>ar.gov.anses.prissa.mi.asistente_reglas</groupId>
+  <version>1.0</version>
+  <name>ARG Formula Analisys Expression</name>
+</project>

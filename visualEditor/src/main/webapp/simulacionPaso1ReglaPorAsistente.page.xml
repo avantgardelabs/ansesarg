@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page login-required="true"
+ no-conversation-view-id="/simulacionPaso1.xhtml"
+ xmlns="http://jboss.com/products/seam/pages"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.0.xsd">
+	
+	<begin-conversation join="true"/>
+   
+	<action execute="#{simulacionReglaPorAsistenteAction.init()}"/>
+	
+	<param name="regla1" value="#{simulacionReglaPorAsistenteAction.id}"/>
+</page>

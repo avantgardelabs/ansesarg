@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://jboss.com/products/seam/pages"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://jboss.com/products/seam/pages http://jboss.com/products/seam/pages-2.0.xsd" login-required="true">
+      
+      <begin-conversation join="true" flush-mode="MANUAL"/>
+      
+   <param name="firstResult" value="#{entidadList.firstResult}"/>
+   <param name="order" value="#{entidadList.order}"/>
+   <param name="from"/>
+   <param name="nombre" value="#{entidadList.entidad.nombre}"/>
+</page>

@@ -1,0 +1,331 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j" template="layout/template.xhtml">
+
+
+	<ui:define name="titulo">
+		<h1>Paso 2 de 4 -Seleccion de  Condiciones</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Aqui va un texto de ayuda<br />
+		<a href="" class="textoayuda">ver mas >></a></div>
+	</ui:define>
+
+
+	<ui:define name="body">
+			
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+			<span class="waitingPanel">
+			<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+			<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+			</span>
+		</rich:modalPanel>	
+
+		<div id="formulario100">
+	
+		<div style="width: 55%; float:left;">
+			<rich:panel bodyClass="inpanelBody"
+			style="height: 260px; overflow:scroll">	
+				<f:facet name="header">
+                    Funciones 
+                </f:facet>
+				
+				<h:panelGrid columns="2" 
+							rowClasses="prop"
+							columnClasses="name,value">
+
+					<rich:listShuttle
+						id="listasFunciones"
+						sourceValue="#{reglaPseudocodigoHome.funcionesList}"
+						targetValue="#{reglaPseudocodigoHome.instance.funciones}"
+						sourceCaptionLabel="Funciones"
+						targetCaptionLabel="Funciones seleccionados" 
+						var="funcion"
+						removeControlLabel="Quitar" removeAllControlLabel="Quitar Todos"
+						copyAllControlLabel="Copiar todos" copyControlLabel="Copiar"
+						upControlLabel="Subir" downControlLabel="Bajar"
+						fastOrderControlsVisible="false" 
+						listsHeight="150"
+						targetListWidth="200" 
+						sourceListWidth="200"
+						immediate="true"										
+						style="FONT-SIZE: medium;"
+						controlsType="none"
+						switchByClick="none">
+		
+						<rich:column>
+							<h:outputText value="#{funcion.nombre}"></h:outputText>
+						</rich:column>
+		
+						<s:convertEntity />
+		
+					</rich:listShuttle>
+
+				</h:panelGrid>
+				
+		</rich:panel>
+		</div>
+		<rich:panel bodyClass="inpanelBody"
+			style="height: 260px; overflow:scroll">	
+				<f:facet name="header">
+                    Entidades y atributos
+                </f:facet>
+	                <h:outputText value="Entidad :" />
+	                <br/>
+	                <h:selectOneMenu 
+			   			id="idEntidad"
+			   			value="#{reglaPseudocodigoHome.entidadActual}"
+	   		  			styleClass="ancho300"
+	   		  			rendered="true"
+			   		>
+			  
+					<s:selectItems 
+						var="entidad" 
+						noSelectionLabel="Indique una entidad..."
+		    	       value="#{entidadList.myResultList}"
+		        	   label="#{entidad.nombre}"                                 
+					>
+					
+
+           			</s:selectItems>
+					<a4j:support ajaxSingle="true" event="onchange" action="#{reglaPseudocodigoHome.getAtributosCondicionDeEntidad()}" reRender="listaAtributos"/>
+					<s:convertEntity />		 
+      				</h:selectOneMenu>
+            
+            	<br/>
+          		<h:outputText value="Atributo :" />
+			   	<br/>
+			   	
+              	<h:selectOneMenu id="listaAtributos"
+					value="#{reglaPseudocodigoHome.atributoActual}"
+					styleClass="ancho300"
+					>
+					<s:selectItems
+						noSelectionLabel="Indique El atributo para la Entidad..."
+						var="atributo" 
+						value="#{reglaPseudocodigoHome.atributos}"
+						label="#{atributo.nombre}">
+					</s:selectItems>
+					
+					<a4j:support ajaxSingle="true" event="onchange" action="#{reglaPseudocodigoHome.actualizarNombre()}" />
+					
+					<s:convertEntity />
+				</h:selectOneMenu>
+		       
+		       <br/>
+		       <a4j:commandButton immediate="true" ajaxSingle="true" action="#{reglaPseudocodigoHome.addEntidadAtributo()}" value="Agregar al arbol" 
+		       		reRender="arbolCondiciones,lblMsgError"
+		       />
+		       <a4j:commandButton
+				value="Eliminar"
+				id="eliminar"
+				reRender="arbolCondiciones, eliminar, lblMsgError"
+				action="#{reglaPseudocodigoHome.eliminarNodo}"
+				immediate="true"
+				ajaxSingle="true"
+			>
+				<a4j:support 
+					event="onclick"
+					onsubmit="javascript:
+						if (#{!reglaPseudocodigoHome.isNodoSeleccionado()}) {
+							alert('Debe seleccionar un elemento para poder eliminarlo');
+						}
+						else {
+							if(!confirm('Se eliminara un elemento y no podra recuperarlo, esta seguro que desea Continuar?')) {
+								return false;
+							}
+						}" 
+					 
+				/>
+			</a4j:commandButton>
+		       <br/>
+		       <br/>
+			<rich:tree 
+					id="arbolCondiciones"
+					nodeSelectListener="#{reglaPseudocodigoHome.processSelection}"
+					ajaxSubmitSelection="true"
+					switchType="client" 
+					value="#{reglaPseudocodigoHome.treeNode}"
+					var="item" 
+					ajaxKeys="#{null}"
+					nodeFace="#{item.class.simpleName}"
+					reRender="addCondicion, eliminar"
+					rendered="true"
+					immediate="true"
+					>
+					
+					<rich:treeNode type="Entidad" icon="/img/iconFolder.gif" iconLeaf="/img/iconFolder.gif">
+		                <h:outputText value="#{item.nombre}" />
+		            </rich:treeNode>
+
+					<rich:treeNode type="Atributo" icon="/img/iconLeaf.gif" iconLeaf="/img/iconLeaf.gif">
+						<h:outputText value="#{item.nombre}" />
+					</rich:treeNode>
+
+				</rich:tree>
+			
+				
+
+				
+			</rich:panel>
+		
+		<div>
+			<rich:panel bodyClass="inpanelBody"
+			style="height: 320px; overflow:scroll">	
+				<f:facet name="header">
+                    Acciones
+                </f:facet>
+			<h:panelGrid columns="2" rowClasses="prop"
+			columnClasses="name,value" style="FONT-FAMILY: 'Bitstream Charter';">
+
+			
+
+				<h:outputText value="Dominio " />
+				
+				<h:selectOneMenu
+				 value="#{reglaPseudocodigoHome.dominioFiltroCondiciones}"
+				 readonly="true"
+				 disabled="true"
+				 >
+					<s:selectItems var="dominio" value="#{reglaPseudocodigoHome.dominiosRegistrados}"
+						label="#{dominio.descripcion}"
+						noSelectionLabel="Seleccione un dominio para filtrar...">
+					</s:selectItems>
+					
+					  <a4j:support
+					 	event="onchange"
+					  	action="#{reglaPseudocodigoHome.filtrarAccion()}"
+					 	reRender="listaElegirAcciones" 
+					  	ajaxSingle="true"
+					  />
+					<s:convertEntity />
+				</h:selectOneMenu>
+			</h:panelGrid>
+			
+				<rich:panel>
+				
+			    	 <rich:listShuttle sourceValue="#{reglaPseudocodigoHome.accionesDisponibles}"
+        				    		   targetValue="#{reglaPseudocodigoHome.accionesSeleccionadas}" var="items" listsHeight="150"
+           					sourceListWidth="400" targetListWidth="400" sourceCaptionLabel="Acciones disponibles"
+            				targetCaptionLabel="Acciones seleccionadas"
+            				removeControlLabel="Quitar" removeAllControlLabel="Quitar Todos"
+							copyAllControlLabel="Copiar todos" copyControlLabel="Copiar"
+							upControlLabel="Subir" downControlLabel="Bajar"
+							fastOrderControlsVisible="false" 
+            				id="listaElegirAcciones"	
+            				onremoveclick="return false;"
+            				controlsType="none"
+            				switchByClick="none"		
+            				>
+            				<rich:column>
+            					<f:facet name="header">
+									<h:outputText value="Dominio" styleClass="columna" />
+								</f:facet>
+                				<h:outputText value="#{items.dominio.descripcion}"></h:outputText>
+            				</rich:column>
+            				<rich:column>
+            					<f:facet name="header">
+									<h:outputText value="Accion" styleClass="columna" />
+								</f:facet>
+                				<h:outputText value="#{items.nombre}"></h:outputText>
+            				</rich:column>
+            				<a4j:support event="onlistchanged"
+            							 action="#{reglaPseudocodigoHome.actualizarAccionesDisponibles()}"
+            							 reRender="listaElegirAcciones"/>
+            				<s:convertEntity />
+        				</rich:listShuttle>
+						
+			    	
+						
+				</rich:panel>
+		</rich:panel>
+			
+		</div>
+			<div>
+				
+				<h:outputText escape="false"
+					value="#{reglaPseudocodigoHome.msgError}" 
+					styleClass="errors" 
+					id="lblMsgError"
+				/>
+			</div>
+		
+		</div>
+		
+		<div style="FONT-FAMILY: 'Courier 10 Pitch';display:none" >
+			<a4j:commandButton 
+				value="Agregar Entidad" 
+				id="addEntidad" 
+				styleClass="botonnavegacion" 
+				oncomplete="javascript:Richfaces.showModalPanel('panelEntidad');" 
+				reRender="panelAddEntidad"
+				immediate="true"
+				ajaxSingle="true"
+				style="FONT-SIZE: x-small;"></a4j:commandButton>	
+		
+			<a4j:commandButton 
+				value="Agregar atributos" 
+				id="addCondicion" 
+				styleClass="botonnavegacion" 
+				oncomplete="javascript:
+					if (#{reglaPseudocodigoHome.esAtributo()}) {
+						alert ('Debe seleccionar una entidad para agregar un atributo');
+					} 
+					else {
+						Richfaces.showModalPanel('panelCondicion');
+					}"
+				reRender="panelCondicion, addCondicion"
+				ajaxSingle="true"
+				immediate="true"
+				style=" height : 20px;">
+				<a4j:support 
+					event="onclick" 
+					action="#{reglaPseudocodigoHome.getAtributosCondicionDeEntidad()}"
+					reRender="panelCondicion"
+					ajaxSingle="true"
+					immediate="true" 
+				/>
+			</a4j:commandButton>
+			
+				
+				
+		</div>
+
+
+		<div id="botonera">
+			<s:button
+				id="cancelEdit"
+				propagation="end"
+				view="/reglaPseudocodigoList.xhtml" 
+				value="Cancelar" 
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+			/>
+			
+			<s:button
+				id="atras"
+				propagation="end"
+				view="/reglaPseudocodigoRead.seam" 
+				value=" Atras" 
+				styleClass="botoncancelar" 
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+				/>	
+			
+			<s:button 
+					view="/reglaPseudocodigoReadAcciones.seam" 
+					value="Continuar >>" 
+					onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+			/>
+			
+		</div>
+	</ui:define>
+
+</ui:composition>
+

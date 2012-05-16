@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<datosClearQuest>
+	<conexion>
+		<nombreDeUsuario>admin_prissa</nombreDeUsuario>
+		<password>anses</password>
+		<nombreDeConexion>AnsesQA</nombreDeConexion>
+		<baseDeDatos>ADM_P</baseDeDatos>
+	</conexion>
+	<LotePrueba>
+		<D_Asunto>Asunto de Prueba</D_Asunto>
+		<D_Descripcion>Descripcion de Prueba</D_Descripcion>
+		<D_JustificacionMultiline>Justificacion de Prueba</D_JustificacionMultiline>
+		<N_UsuarioAlta>
+			<uniqueKey login_name="A984006" campoCQ="login_name" entidadCQ="users">
+			</uniqueKey>
+		</N_UsuarioAlta>
+		<N_Sistemas>
+			<uniqueKey D_Nombre="ADP" campoCQ="D_Nombre" entidadCQ="Sistemas">
+				<D_Descripcion>Administracion de personas</D_Descripcion>
+			</uniqueKey>
+			<uniqueKey D_Nombre="BUSS" campoCQ="D_Nombre" entidadCQ="Sistemas">
+				<D_Descripcion>Base unica de la seguridad social</D_Descripcion>
+			</uniqueKey>
+		</N_Sistemas>
+		<N_Reglas>
+			<uniqueKey D_Id="4554313" campoCQ="dbid" entidadCQ="Regla">
+				<D_Nombre>Nombre de Regla</D_Nombre>
+				<D_Descripcion>Esta es la descripcion de la Regla 4554313</D_Descripcion>
+				<D_Tipo>Tipo de Regla</D_Tipo>
+				<D_Dominio>RTI</D_Dominio>
+				<D_Version>0.1</D_Version>
+			</uniqueKey>
+			<uniqueKey D_Id="8888813" campoCQ="dbid" entidadCQ="Regla">
+				<D_Nombre>Nombre de Regla</D_Nombre>
+				<D_Descripcion>Esta es la descripcion de la Regla 8888813</D_Descripcion>
+				<D_Tipo>Tipo de Regla</D_Tipo>
+				<D_Dominio>RTI</D_Dominio>
+				<D_Version>0.2</D_Version>
+			</uniqueKey>
+		</N_Reglas>
+		<A_AdjuntosReglas>Este es el documento tecnico N XXX/XXXX</A_AdjuntosReglas>
+	</LotePrueba>
+</datosClearQuest>

@@ -1,0 +1,117 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                xmlns:a4j="http://richfaces.org/a4j"
+                template= "layout/template.xhtml">
+
+<ui:define name="titulo">
+		<h1>Simulación - Lotes de Prueba</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">
+		<h:outputText value="Regla a simular: #{simulacionReglaPorLoteAction.tabla.nombre}"/>
+		<a href="" class="textoayuda">ver mas >></a>
+		
+		</div>
+	</ui:define>
+	                       
+<ui:define name="body">
+    
+    <![CDATA[<h:messages globalOnly="true" styleClass="message" id="globalMessages"/>]]>
+    
+    <rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+		<span class="waitingPanel">
+		<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+		<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+		</span>
+	</rich:modalPanel>
+	
+   	<div id="formulario" >
+	
+	
+	<rich:panel>
+	<f:facet name="header">Escenarios</f:facet>	
+	
+    
+	<rich:dataTable value="#{simulacionReglaPorLoteAction.lotesSimulacion}" var="var" rows="10">
+    	<rich:column>
+                <f:facet name="header">
+                    Nombre
+                </f:facet>
+                    <h:outputText value="#{var.nombre}"/>
+                    
+        </rich:column>
+    
+    	  	<rich:column>
+                <f:facet name="header">
+                    Descripción
+                </f:facet>
+                    <h:outputText value="#{var.descripcion}"/>
+                    
+        </rich:column>
+        
+          	<rich:column>
+                <f:facet name="header">
+                    Visibilidad
+                </f:facet>
+                   <h:outputText value="#{simulacionReglaPorLoteAction.resolverVisibilidad(var.visibilidad)}"/>
+                    
+        </rich:column>
+        
+          	<rich:column>
+                <f:facet name="header">
+                    Acción
+                </f:facet>
+                	<h:panelGrid columns="5">
+                	<a4j:commandLink action="#{simulacionReglaPorLoteAction.verEscenario(var)}"
+                   		style = "color: black"  >
+	
+					<h:graphicImage value="/img/ver.png" styleClass="img"/>
+					<h:outputText value="Ver" />
+					</a4j:commandLink>
+					<h:outputText />
+                    <a4j:commandLink action="#{simulacionReglaPorLoteAction.editarEscenario(var)}" actionListener = "#{simuladorVirtual.generarRegla(simulacionReglaPorLoteAction.tabla)}" ajaxSingle="true"
+                   		style = "color: black"  >
+	
+					<h:graphicImage value="/img/editar.png" styleClass="img"/>
+					<h:outputText value="Editar - Simular" />
+					</a4j:commandLink>
+                    <h:outputText />
+                  
+                  </h:panelGrid>
+        </rich:column>
+        
+       
+    
+    	<f:facet name="footer">
+			<rich:datascroller id="datascroller" />
+		</f:facet>
+    
+    </rich:dataTable>   
+    
+  
+	</rich:panel>	
+    <h:panelGrid columns="5">
+    
+    </h:panelGrid>
+		
+	</div>
+    
+    <div class="actionButtons">      
+
+        <h:commandButton value="Cancelar" action="#{simulacionReglaPorLoteAction.cancelar()}"/>
+        <h:commandButton value="Agregar Lote" action="#{simulacionReglaPorLoteAction.nuevoEscenario()}" actionListener = "#{simuladorVirtual.generarRegla(simulacionReglaPorLoteAction.tabla)}"/>
+        
+
+    </div>
+
+</ui:define>
+
+</ui:composition>

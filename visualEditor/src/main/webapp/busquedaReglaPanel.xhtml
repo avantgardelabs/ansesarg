@@ -1,0 +1,122 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j">
+
+	
+		<rich:modalPanel id="busquedaReglaPanel" width="370" height="400" >
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="Buscar Regla"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="img/bt_exit.png" styleClass="hidelink"
+						id="hidelink" />
+					<rich:componentControl for="busquedaReglaPanel" attachTo="hidelink"
+						operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+			
+
+			<div id="panelBuscar" >
+			
+		
+		
+			<s:decorate>
+				<h:outputText value="Nombre:" />
+				<h:inputText id="txtNombre" value="#{busquedaReglaHome.nombreBusqueda}" rendered="true">
+					<a4j:support 
+						event="onblur" 
+						action="#{busquedaReglaHome.actualizaNombre()}" 
+						ajaxSingle="true"/>
+				</h:inputText>
+			</s:decorate>
+			
+          
+          <a4j:commandButton 
+				id="buscar" 
+				action="#{busquedaReglaHome.getResultados()}" 
+				value="Buscar"
+				reRender="panelReglaPseudocodigoList,txtNombre" 
+				ajaxSingle="true"
+			/>
+			<br/><br/><br/>
+			<div>
+			
+			<rich:panel id="panelReglaPseudocodigoList">
+		        <f:facet name="header">Resultados de Busqueda de Regla</f:facet>
+			    <div class="results">
+		
+			 <h:outputText value="No se han encontrado resultados." 
+	               rendered="#{empty busquedaReglaHome.resultadosReglas}"/>
+			               
+			    <rich:dataTable id="reglaPseudocodigoList" 
+			                	var="_reglaPseudocodigo"
+			              		value="#{busquedaReglaHome.resultadosReglas}" 
+			           			rendered="#{not empty busquedaReglaHome.resultadosReglas}"
+			           			rows="10">
+			
+			
+			        <h:column>
+			            <f:facet name="header">
+			                <h:outputText styleClass="columnHeader"
+			                             value="Nombre" />			                 
+	
+			            </f:facet>
+			            <h:outputText value="#{_reglaPseudocodigo.nombre}"/>
+			        </h:column>
+	        
+	        <h:column>
+	            <f:facet name="header">
+			                <h:outputText styleClass="columnHeader"
+			                             value="Descripcion" />			                 
+			                
+	            </f:facet>
+			            <h:outputText value="#{_reglaPseudocodigo.descripcion}"/>
+	        </h:column>
+			
+			        <h:column>
+			            <f:facet name="header">
+			                <h:outputText styleClass="columnHeader"
+			                             value="Dominio" />
+		
+			            </f:facet>
+			            <h:outputText value="#{_reglaPseudocodigo.dominio.descripcion}" />
+			        </h:column>	        
+
+			        <rich:column styleClass="action">
+			            <f:facet name="header">Accion</f:facet>
+				        <s:link 
+				        	value="Seleccionar"
+				            id="reglaPseudocodigoViewId"				            
+				        >
+				            #{' '}
+				            <h:graphicImage value="/img/editar.png" width="15px" height="15px" />
+				            
+				            <a4j:support 
+				            	event="onclick"
+				            	action="#{entidadHome.atributo.setReglaPseudocodigo(_reglaPseudocodigo)}"
+				            />
+				        </s:link>
+			        </rich:column>
+		
+			        <f:facet name="footer">
+						<rich:datascroller id="datascroller" />
+					</f:facet>
+			    </rich:dataTable>
+		   	 </div>
+		    </rich:panel>
+		    </div>
+    	</div>
+		</rich:modalPanel>
+</ui:composition>
+
+ 
+ 

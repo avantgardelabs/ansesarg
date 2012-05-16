@@ -1,0 +1,175 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j" template="layout/template.xhtml">
+
+
+	<ui:define name="titulo">
+		<h1>Nueva fila</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">
+			Aqui va un texto de ayuda<br /> <a href="" class="textoayuda">ver
+				mas >></a>
+		</div>
+	</ui:define>
+
+	<ui:define name="body">
+
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false"
+			resizeable="false" autosized="true" zindex="2000" top="500"
+			minWidth="350" width="300">
+			<span class="waitingPanel"> <h:graphicImage
+					value="/img/wait_bar.gif" style="vertical-align: middle;" /> <h:outputText
+					style="" value="#{messages['message.pleasewait']}" /> </span>
+		</rich:modalPanel>
+
+		<div id="formulario">
+			<h:panelGrid columns="1" style="width:99%">
+
+				<div id="DIV100">
+
+
+					<rich:dataTable value="#{fakeFila}">
+						<rich:columns value="#{filaAAgregar.valores}" var="descisor"
+							index="idx">
+							<f:facet name="header">
+								<h:outputText value="#{descisor.condicion.nombre}" />
+							</f:facet>
+
+
+							<h:selectOneMenu defaultLabel="Valor?" value="#{descisor.valor}"
+								rendered="#{not empty descisor.condicion.literales}">
+								<s:selectItems noSelectionLabel="N/A" var="literal"
+									value="#{descisor.condicion.literales}"
+									label="#{literal.operadorLogico} #{literal.descripcion}" />
+								<s:convertEntity />
+							</h:selectOneMenu>
+
+							<h:selectOneMenu defaultLabel="Valor?"
+								value="#{descisor.valorCondicionAtributo}"
+								rendered="#{not empty descisor.condicion.condicionAtributoList}">
+								<s:selectItems noSelectionLabel="N/A" var="atr"
+									value="#{descisor.condicion.condicionAtributoList}"
+									label="#{atr.operadorLogico} #{atributoNameGetter.convertirATexto(atr.atributo2)}" />
+								<s:convertEntity />
+							</h:selectOneMenu>
+
+							<h:selectOneMenu defaultLabel="Valor?"
+								value="#{descisor.valorCondicionFormula}"
+								rendered="#{not empty descisor.condicion.condicionFormulaList}">
+								<s:selectItems noSelectionLabel="N/A" var="formul"
+									value="#{descisor.condicion.condicionFormulaList}"
+									label="#{formul.operadorLogico} #{formul.formula.nombre}" />
+								<s:convertEntity />
+							</h:selectOneMenu>
+
+						</rich:columns>
+
+					</rich:dataTable>
+				</div>
+
+
+
+				<rich:separator height="2" lineType="solid" />
+				<h:panelGrid columns="2">
+
+
+					<rich:listShuttle
+						sourceValue="#{editor.resultadosEsperadosPreSeleccionados}"
+						targetValue="#{filaAAgregar.acciones}"
+						sourceCaptionLabel="Acciones esperadas disponibles"
+						targetCaptionLabel="Acciones esperadas seleccionados" id="accion"
+						var="accion" removeControlLabel="Quitar"
+						removeAllControlLabel="Quitar Todos"
+						copyAllControlLabel="Copiar todos" copyControlLabel="Copiar"
+						upControlLabel="Subir" downControlLabel="Bajar"
+						fastOrderControlsVisible="false" listsHeight="100"
+						targetListWidth="300" sourceListWidth="300">
+
+						<rich:column>
+							<h:outputText value="#{accion.nombre}"></h:outputText>
+						</rich:column>
+
+						<s:convertEntity />
+
+					</rich:listShuttle>
+
+
+				</h:panelGrid>
+
+				<h:selectBooleanCheckbox 
+					value="#{filaAAgregar.elevaExcepcion}">
+				</h:selectBooleanCheckbox>
+				<h:outputText value="Interrumpir el flujo de ejecucion cuando se den las condiciones " />
+
+
+
+				<h:commandButton action="#{editor.crearAccion()}" id="create"
+					propagation="join" value="Crear accion"
+					onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+					<f:param name="crearFila" value="true" />
+				</h:commandButton>
+
+				<h:message for="accion" styleClass="errors" />
+
+
+				<rich:separator height="2" lineType="solid" />
+
+
+
+
+				<h:panelGrid columns="3" style="height : 21px; width : 1024px;">
+					<h:outputText value="Mensaje para operador de UDAI" />
+					<h:outputText value="Mensaje para Ciudadano" />
+					<h:outputText value="Observacion general" />
+				</h:panelGrid>
+				
+				
+				
+				<h:panelGrid columns="3">
+
+
+					 <h:inputTextarea id="mensajesWeb" style="width:300px;" rows="15"
+						value="#{filaAAgregar.mensajeOperadorUdai}" />
+						
+					<h:inputTextarea id="mensajesUdai" style="width:300px;" rows="15"
+						value="#{filaAAgregar.mensajeUsuarioWEB}" />
+					<h:inputTextarea id="observaciones" style="width:300px;" rows="15"
+						value="#{filaAAgregar.observacion}" />
+
+
+				</h:panelGrid>
+
+			</h:panelGrid>
+
+		</div>
+
+
+
+
+		<div style="clear: both" />
+	</ui:define>
+	<ui:define name="botonera">
+
+
+		<div id="botonera">
+
+			<h:commandLink action="#{editor.cancelarFila()}" value="Cancelar"
+				styleClass="botoncancelar"
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})" />
+
+			<h:commandButton action="#{editor.guardarFila()}" value="Aceptar"
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})" />
+		</div>
+	</ui:define>
+
+</ui:composition>

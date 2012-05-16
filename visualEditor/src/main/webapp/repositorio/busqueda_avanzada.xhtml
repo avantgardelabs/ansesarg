@@ -1,0 +1,97 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich" 
+	template="layout/template.xhtml">
+
+
+	<ui:define name="titulo">
+		<h1>Busqueda Avanzada</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda" style="margin-bottom: 5px;">Aqui va un texto
+		de ayuda<br />
+		<a href="" class="textoayuda">ver mas >></a></div>
+	</ui:define>
+
+	<ui:define name="body">
+		<div id="formulario">
+		
+		<h:panelGrid columns="4">
+		<h3>Prestacion</h3>
+		<h:outputText  />
+		<h3>Requisito para Computo y Derecho</h3>
+		
+		<h:outputText  />
+		 <rich:pickList
+			removeControlLabel="Quitar"
+                 	removeAllControlLabel="Quitar Todos"
+                 	copyAllControlLabel="Copiar todos"
+                 	copyControlLabel="Copiar"
+                 
+                 	>
+            <f:selectItem itemLabel="Opcion 1" itemValue="1"/>
+            <f:selectItem itemLabel="Opcion 2" itemValue="2"/>
+            <f:selectItem itemLabel="Opcion 3" itemValue="3"/>
+            <f:selectItem itemLabel="Opcion 4" itemValue="4"/>
+            <f:selectItem itemLabel="Opcion 5" itemValue="5"/>
+        </rich:pickList>
+        
+       <h:outputText  />
+				
+			<rich:pickList
+			removeControlLabel="Quitar"
+                 	removeAllControlLabel="Quitar Todos"
+                 	copyAllControlLabel="Copiar todos"
+                 	copyControlLabel="Copiar"
+                 	>
+            <f:selectItem itemLabel="Opcion 1" itemValue="1"/>
+            <f:selectItem itemLabel="Opcion 2" itemValue="2"/>
+            <f:selectItem itemLabel="Opcion 3" itemValue="3"/>
+            <f:selectItem itemLabel="Opcion 4" itemValue="4"/>
+            <f:selectItem itemLabel="Opcion 5" itemValue="5"/>
+        </rich:pickList>
+        <h:outputText  />
+        <h3> Requisito Determincaion del Haber</h3>
+		<h:outputText  />
+		<h:outputText />
+		<h:outputText  />
+
+	
+			
+			<rich:pickList
+			removeControlLabel="Quitar"
+                 	removeAllControlLabel="Quitar Todos"
+                 	copyAllControlLabel="Copiar todos"
+                 	copyControlLabel="Copiar"
+                 	
+                 	 >
+            <f:selectItem itemLabel="Opcion 1" itemValue="1"/>
+            <f:selectItem itemLabel="Opcion 2" itemValue="2"/>
+            <f:selectItem itemLabel="Opcion 3" itemValue="3"/>
+            <f:selectItem itemLabel="Opcion 4" itemValue="4"/>
+            <f:selectItem itemLabel="Opcion 5" itemValue="5"/>
+        </rich:pickList>
+        
+			
+
+
+		</h:panelGrid>
+		</div>
+
+
+	</ui:define>
+
+	<ui:define name="botonera">
+
+		<div id="botonera"><h:commandButton value="Buscar" />
+		
+		</div>
+	</ui:define>
+
+</ui:composition>

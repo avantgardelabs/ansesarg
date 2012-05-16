@@ -1,0 +1,299 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j" template="layout/template.xhtml">
+
+	<ui:define name="titulo">
+		<h1>Agregar Fórmula</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">
+			<a href="" class="textoayuda">ver mas >></a>
+			<h:outputText value="Agregar Fórmula" />
+		</div>
+	</ui:define>
+
+	<ui:define name="body">
+
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false"
+			resizeable="false" autosized="true" zindex="2000" top="500"
+			minWidth="350" width="300">
+			<span class="waitingPanel"> <h:graphicImage
+					value="/img/wait_bar.gif" style="vertical-align: middle;" /> <h:outputText
+					style="" value="#{messages['message.pleasewait']}" /> </span>
+		</rich:modalPanel>
+
+		<div id="formulario">
+
+			<h:panelGrid columns="1" styleClass="rich-table70">
+				<s:decorate template="layout/edit.xhtml" style="padding: 10px">
+					<ui:define name="label">Nombre:</ui:define>
+					<h:inputText value="#{formulasAction.formula.nombre}"
+						required="true" requiredMessage="El Campo Nombre es obligatorio"
+						style=" width : 630px; margin-left:17px"
+						disabled="#{formulasAction.selector!=0}" />
+				</s:decorate>
+
+				<s:decorate template="layout/edit.xhtml" style="padding: 10px">
+					<ui:define name="label">Descripción:</ui:define>
+
+					<h:inputTextarea value="#{formulasAction.formula.descripcion}"
+						required="true"
+						requiredMessage="El Campo Descripción es obligatorio"
+						style=" width : 630px; margin-left:17px"
+						disabled="#{formulasAction.selector==2}" />
+				</s:decorate>
+
+				<s:decorate template="layout/edit.xhtml" style="padding: 10px;">
+					<ui:define name="label">Dominio:</ui:define>
+					<h:selectOneMenu onchange="_modificado=true" id="idDominio"
+						required="true" value="#{formulasAction.formula.dominio}"
+						requiredMessage="Debe seleccionar el dominio correspondiente."
+						styleClass="ancho300" style="margin-left:17px;"
+						disabled="#{formulasAction.selector==2}">
+						<s:selectItems var="dominio"
+							noSelectionLabel="Indique un dominio..."
+							value="#{dominioList.myResultList}"
+							label="#{dominio.descripcion}">
+						</s:selectItems>
+						<s:convertEntity />
+						<a4j:support event="onchange" reRender="cancelEdit"
+							ajaxSingle="false" bypassUpdates="true" />
+					</h:selectOneMenu>
+				</s:decorate>
+				<br />
+
+			</h:panelGrid>
+			<div style="width: 100%;">
+				<rich:panel
+					style="width : 50%; height : 150px; margin-left:10px; float:left"
+					rendered="#{formulasAction.selector!=2}">
+					<f:facet name="header">Incógnitas</f:facet>
+					<a4j:region>
+
+						<s:decorate id="entidad" template="layout/edit.xhtml">
+
+							<ui:define name="label">Entidad</ui:define>
+							<h:selectOneMenu id="idEntidad" value="#{formulasAction.entidad}"
+								requiredMessage="Debe seleccionar una Entidad">
+
+								<s:selectItems var="entidad"
+									noSelectionLabel="Indique una entidad..."
+									value="#{formulasAction.entidades}" label="#{entidad.nombre}">
+
+								</s:selectItems>
+								<a4j:support event="onchange"
+									reRender="cancelEdit,listaAtributos" ajaxSingle="true"
+									action="#{condicionHome.setModificado(true)}" />
+
+								<s:convertEntity />
+							</h:selectOneMenu>
+
+						</s:decorate>
+
+
+						<s:decorate id="lista" template="layout/edit.xhtml">
+
+							<ui:define name="label">Atributo</ui:define>
+							<h:selectOneMenu id="listaAtributos"
+								requiredMessage="Debe Seleccionar un Atributo"
+								value="#{formulasAction.atributo}" immediate="true">
+								<s:selectItems noSelectionLabel="Indique un atributo..."
+									var="atributo" value="#{formulasAction.atributos}"
+									label="#{atributo.nombre}" />
+								<a4j:support event="onchange"
+									reRender="cancelEdit,literal,cboOperadorLogico1,modoCarga,cargaLogica,cargaPorLiteral"
+									action="#{condicionHome.setModificado(true)}" ajaxSingle="true"
+									oncomplete="mostrarPanel()" />
+								<s:convertEntity />
+							</h:selectOneMenu>
+
+
+						</s:decorate>
+
+					</a4j:region>
+					<a4j:commandButton action="#{formulasAction.agregarIncognita()}"
+						value="Agregar" reRender="formula, panelIncog" />
+
+				</rich:panel>
+
+				<rich:panel
+					style="width : 45%; height : 150px; margin-left:10px; float:left"
+					rendered="#{formulasAction.selector!=2}">
+					<f:facet name="header">Funciones</f:facet>
+					<a4j:region>
+						<s:decorate id="lista2" template="layout/edit.xhtml">
+							<ui:define name="label">Funciones</ui:define>
+							<h:selectOneMenu id="listaFunciones"
+								requiredMessage="Debe Seleccionar una Función"
+								value="#{formulasAction.funcion.cuerpo}" immediate="true">
+								<s:selectItems noSelectionLabel="Indique una Función..."
+									var="func" value="#{formulasAction.funciones}"
+									label="#{func.nombre}" itemValue="#{func.cuerpo}" />
+							</h:selectOneMenu>
+
+
+						</s:decorate>
+					</a4j:region>
+					<a4j:commandButton
+						action="#{formulasAction.agregarFuncionAFormula(formulasAction.funcion)}"
+						value="Agregar" reRender="formula" />
+				</rich:panel>
+
+				<!-- <rich:panel
+					style="width : 30%; height : 150px; margin-left:10px; float:left;"
+					rendered="#{formulasAction.selector!=2}">
+					<f:facet name="header">Fórmulas</f:facet>
+					<a4j:region>
+						<s:decorate id="lista3" template="layout/edit.xhtml">
+							<ui:define name="label">Fórmulas</ui:define>
+							<h:selectOneMenu id="listaFunciones"
+								requiredMessage="Debe Seleccionar una Función"
+								value="#{formulasAction.formula2}" immediate="true">
+								<s:selectItems noSelectionLabel="Indique una Función..."
+									var="formula" value="#{formulasAction.formulas}"
+									label="#{formula.nombre}" />
+								<s:convertEntity />
+							</h:selectOneMenu>
+
+
+						</s:decorate>
+					</a4j:region>
+					<a4j:commandButton
+						action="#{formulasAction.agregarFormulaAFormula(formulasAction.formula2)}"
+						value="Agregar" reRender="formula" />
+				</rich:panel> -->
+
+
+			</div>
+
+			<div style="width: 100%; float: left;">
+				<br />
+				<a4j:outputPanel id="panelIncog">
+					<rich:panel>
+						<rich:dataTable value="#{formulasAction.formula.incognitas}"
+							var="var" rows="10">
+							<rich:column>
+								<f:facet name="header">
+                    Incógnita
+                </f:facet>
+								<h:outputText value="#{var.codigo}" />
+
+							</rich:column>
+
+							<rich:column>
+								<f:facet name="header">
+                    Entidad
+                </f:facet>
+								<h:outputText value="#{var.entidad.nombre}" />
+
+							</rich:column>
+
+							<rich:column>
+								<f:facet name="header">
+                    Atributo
+                </f:facet>
+								<h:outputText value="#{var.atributo.nombre}" />
+
+							</rich:column>
+
+							<rich:column rendered="#{formulasAction.selector!=2}">
+								<f:facet name="header">
+                    Acción
+                </f:facet>
+								<h:panelGrid columns="5">
+									<a4j:commandLink
+										action="#{formulasAction.agregarAFormula(var)}"
+										style="color: black" reRender="formula">
+
+										<h:graphicImage value="/img/ver.png" styleClass="img" />
+										<h:outputText value="Agregar" />
+									</a4j:commandLink>
+									<h:outputText />
+									<a4j:commandLink
+										action="#{formulasAction.formula.incognitas.remove(var)}"
+										ajaxSingle="true" style="color: black" reRender="panelIncog"
+										onclick="if (!confirm('Se eliminará una incognita. Esta seguro?')) return false">
+
+										<h:graphicImage value="/img/editar.png" styleClass="img" />
+										<h:outputText value="Eliminar" />
+									</a4j:commandLink>
+									<h:outputText />
+								</h:panelGrid>
+							</rich:column>
+
+
+
+							<f:facet name="footer">
+								<rich:datascroller id="datascroller" />
+							</f:facet>
+
+						</rich:dataTable>
+
+					</rich:panel>
+				</a4j:outputPanel>
+			</div>
+
+			<div style="width: 100%; float: left;">
+				<!--    <h:panelGrid columns="2">-->
+				<!--    	<h:outputText value="Funciones:"/>-->
+				<!--    	<h:outputText value="REDONDEAR(X) -> Quita los decimales a un número, siendo X de tipo número."/>-->
+				<!--    	<h:outputText value=""/>-->
+				<!--    	<h:outputText value="RAIZ(X) -> Realiza la raíz cuadrada de un número, siendo X de tipo número. "/>-->
+				<!--    	<h:outputText value=""/>-->
+				<!--    	<h:outputText value="POTENCIA(X,Y) -> Realiza la potencia del número indicado en el parámetro X como base, siendo siendo el exponente el parámetro Y que tiene que ser del tipo número."/>-->
+				<!--    	<h:outputText value=""/>-->
+				<!--    	<h:outputText value=""/>-->
+				<!--    	</h:panelGrid>-->
+				<a4j:region>
+					<a4j:outputPanel id="formula">
+						<h:panelGrid columns="3">
+							<h:outputText value="Cuerpo:" style="padding: 10px" />
+							<s:decorate id="listaInc" template="layout/edit.xhtml">
+								<h:inputTextarea value="#{formulasAction.formula.cuerpo}"
+									requiredMessage="El campo Cuerpo es obligatorio"
+									style=" width : 622px; padding: 5px; "
+									disabled="#{formulasAction.selector==2}" />
+							</s:decorate>
+							<a4j:commandButton value="Validar"
+								action="#{formulasAction.calculcar()}"
+								rendered="#{formulasAction.selector!=2}" />
+						</h:panelGrid>
+					</a4j:outputPanel>
+				</a4j:region>
+
+			</div>
+			<div style="width: 100%; float: left;">
+				<rich:panel>
+					<a4j:outputPanel ajaxRendered="true">
+						<rich:messages styleClass="Error errors">
+						</rich:messages>
+					</a4j:outputPanel>
+				</rich:panel>
+			</div>
+
+		</div>
+		<div class="actionButtons">
+
+
+			<h:commandButton value="Guardar" action="#{formulasAction.guardar()}"
+				rendered="#{formulasAction.selector!=2}" />
+			<h:commandButton value="Cancelar"
+				action="#{formulasAction.cancelar()}" immediate="true"
+				rendered="#{formulasAction.selector!=2}"
+				onclick="if (!confirm('Se perderán los cambios, está seguro que desea Cancelar?')) return false" />
+
+			<h:commandButton value="Volver" action="#{formulasAction.cancelar()}"
+				rendered="#{formulasAction.selector==2}" immediate="true" />
+		</div>
+
+	</ui:define>
+
+</ui:composition>

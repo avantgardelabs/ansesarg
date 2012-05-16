@@ -1,0 +1,358 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	 template="layout/template.xhtml" >
+
+
+<ui:define name="titulo">
+		<h1>Paso 1 de 4 - Detalle de Regla</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Aqui va un texto
+		de ayuda<br />
+		<a href="" class="textoayuda">ver mas >></a></div>
+	</ui:define>
+
+	<ui:define name="body">
+	
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+			<span class="waitingPanel">
+			<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+			<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+			</span>
+		</rich:modalPanel>
+		
+		<div id="formulario">
+		
+		<h:panelGrid id="formRegla" columns="3" >
+			<h:outputText value="Nombre" />
+			<h:inputText id="txtNombreRegla" 
+				value="#{reglaPseudocodigoHome.instance.nombre}" 
+				required="true"
+				requiredMessage="Debe especificar el nombre de la regla"	
+				styleClass="ancho400"
+				onblur="_modificado = true; this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');"
+				>
+				
+				<s:validate/> 	
+			</h:inputText>
+			<h:message  id="errorTxtNombreRegla" for="txtNombreRegla" styleClass="error errors"/>
+			
+			<h:outputText value="Descripcion" />
+			<h:inputTextarea id="txtDescripcion" 
+							value="#{reglaPseudocodigoHome.instance.descripcion}"  
+							styleClass="ancho500"
+							required="true"
+							onblur="_modificado=true"
+						requiredMessage="Debe especificar la descripcion de la regla"/>
+			
+			<h:message  id="errorTxtDescripcion" for="txtDescripcion" styleClass="error errors"/>
+			
+			
+			<h:outputText value="Dominio"
+							required="true"
+							/>
+			  
+	          
+          <s:decorate id="txtDominio" >
+            <h:selectOneMenu 
+			  id="idDominio" 
+			  value="#{reglaPseudocodigoHome.instance.dominio}"
+			  required="true"
+			  requiredMessage="Debe seleccionar el dominio correspondiente."
+			  styleClass="ancho300"
+			  onchange="_modificado=true"
+			  >
+			 	<s:selectItems 
+           			var="dominio" 
+           			noSelectionLabel="Indique un dominio..."
+           			value="#{dominioList.getMyResultList()}"
+           			label="#{dominio.descripcion}"                                 
+           		>
+           		</s:selectItems>
+           		<s:convertEntity/> 
+         	</h:selectOneMenu>
+          </s:decorate>
+
+		</h:panelGrid>
+		
+		
+		<h:panelGrid columns="1">
+			<rich:panel bodyClass="inpanelBody"
+			style="height: 400px;overflow:scroll; width : 1150px;"
+			>
+				<f:facet name="header">
+	                    Instrumentos disponibles
+	                </f:facet>
+	
+			<div id="panelBuscar" >
+			
+				<h:panelGrid columns="4" >				
+					
+					<h:outputText value="Nombre:" />
+					<h:inputText id="txtNameFunction" value="#{reglaPseudocodigoHome.nameInstrument}" rendered="true">
+								<a4j:support 
+										event="onblur" 
+										action="#{reglaPseudocodigoHome.actualizarNombre()}" 
+										ajaxSingle="true"/>
+					</h:inputText>
+					
+					<a4j:commandButton 
+							id="btnSearchNormativeInstrument" 
+							action="#{reglaPseudocodigoHome.searchNormativeInstrument()}" 
+							value="Buscar"
+							reRender="normativeInstrumentsList,panelNormativeInstrumentsList,txtNameFunction" 
+							ajaxSingle="true"
+							immediate="true"/>
+					
+				</h:panelGrid>
+				<br/><br/><br/>
+			<div>
+			
+			<rich:panel id="panelNormativeInstrumentsList">
+		        <f:facet name="header">Lista de instrumentos normativos de </f:facet>
+			    <div class="results">
+					               
+					<rich:dataTable id="normativeInstrumentsList" 
+					                	var="_normativeInstrument"
+					              		value="#{reglaPseudocodigoHome.listInstruments}" 
+					           			rendered="#{not empty reglaPseudocodigoHome.listInstruments}"
+					           			rows="10">
+			  	 
+			        <h:column>
+			            <f:facet name="header">
+			                <h:outputText styleClass="columnHeader" value="Instrumento Padre" />
+			            </f:facet>
+			            <h:outputText value="#{_normativeInstrument.padre == null?'-':_normativeInstrument.padre.descripcion}"/>
+			        </h:column>
+			        			  
+			        <h:column>
+			            <f:facet name="header">
+			                <h:outputText styleClass="columnHeader" value="Descripcion" />
+			            </f:facet>
+			            <h:outputText value="#{_normativeInstrument.descripcion}"/>
+			        </h:column>
+			
+			        <h:column>
+			            <f:facet name="header">
+			                <h:outputText styleClass="columnHeader" value="Fecha de firma"/>
+			            </f:facet>
+			            <h:outputText value="#{_normativeInstrument.fechaFirmaFormat}" />
+			        </h:column>
+			        
+			        <h:column>
+			            <f:facet name="header">
+			                <h:outputText styleClass="columnHeader" value="Fecha de firma" />
+			            </f:facet>
+			            <h:outputText value="#{_normativeInstrument.fechaVigenciaFormat}" />
+			        </h:column>
+			        
+			        <h:column>
+			            <f:facet name="header">
+			                <h:outputText styleClass="columnHeader" value="Fecha de aplicacion" />
+			            </f:facet>
+			            <h:outputText value="#{_normativeInstrument.fechaAplicacionFormat}" />
+			        </h:column>	        
+	
+			        <rich:column styleClass="action">
+			            <f:facet name="header">Accion</f:facet>
+			            
+			            <h:panelGrid columns="2">
+					        
+							<a4j:commandLink id="removeInst" 
+										value=""
+										action="#{reglaPseudocodigoHome.addInst(_normativeInstrument)}"
+										styleClass="hover"
+										reRender="tablaInstrumentosSeleccionados"
+										ajaxSingle="true"
+										oncomplete="#{rich:component('asistenteWaitingPanel')}.hide()"
+										onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+										
+										<h:outputText value="Mover" />
+										<h:graphicImage value="/img/bin_closed.png"
+													title="Quitar" alt="Quitar"  
+													styleClass="img" />
+							</a4j:commandLink>
+					
+				        </h:panelGrid>
+			        </rich:column>
+		
+			        <f:facet name="footer">
+						<rich:datascroller id="datascroller" />
+					</f:facet>
+			    	</rich:dataTable>
+		   	 	</div>
+		    </rich:panel>
+		    </div>
+    	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+				<div style="overflow: true;">
+				
+				<rich:tree 
+					style="width:300px"
+					id="arbolInstrumentos"
+					nodeSelectListener="#{reglaPseudocodigoHome.processSelectionInstrumento}" 
+					ajaxSubmitSelection="true"
+					switchType="client" 
+					value="#{reglaPseudocodigoHome.treeNodeInstrumento}"
+					var="item" 
+					ajaxKeys="#{null}" 
+					nodeFace="#{item.tipo}"
+					bypassUpdates="true"
+					ajaxSingle="true"
+					>
+					
+					<rich:treeNode type="carpeta" icon="/img/iconFolder.gif" iconLeaf="/img/iconFolder.gif" >
+			                <h:outputText value="#{item.descripcion}" />
+			            </rich:treeNode>
+	
+				</rich:tree>
+			</div>
+			<br/>
+			<a4j:commandButton 
+							id="btnViewshNormativeInstrumentOfFolder" 
+							action="#{reglaPseudocodigoHome.viewInstOfFolderSelected()}" 
+							value="Mostrar"
+							reRender="normativeInstrumentsList,panelNormativeInstrumentsList,txtNameFunction" 
+							ajaxSingle="true"
+							immediate="true"/>
+	
+			</rich:panel> 
+			
+			
+			
+			
+			<rich:panel bodyClass="inpanelBody"
+			style="height: 250px;overflow:scroll; width : 1150px;"
+			>
+				<f:facet name="header">
+					<h:outputText value="Instrumentos Seleccionados" />
+				</f:facet>
+					
+				<rich:dataTable
+					value="#{reglaPseudocodigoHome.instance.instrumentosNormativos}"
+					id="tablaInstrumentosSeleccionados" var="instrumento">
+					
+	
+					<rich:column>
+						<a4j:commandLink 
+							action="#{reglaPseudocodigoHome.eliminarInstrumentoSeleccionado(instrumento)}"
+							reRender="tablaInstrumentosSeleccionados" 
+							ajaxSingle="true"
+							
+						>	
+							<h:graphicImage value="/img/bin_closed.png" styleClass="img"  />
+							
+						</a4j:commandLink>
+					</rich:column>
+	
+					
+	
+					<rich:column>
+						<f:facet name="header">Descripcion</f:facet>
+						<h:outputText value="#{instrumento.descripcion}" id="descripcion" />
+					</rich:column>
+	
+					<rich:column>
+						<f:facet name="header">F. Firma</f:facet>
+						<h:outputText value="#{instrumento.fechaFirma}">
+							<f:convertDateTime type="date" dateStyle="medium"
+								pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</rich:column>
+	
+					<rich:column>
+						<f:facet name="header">F. Vigencia</f:facet>
+						<h:outputText value="#{instrumento.fechaVigencia}">
+							<f:convertDateTime type="date" dateStyle="medium"
+								pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</rich:column>
+	
+					<rich:column>
+						<f:facet name="header">F.Aplicacion</f:facet>
+						<h:outputText value="#{instrumento.fechaAplicacion}">
+							<f:convertDateTime type="date" dateStyle="medium"
+								pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</rich:column>
+	
+	
+	
+				</rich:dataTable>
+			</rich:panel>
+		</h:panelGrid>		
+		
+	
+		<div style="clear: both" />
+</div>
+
+	</ui:define>
+	<ui:define name="botonera">
+		<div id="botonera">
+			<s:button
+				id="cancelEdit"
+				propagation="end"
+				action="#{reglaPseudocodigoHome.exit()}" 
+				view="/reglaPseudocodigoList.xhtml" 
+				value="Cancelar" 
+				rendered="#{reglaPseudocodigoHome.managed}"
+				immediate="true"
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+			>
+				<a4j:support 
+					event="onclick"
+					onsubmit="if(_modificado) {if (!confirm('Esta seguro que desea cancelar la operacion?')) {return false;}}"
+					immediate="true"
+				/>
+			</s:button>
+			
+			
+		    <s:button id="cancelAdd"
+                   value="Cancelar"
+             propagation="end"
+                    view="/#{empty reglaFilaPseudocodigoFrom ? 'reglaPseudocodigoList' : reglaFilaPseudocodigoFrom}.xhtml"
+                rendered="#{!reglaPseudocodigoHome.managed}"
+                immediate="true"
+                onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+                <a4j:support
+                	event="onclick"
+					onsubmit="if (_modificado) {if(!confirm('Se perderan los cambios. Esta seguro que desea Cancelar?')) {return false;}}"
+					immediate="true" 
+				/>
+			</s:button>
+				
+			<h:commandButton
+				id="continuar" 
+				value="Continuar >>" 
+				styleClass="botoncancelar"
+				action="#{reglaPseudocodigoHome.irAPaso2()}"
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+			>
+			</h:commandButton>
+		</div>
+	</ui:define>
+</ui:composition>
+

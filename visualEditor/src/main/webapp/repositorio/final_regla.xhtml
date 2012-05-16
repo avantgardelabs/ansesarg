@@ -1,0 +1,61 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	template="layout/template.xhtml">
+	
+	<ui:define name="titulo">
+		<h1>Resumen</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Revise las opciones configuradas<br />
+		<a href="" style="text-align: right; cursor: pointer;">ver mas >></a></div>
+	</ui:define>
+<br/>
+	<ui:define name="bodyFinalRegla">
+<div id="cajaformulario"  >
+		
+		
+			<h:outputText value="Ud ha configurado" />
+
+			<rich:separator height="2" lineType="dashed" />
+			<rich:dataList var="paso" value="#{asistente.pasosRealizados}">
+				<h:outputText value="#{paso.descripcion}" />
+				<br />
+			</rich:dataList>
+	</div>
+
+		
+		
+			
+		<div style="clear: both" />
+	</ui:define>
+	<ui:define name="preview">
+	<rich:dataTable
+			var="paso" value="#">
+			<f:facet name="header">
+				<h:outputText value="Area de Preview" />
+			</f:facet>
+			
+			
+			
+			
+
+		</rich:dataTable>
+		</ui:define>
+		<ui:define name="botonera">
+
+			<h:commandButton type="submit" value="Enviar"/>
+		<div id="botonera">
+		<h:commandButton type="submit" value="Confirmar"
+			action="#{asistente.establecerPaso('FINAL')}" />			
+			<h:commandButton type="submit" value="Guardar"/>
+			</div>
+	</ui:define>
+
+</ui:composition>

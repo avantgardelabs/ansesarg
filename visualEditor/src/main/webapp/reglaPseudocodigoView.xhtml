@@ -1,0 +1,264 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                xmlns:a4j="http://richfaces.org/a4j"
+                template= "layout/template.xhtml">
+
+<ui:define name="titulo">
+		<h1>Regla en Pseudocodigo</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Pantalla principal de Regla en Pseudocodigo<br />
+		<a href="" class="textoayuda">ver mas >></a></div>
+	</ui:define>
+	                       
+<ui:define name="body">
+    
+    
+   	<div id="formulario">
+	
+	
+	<h:panelGrid id="formRegla" columns="3" >
+			<h:outputText value="Nombre" />
+			<h:inputText id="txtNombreRegla" 
+				value="#{reglaPseudocodigoHome.instance.nombre}" 
+				required="true"
+				requiredMessage="Debe especificar el nombre de la regla"	
+				style="width:500px;"
+				disabled="#{from == 'view'}"
+				>
+				<a4j:support event="onblur" 
+					reRender="txtNombreRegla" 
+					bypassUpdates="true" 
+					ajaxSingle="true"
+				/>
+				<s:validate/> 	
+			</h:inputText>
+			<h:message  id="errorTxtNombreRegla" for="txtNombreRegla" styleClass="error errors"/>
+			
+			<h:outputText value="Descripcion" />
+			<h:inputTextarea id="txtDescripcion" 
+							value="#{reglaPseudocodigoHome.instance.descripcion}"  
+							style=" width : 499px;"
+							required="true"
+							disabled="#{from == 'view'}"
+						requiredMessage="Debe especificar la descripcion de la regla"/>
+			
+			<h:message  id="errorTxtDescripcion" for="txtDescripcion" styleClass="error errors"/>
+			
+			
+			<h:outputText value="Dominio"
+							required="true"
+							/>
+			  
+	          
+          <s:decorate id="txtDominio" >
+            <h:selectOneMenu 
+			  id="idDominio" 
+			  value="#{reglaPseudocodigoHome.instance.dominio}"
+			  required="true"
+			  requiredMessage="Debe seleccionar el dominio correspondiente."
+			  styleClass="ancho300"
+			  disabled="#{from == 'view'}"
+			  >
+			 	<s:selectItems 
+           			var="dominio" 
+           			value="#{dominioList.resultList}"
+           			label="#{dominio.descripcion}"                                 
+           		>
+           		</s:selectItems>
+           		<s:convertEntity/> 
+         	</h:selectOneMenu>
+          </s:decorate>
+
+		</h:panelGrid>
+		
+	<h:panelGrid columns="3">
+			<rich:panel bodyClass="inpanelBody"
+			style="height: 200px;overflow:scroll; width : 250px;"
+			rendered="#{from == 'edit'}"
+			>
+				<f:facet name="header">
+	                    Instrumentos disponibles
+	                </f:facet>
+	
+	
+				<div style="overflow: true;">
+				
+				<rich:tree 
+					style="width:200px"
+					id="arbolInstrumentos"
+					nodeSelectListener="#{reglaPseudocodigoHome.processSelectionInstrumento}" 
+					ajaxSubmitSelection="true"
+					switchType="client" 
+					value="#{reglaPseudocodigoHome.treeNodeInstrumento}"
+					var="item" 
+					ajaxKeys="#{null}" 
+					nodeFace="#{item.tipo}"
+					bypassUpdates="true"
+					ajaxSingle="true"
+					>
+					
+					<rich:treeNode type="carpeta" icon="/img/iconFolder.gif" iconLeaf="/img/iconFolder.gif" >
+			                <h:outputText value="#{item.descripcion}" />
+			            </rich:treeNode>
+	
+						<rich:treeNode type="instrumento" icon="/img/iconLeaf.gif" iconLeaf="/img/iconLeaf.gif">
+							<h:outputText value="#{item.descripcion}" />
+					</rich:treeNode>
+					
+				</rich:tree>
+			</div>
+	
+			</rich:panel> 
+			
+			<a4j:commandButton 
+				action="#{reglaPseudocodigoHome.addInstrumentoSeleccionado()}"
+				value="Agregar &gt;&gt;" 
+				reRender="tablaInstrumentosSeleccionados"
+				ajaxSingle="true"
+				rendered="#{from == 'edit'}"
+			>
+			</a4j:commandButton>
+			
+			
+			<rich:panel bodyClass="inpanelBody"
+			style="height: 200px;overflow:scroll; width : 400px;"
+			>
+				<f:facet name="header">
+					<h:outputText value="Instrumentos Seleccionados" />
+				</f:facet>
+					
+				<rich:dataTable
+					value="#{reglaPseudocodigoHome.instance.instrumentosNormativos}"
+					id="tablaInstrumentosSeleccionados" var="instrumento">
+					
+	
+					<rich:column>
+						<a4j:commandLink 
+							action="#{reglaPseudocodigoHome.eliminarInstrumentoSeleccionado(instrumento)}"
+							reRender="tablaInstrumentosSeleccionados" 
+							ajaxSingle="true"
+						>	
+							<h:graphicImage value="/img/bin_closed.png"  />
+							
+						</a4j:commandLink>
+					</rich:column>
+	
+					
+	
+					<rich:column>
+						<f:facet name="header">Descripcion</f:facet>
+						<h:outputText value="#{instrumento.descripcion}" id="descripcion" />
+					</rich:column>
+	
+					<rich:column>
+						<f:facet name="header">F. Firma</f:facet>
+						<h:outputText value="#{instrumento.fechaFirma}">
+							<f:convertDateTime type="date" dateStyle="medium"
+								pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</rich:column>
+	
+					<rich:column>
+						<f:facet name="header">F. Vigencia</f:facet>
+						<h:outputText value="#{instrumento.fechaVigencia}">
+							<f:convertDateTime type="date" dateStyle="medium"
+								pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</rich:column>
+	
+					<rich:column>
+						<f:facet name="header">F.Aplicacion</f:facet>
+						<h:outputText value="#{instrumento.fechaAplicacion}">
+							<f:convertDateTime type="date" dateStyle="medium"
+								pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</rich:column>
+	
+	
+	
+				</rich:dataTable>
+			</rich:panel>
+		</h:panelGrid>	
+	<h:panelGrid columns="3" styleClass="rich-table70">
+    
+    <rich:panel styleClass="rich-table70" style="width : 689px; height : 180px;" >
+        
+        <f:facet name="header">Detalle de la Regla en Pseudocodigo</f:facet>
+			<h:inputTextarea 
+				value="#{reglaPseudocodigoHome.instance.pseudocodigo}"  
+				style="width : 666px; height : 138px;"
+				id="txtPseudoCodigo"
+				disabled="#{from == 'view'}"
+			/>
+        <div style="clear:both"/>
+        
+        
+    </rich:panel>
+    </h:panelGrid>
+	</div>
+    
+    <div class="actionButtons">      
+		
+		<h:commandButton  
+        		value="Validar" />
+        
+        <h:commandButton value="Exportar"
+        			action="#{reglaPseudocodigoHome.exportar()}"
+        			styleClass="botonnavegacion"
+        />
+        			
+        
+		
+        
+    </div>
+    
+    
+    
+    <div id="botonera">
+			<h:commandButton
+				id="cancelEdit"
+				propagation="end"
+				action="reglaPseudocodigoHome.exit()"
+				view="/reglaPseudocodigoList.xhtml" 
+				value="Cancelar" 
+				styleClass="botoncancelar"
+			>
+				<a4j:support 
+					event="onclick"
+					onsubmit="javascript:return confirm('Esta seguro que desea cancelar la operacion?')"
+					rendered="#{from == 'edit'}"
+				/>
+			</h:commandButton>	
+			
+			<h:commandButton id="delete" value="Eliminar"
+				action="#{reglaPseudocodigoHome.remove}" immediate="true"
+				rendered="#{from == 'edit'}" >
+				
+				<a4j:support 
+                	event="onclick"
+					onsubmit="if(!confirm('Se eliminara un elemento y no podra recuperarlo, esta seguro que desea Continuar?')) {return false;}" 
+				/>
+			</h:commandButton>
+			
+			<h:commandButton 
+					action="#{reglaPseudocodigoHome.persist()}" 
+					value="Aceptar" 
+					disabled="#{!condicionHome.wired}"
+					rendered="#{from == 'edit'}"
+			/>
+			
+			
+		</div>
+
+</ui:define>
+
+</ui:composition>

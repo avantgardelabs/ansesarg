@@ -1,0 +1,269 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                xmlns:a4j="http://richfaces.org/a4j"
+                template="layout/template.xhtml"
+                >
+                       
+      
+                       
+<ui:define name="ayuda">
+		<div class="ayuda">Pantalla buscar condiciones y visualizar las condiciones que ya contiene el sistema. <br />
+		<a href="" class="textoayuda">ver mas >></a></div>
+		
+</ui:define>
+
+<ui:define name="body">
+    
+    <![CDATA[<h:messages globalOnly="true" styleClass="message" id="globalMessages"/>]]> 
+   
+	<script type="text/javascript" >
+
+		function validacionLongCamposBusqueda(){
+			if( (document.getElementById("frmPrincipal:dominio").value.length &lt; 3 
+				&amp;&amp; document.getElementById("frmPrincipal:dominio").value.length &gt; 0)
+				||
+				(document.getElementById("frmPrincipal:txtNombreBusqueda").value.length &lt; 3 
+				&amp;&amp; document.getElementById("frmPrincipal:txtNombreBusqueda").value.length &gt; 0)
+				){
+				alert("Todos los campos de busqueda debe tener al menos 3 caracteres.");
+				return false;
+			}
+			Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300});
+			return true;
+		}
+
+		window.onload = function() {
+			if (#{not condicionList.firstTime and not empty condicionList.resultList})
+				document.getElementById("frmPrincipal:pnlLista").style.display="block";
+
+			if (#{condicionList.order != null})
+				document.getElementById("frmPrincipal:pnlLista").style.display="block";
+		}
+		
+	</script>
+   
+    <rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+		<span class="waitingPanel">
+		<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+		<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+		</span>
+	</rich:modalPanel>
+	
+    <rich:panel id="condicionSearch" styleClass="edit" prependId="false" >
+
+        <rich:simpleTogglePanel label="Busqueda de condicion" switchType="client" opened="true">
+
+           <h:panelGrid columns="7" style="border:none;">
+                <h:outputText value="Nombre" style="font-weight:bold" />
+                    
+	            <h:inputText 
+	            			id="txtNombreBusqueda" 
+	            			value="#{condicionList.condicion.nombre}"
+	               			styleClass="ancho300"
+	               			onblur="javascript:this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');"
+	               			>
+	            </h:inputText>
+	    
+                <h:outputText value="Dominio" style="font-weight:bold" />
+                <h:inputText id="dominio" value="#{condicionList.condicion.dominio.descripcion}" 
+               styleClass="ancho300" onblur="javascript:this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');">
+            
+               </h:inputText>
+          
+		        <div class="actionButtons">
+		            <h:commandButton  id="search" value="Buscar" action="#{condicionList.searchWrap()}" 
+		            onclick="return validacionLongCamposBusqueda()"
+		            >
+		            </h:commandButton>
+            		<s:button id="reset" value="Limpiar" includePageParams="false" action="#{condicionList.limpiar()}" onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+		        </div>    
+         
+             </h:panelGrid>
+            
+        </rich:simpleTogglePanel>
+        
+        
+        
+    </rich:panel>
+    
+    <rich:panel styleClass="margen5">
+        <f:facet name="header">Resultados de Busqueda de Condiciones</f:facet>
+	    <div class="results">
+	
+	    <h:outputText value="No se han encontrado resultados." 
+	               rendered="#{empty condicionList.resultList and not condicionList.firstTime}"/>
+	        
+	    <h:panelGroup id="pnlLista" style="display:none">       
+	    <rich:dataTable id="condicionList" 
+	                var="_condicion"
+	              value="#{condicionList.resultList}" 
+	           rows="10">
+	
+	        
+	        <h:column>
+	            <f:facet name="header">
+	                <s:link styleClass="columnHeader"
+	                             value="Nombre #{condicionList.order=='nombre asc' ? 'Asc.' : ( condicionList.order=='nombre desc' ? 'Desc.' : '' )}"
+	                             style="color:#000000;" >
+	                    <f:param name="order" value="#{condicionList.order=='nombre asc' ? 'nombre desc' : 'nombre asc'}"/>
+	                </s:link>
+	            </f:facet>
+	            <h:outputText value="#{_condicion.nombre}"/>
+	        </h:column>
+	
+	        <h:column>
+	            <f:facet name="header">
+	                <s:link styleClass="columnHeader"
+	                             value="Dominio #{condicionList.order=='dominio asc' ? 'Asc.' : ( condicionList.order=='dominio desc' ? 'Desc.' : '' )}"
+	                             style="color:#000000;" >
+	                    <f:param name="order" value="#{condicionList.order=='dominio asc' ? 'dominio desc' : 'dominio asc'}"/>
+	                </s:link>
+	            </f:facet>
+	            <h:outputText value="#{_condicion.dominio.descripcion}"/>
+	        </h:column>
+	
+		
+		    <h:column>
+	            <f:facet name="header">
+	                <s:link styleClass="columnHeader"
+	                             value="Descripcion #{condicionList.order=='descripcion asc' ? 'Asc.' : ( condicionList.order=='descripcion desc' ? 'Desc.' : '' )}"
+	                             style="color:#000000;"  >
+	                    <f:param name="order" value="#{condicionList.order=='descripcion asc' ? 'descripcion desc' : 'descripcion asc'}"/>
+	                </s:link>
+	            </f:facet>
+	            <h:outputText value="#{_condicion.descripcion}"/>
+	        </h:column>
+	        
+	        <h:column>
+	            <f:facet name="header">
+	                <s:link styleClass="columnHeader"
+	                             value="Entidad #{condicionList.order=='entidad asc' ? 'Asc.' : ( condicionList.order=='entidad desc' ? 'Desc.' : '' )}"
+	                             style="color:#000000;" >
+	                    <f:param name="order" value="#{condicionList.order=='entidad asc' ? 'entidad desc' : 'entidad asc'}"/>
+	                </s:link>
+	            </f:facet>
+	            <h:outputText value="#{_condicion.entidad.nombre}"/>
+	        </h:column>
+			
+			
+			<h:column>
+	            <f:facet name="header">
+	                <s:link styleClass="columnHeader"
+	                             value="Atributo #{condicionList.order=='atributo asc' ? 'Asc.' : ( condicionList.order=='atributo desc' ? 'Desc.' : '' )}" 
+	                             style="color:#000000;">
+	                    <f:param name="order" value="#{condicionList.order=='atributo asc' ? 'atributo desc' : 'atributo asc'}"/>
+	                </s:link>
+	            </f:facet>
+	            <h:outputText value="#{_condicion.atributo.nombre}"/>
+	        </h:column>
+	        
+	        
+	        <rich:column styleClass="ancho150">
+	            <f:facet name="header">Accion</f:facet>
+	        
+	        
+	        <h:graphicImage value="/img/ver.png" width="15px" height="15px" styleClass="img" />  
+	        <s:link view="/#{empty from ? 'condicion' : from}.xhtml"
+	                   value="#{empty from ? ' Ver ' : 'Select'}"
+	             propagation="#{empty from ? 'none' : 'default'}"
+	                      id="condicionViewId"
+	                      style="color:#000000;"
+	                      onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+	                <f:param name="condicionId" 
+	                        value="#{_condicion.id}"
+	                        />
+	            </s:link>
+	        
+	           
+	        
+	            #{' '}
+	            <h:graphicImage value="/img/editar.png" width="15px" height="15px" styleClass="img" />
+	            <s:link view="/condicionEdit.xhtml"
+	                   value=" Editar "
+	                   style="color:#000000;"
+	               propagation="none" 
+	                 id="condicionEdit"
+	                rendered="#{empty from}"
+	                onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+	                
+	                <f:param name="condicionId"
+	                        value="#{_condicion.id}"/>
+	            </s:link>
+	        </rich:column>
+	        
+	        <f:facet name="footer">
+						<rich:datascroller for="condicionList" maxPages="50"
+						page="#{condicionList.scrollerPage}" id="down" reRender="up" />
+
+			</f:facet>
+			
+	    </rich:dataTable>
+		</h:panelGroup>
+   	 </div>				
+    </rich:panel>
+    
+    <div class="tableControl">
+      
+        <s:link view="/condicionList.xhtml" 
+            rendered="#{condicionList.previousExists}" 
+               value="#{messages.left}#{messages.left} Primera Pagina"
+                  id="firstPage">
+          <f:param name="firstResult" value="0"/>
+        </s:link>
+        
+        <s:link view="/condicionList.xhtml" 
+            rendered="#{condicionList.previousExists}" 
+               value="#{messages.left} Pagina Anterior"
+                  id="previousPage">
+            <f:param name="firstResult" 
+                    value="#{condicionList.previousFirstResult}"/>
+        </s:link>
+        
+        <s:link view="/condicionList.xhtml" 
+            rendered="#{condicionList.nextExists}" 
+               value="Next Page #{messages.right}"
+                  id="nextPage">
+            <f:param name="firstResult" 
+                    value="#{condicionList.nextFirstResult}"/>
+        </s:link>
+        
+        <s:link view="/condicionList.xhtml" 
+            rendered="#{condicionList.nextExists}" 
+               value="Last Page #{messages.right}#{messages.right}"
+                  id="lastPage">
+            <f:param name="firstResult" 
+                    value="#{condicionList.lastFirstResult}"/>
+        </s:link>
+        
+    </div>
+    
+    <s:div styleClass="actionButtons" rendered="#{empty from}">
+        <s:button view="/condicionEdit.xhtml"
+                    id="create"
+           propagation="none"
+                 value="Crear condicion"
+                 onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+            <f:param name="condicionId"/>
+        </s:button>
+        
+        <s:button view="/home.xhtml"
+                    id="salir"
+           propagation="none"
+                 value="Salir"
+                 onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+        </s:button>
+    </s:div>
+    
+</ui:define>
+
+</ui:composition>
+

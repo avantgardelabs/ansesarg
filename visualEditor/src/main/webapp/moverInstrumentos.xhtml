@@ -1,0 +1,85 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	template="layout/template.xhtml">
+	
+	<ui:define name="titulo">
+		<h1>Instrumento normativo</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Seleccione el instrumento normativo. El
+		instrumento seleccionado con el CheckBox ser&aacute; quien rija la
+		ponderaci&oacute;n de la regla<br />
+		<a href="" style="text-align: right; cursor: pointer;">ver mas >></a></div>
+	</ui:define>
+
+	<ui:define name="bodyInstrumento">
+	
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+			<span class="waitingPanel">
+			<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+			<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+			</span>
+		</rich:modalPanel>
+	
+		<div style="width: 100%">
+		
+		<rich:panel bodyClass="inpanelBody"
+			style="height: 450px;overflow:scroll">
+			
+			<f:facet name="header">
+                    Instrumentos disponibles
+                </f:facet>
+
+
+			<div style="overflow: true;">
+				<rich:tree 
+					style="width:300px" 
+					id="arbolInstrumentos"
+					nodeSelectListener="#{instrumentoNormativoManager.processSelectionPanelmoves}"
+					ajaxSubmitSelection="true"
+					switchType="client" 
+					value="#{instrumentoNormativoManager.treeNode}"
+					var="item" 
+					ajaxKeys="#{null}" 
+					nodeFace="#{item.tipo}"
+					
+					>
+					
+					<rich:treeNode type="carpeta" icon="/img/iconFolder.gif" iconLeaf="/img/iconFolder.gif">
+		                <h:outputText value="#{item.descripcion}" />
+		            </rich:treeNode>
+
+				</rich:tree>
+			</div>
+
+		</rich:panel> 
+		
+		<h:panelGrid columns="2">
+					
+					<h:commandButton 
+						value="Atras"
+						action="/instrumentoEdit.xhtml"
+						onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+					/>
+						
+					<h:commandButton 
+						value="Aceptar"
+						action="#{instrumentoNormativoManager.moveSelectedInst()}" 
+						onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+					
+		</h:panelGrid>
+		
+		</div>
+	
+	
+	</ui:define>
+	
+</ui:composition>

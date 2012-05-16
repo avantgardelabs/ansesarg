@@ -1,0 +1,67 @@
+<profilesXml>
+	<profiles>
+	
+		<profile>
+			<id>externo</id>
+				<properties>
+					<host.token>EXTERNO</host.token>
+					<host.url>autenticador.html</host.url>
+					<host.path.jboss>C://</host.path.jboss>
+				</properties>
+		</profile>
+	
+		<profile>
+			<id>desa</id>
+				<properties>
+					<host.token>ANSESDESA</host.token>
+					<host.url> http://labprueba2/gsistemas/aplicacionesdesa/marn.aspx</host.url>
+					<host.path.jboss>C://</host.path.jboss>
+				</properties>
+		</profile>
+		
+		<profile>
+			<id>test</id>
+				<properties>
+					<host.token>ANSESTEST</host.token>
+					<host.url> http://labprueba2/gsistemas/aplicacionestest/marn.aspx</host.url>
+					<host.path.jboss>/zprissa03/servidores-JBoss/jboss-eap-4.3.0_CP06_FP01/server/prissa-dev/deploy</host.path.jboss>
+				</properties>
+		</profile>
+
+		<profile>
+			<id>capa</id>
+				<properties>
+					<host.token>ANSESCAPACITACION</host.token>
+					<host.url>http://labprueba2/gsistemas/aplicacionestest/marn2.aspx</host.url>
+					<host.path.jboss>/usr/local/jboss-eap-4.3.0_CP06/server/prissa/deploy</host.path.jboss>
+				</properties>
+		</profile>
+		
+		<profile>
+			<id>sist</id>
+				<properties>
+					<host.token>ANSESSISTEMA</host.token>
+					<host.url>http://labprueba2/gsistemas/aplicacionestest/marnsist.aspx</host.url>
+					<host.path.jboss>/usr/local/jboss-eap-4.3.0_CP06/server/prissa-sist/deploy</host.path.jboss>
+				</properties>
+		</profile>
+
+		<profile>
+			<id>qa</id>
+				<properties>
+					<host.token></host.token>
+					<host.url></host.url>
+					<host.path.jboss></host.path.jboss>
+				</properties>
+		</profile>	
+
+		<profile>
+			<id>prod</id>
+				<properties>
+					<host.token></host.token>
+					<host.url></host.url>
+					<host.path.jboss></host.path.jboss>
+				</properties>
+		</profile>			
+	</profiles>
+</profilesXml>

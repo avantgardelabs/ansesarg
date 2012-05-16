@@ -1,0 +1,151 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	 template="layout/template.xhtml" >
+
+
+<ui:define name="titulo">
+		<h1>Paso 1 de 4 - Detalle de Regla</h1>
+	</ui:define>
+
+	
+
+	<ui:define name="body">
+	
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+			<span class="waitingPanel">
+			<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+			<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+			</span>
+		</rich:modalPanel>
+
+		<div id="formulario">
+		
+			<h:panelGrid columns="1" >
+		 		<s:decorate id="nombre" template="layout/edit.xhtml">
+					<ui:define name="label">Nombre</ui:define>
+					<h:inputText 
+						required="true"
+						requiredMessage="El nombre de la regla es obligatorio"	
+						value="#{tablaDesicion.nombre}" 
+						style="width:500px;" 
+						readonly="true"
+						disabled="true"/>
+				</s:decorate>
+			
+				<s:decorate id="descripcion" template="layout/edit.xhtml">
+					<ui:define name="label">Descripcion</ui:define>
+					<h:inputTextarea 
+						required="true"
+						requiredMessage="Debe proporcionar una breve descripcion de la regla"
+						value="#{tablaDesicion.descripcion}"  
+						style=" width : 499px;"
+						readonly="true"
+						disabled="true"/>
+				</s:decorate>
+			
+				<s:decorate id="dominio" template="layout/edit.xhtml">
+					<ui:define name="label">Dominio</ui:define>
+		
+			  		<h:selectOneMenu 
+					  	required="true"
+					  	requiredMessage="Debe indicar el dominio de aplicacion de la regla"
+					  	value="#{tablaDesicion.dominio}"
+					  	readonly="true"
+					  	disabled="true">
+			          
+		            	<s:selectItems 
+				            noSelectionLabel="Seleccione un dominio de aplicacion"
+				            var="dominio" 
+				            value="#{editor.dominiosRegistrados}"
+				            label="#{dominio.descripcion}"/>
+		            	
+		            	<s:convertEntity/>
+	      		  </h:selectOneMenu>
+      		  </s:decorate>
+	      	  <div style="FONT-FAMILY: 'Bitstream Charter'; clear:both">
+	             Los campos que contengan   <span class="required">(*)</span> son de caracter obligatorio
+	               
+	               
+	          </div>
+			  <h3>Instrumentos</h3>
+		</h:panelGrid>
+		
+		<h:panelGrid columns="1">
+			 
+			<rich:panel 
+				bodyClass="inpanelBody"
+				style="height: 200px;overflow:scroll; width : 1150px;">
+			
+				<f:facet name="header">
+                    Instrumentos seleccionados
+                </f:facet>
+
+
+				<rich:dataTable
+					value="#{editor.tablaDesicion.instrumentos}"
+					id="tablaInstrumento" var="instrumento">
+					<f:facet name="header">
+						<h:outputText value="Ud ha seleccionado..." />
+					</f:facet>
+
+					<rich:column>
+						<h:outputText value="#{instrumento.descripcion}" id="descripcion" />
+					</rich:column>
+	
+					<rich:column>
+						<h:outputText value="#{instrumento.fechaFirma}">
+							<f:convertDateTime type="date" dateStyle="medium"
+								pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</rich:column>
+	
+					<rich:column>
+						<h:outputText value="#{instrumento.fechaVigencia}">
+							<f:convertDateTime type="date" dateStyle="medium"
+								pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</rich:column>
+	
+					<rich:column>
+						<h:outputText value="#{instrumento.fechaAplicacion}">
+							<f:convertDateTime type="date" dateStyle="medium"
+								pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</rich:column>
+
+
+
+				</rich:dataTable>
+			</rich:panel>
+		</h:panelGrid>
+		
+		<div style="clear: both" />
+	</div>
+
+	</ui:define>
+
+	<ui:define name="botonera">
+
+		<div id="botonera">
+			
+			
+			
+			<h:commandLink action="#{editor.cancelar()}" value="Cancelar" styleClass="botonnavegacion" style="color:#ffffff;" immediate="true" onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})" />
+			
+			<s:button view="/condiciones_read.seam" value="Continuar"  styleClass="botonnavegacion" onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+			</div>
+			
+			
+			
+	</ui:define>
+
+</ui:composition>
+

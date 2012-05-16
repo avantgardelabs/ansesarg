@@ -1,0 +1,178 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:a4j="http://richfaces.org/a4j"
+    xmlns:rich="http://richfaces.org/rich">
+    
+<style>
+.active-row {
+    background-color: #FFEBDA;
+}
+</style>
+
+    <h:form>
+        <script type="text/javascript">
+            var row;
+        </script>
+        <rich:contextMenu attached="false" id="menu" submitMode="ajax" oncollapse="row.style.backgroundColor='#{a4jSkin.tableBackgroundColor}'">
+            <rich:menuItem value="Editar" ajaxSingle="true"
+                oncomplete="#{rich:component('editPanel')}.show()"
+                actionListener="#{dataTableScrollerBean.fetchCurrentRow}">
+                <a4j:actionparam name="vin" value="{carVin}" />
+                <a4j:actionparam name="row" value="{currentRow}" />
+            </rich:menuItem>
+            <rich:menuItem value="Eliminar" ajaxSingle="true"
+                oncomplete="#{rich:component('deletePanel')}.show()"
+                actionListener="#{dataTableScrollerBean.fetchCurrentRow}">
+                <a4j:actionparam name="vin" value="{carVin}" />
+                <a4j:actionparam name="row" value="{currentRow}" />
+            </rich:menuItem>
+        </rich:contextMenu>
+        <a4j:region>
+            <rich:dataTable value="#{dataTableScrollerBean.atributos}"
+                var="atributo" rows="20" rowKeyVar="row"
+                ajaxKeys="#{dataTableScrollerBean.keys}" id="table"
+                onRowContextMenu="if (row) row.style.backgroundColor='#{a4jSkin.tableBackgroundColor}';
+                this.style.backgroundColor='#F1F1F1'; row=this;
+                #{rich:component('menu')}.show(event,{carVin:'#{category.vin}', currentRow:'#{row}'});
+                return false;">
+                <f:facet name="header">
+                    <h:outputText value="Atributos" />
+                </f:facet>
+                <rich:column>
+                    <f:facet name="header">
+                        <h:outputText value="Nombre" />
+                    </f:facet>
+                    <h:outputText value="#{atributo.nombre}" id="nombre" />
+                </rich:column>
+                <rich:column>
+                    <f:facet name="header">
+                        <h:outputText value="Descripcion" />
+                    </f:facet>
+                    <h:outputText value="#{atributo.descripcion}" id="descripcion" />
+                </rich:column>
+                <rich:column>
+                    <f:facet name="header">
+                        <h:outputText value="Tipo de Dato" />
+                    </f:facet>
+                    <h:outputText value="#{atributo.tipoDato}" id="tipoDato" />
+                </rich:column>
+                <rich:column>
+                    <f:facet name="header">
+                        <h:outputText value="Origen" />
+                    </f:facet>
+                    <h:outputText value="#{atributo.persistible}" />
+                </rich:column>
+                <rich:column>
+                    <f:facet name="header">
+                        Acciones
+                </f:facet>
+                    <a4j:commandLink ajaxSingle="true" id="editlink"
+                        oncomplete="#{rich:component('editPanel')}.show()">
+                        <h:graphicImage value="/img/editar.png" style="border:0" />
+                        <f:setPropertyActionListener value="#{category}"
+                            target="#{dataTableScrollerBean.currentItem}" />
+                        <f:setPropertyActionListener value="#{row}"
+                            target="#{dataTableScrollerBean.currentRow}" />
+                    </a4j:commandLink>
+                    <rich:toolTip for="editlink" value="Editar" />
+                    <a4j:commandLink ajaxSingle="true" id="deletelink"
+                        oncomplete="#{rich:component('deletePanel')}.show()">
+                        <h:graphicImage value="/img/cancel.png" style="border:0" />
+                        <f:setPropertyActionListener value="#{row}"
+                            target="#{dataTableScrollerBean.currentRow}" />
+                    </a4j:commandLink>
+                    <rich:toolTip for="deletelink" value="Eliminar" />
+                </rich:column>
+                <f:facet name="footer">
+                    <rich:datascroller renderIfSinglePage="false" maxPages="5" />
+                </f:facet>
+            </rich:dataTable>
+        </a4j:region>
+    </h:form>
+
+    <rich:modalPanel id="editPanel" autosized="true" width="450">
+        <f:facet name="header">
+            <h:outputText value="Editar Atributo" />
+        </f:facet>
+        <f:facet name="controls">
+            <h:panelGroup>
+                <h:graphicImage value="/img/cancel.png" id="hidelink"
+                    styleClass="hidelink" />
+                <rich:componentControl for="editPanel" attachTo="hidelink"
+                    operation="hide" event="onclick" />
+            </h:panelGroup>
+        </f:facet>
+        <h:form>
+            <rich:messages style="color:red;"></rich:messages>
+            <h:panelGrid columns="1">
+                <a4j:outputPanel ajaxRendered="true">
+                    <h:panelGrid columns="2">
+                        <h:outputText value="Nombre" />
+                        <h:inputText value="#{dataTableScrollerBean.currentItem.nombre}" />
+                        <h:outputText value="Descripcion" />
+                        <h:inputText value="#{dataTableScrollerBean.currentItem.descripcion}" />
+                        <h:outputText value="Tipo de Dato" />
+                        <rich:comboBox value="#{dataTableScrollerBean.currentItem.tipoDato}"
+						id="tipoDato" enableManualInput="false"
+						required="true"
+						requiredMessage="El tipo de dato es obligatorio">
+						<f:selectItem itemValue="TEXTO" itemLabel="Texto" />
+						<f:selectItem itemValue="NUMERO" itemLabel="Numeros" />
+						<f:selectItem itemValue="FECHA" itemLabel="Fecha" />
+						<f:selectItem itemValue="BOOLEANO" itemLabel="Booleano" />
+						</rich:comboBox>
+                        <h:outputText value="Origen" />
+						<h:selectBooleanCheckbox value="#{dataTableScrollerBean.currentItem.persistible}" />
+                     </h:panelGrid>
+                    <rich:message showSummary="true" showDetail="false" for="nombre" />
+                </a4j:outputPanel>
+                <a4j:commandButton value="Store"
+                    action="#{dataTableScrollerBean.store}"
+                    reRender="make, model, price"
+                    oncomplete="if (#{facesContext.maximumSeverity==null}) #{rich:component('editPanel')}.hide();" />
+            </h:panelGrid>
+        </h:form>
+    </rich:modalPanel>
+    <rich:modalPanel id="deletePanel" autosized="true" width="200">
+        <f:facet name="header">
+            <h:outputText value="Delete this car from list?"
+                style="padding-right:15px;" />
+        </f:facet>
+        <f:facet name="controls">
+            <h:panelGroup>
+                <h:graphicImage value="/images/modal/close.png"
+                    styleClass="hidelink" id="hidelink2" />
+                <rich:componentControl for="deletePanel" attachTo="hidelink2"
+                    operation="hide" event="onclick" />
+            </h:panelGroup>
+        </f:facet>
+        <h:form>
+            <table width="100%">
+                <tbody>
+                    <tr>
+                        <td align="center" width="50%"><a4j:commandButton value="Yes"
+                            ajaxSingle="true" action="#{dataTableScrollerBean.delete}"
+                            oncomplete="#{rich:component('deletePanel')}.hide();"
+                            reRender="table" /></td>
+                        <td align="center" width="50%"><a4j:commandButton
+                            value="Cancel"
+                            onclick="#{rich:component('deletePanel')}.hide();return false;" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </h:form>
+    </rich:modalPanel>
+    <a4j:status onstart="#{rich:component('wait')}.show()"
+        onstop="#{rich:component('wait')}.hide()" />
+    <rich:modalPanel id="wait" autosized="true" width="200" height="120"
+        moveable="false" resizeable="false">
+        <f:facet name="header">
+            <h:outputText value="Processing" />
+        </f:facet>
+        <h:outputText value="Wait Please..." />
+    </rich:modalPanel>
+    <rich:messages></rich:messages>
+</ui:composition>

@@ -1,0 +1,178 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:rich="http://richfaces.org/rich"
+                xmlns:a4j="http://richfaces.org/a4j"
+                template= "layout/template.xhtml">
+
+<ui:define name="titulo">
+		<h1>Fórmulas</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">
+		<h:outputText value="Fórmulas"/>
+		<a href="" class="textoayuda">ver mas >></a>
+		
+		</div>
+	</ui:define>
+	                       
+<ui:define name="body">
+    
+    <![CDATA[<h:messages globalOnly="true" styleClass="message" id="globalMessages"/>]]>
+    
+        <script type="text/javascript" >
+
+		function validacionLongCamposBusqueda(){
+			if( (document.getElementById("frmPrincipal:dominio").value.length &lt; 3 
+				&amp;&amp; document.getElementById("frmPrincipal:dominio").value.length &gt; 0)
+				||
+				(document.getElementById("frmPrincipal:txtNombreBusqueda").value.length &lt; 3 
+				&amp;&amp; document.getElementById("frmPrincipal:txtNombreBusqueda").value.length &gt; 0)
+				){
+				alert("Todos los campos de busqueda debe tener al menos 3 caracteres.");
+				return false;
+			}
+			Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300});
+			return true;
+		}
+
+	</script>
+    
+    <rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+		<span class="waitingPanel">
+		<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+		<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+		</span>
+	</rich:modalPanel>
+	
+   	<div id="formulario" >
+	
+	 <rich:panel id="condicionSearch" styleClass="edit" prependId="false" >
+		<f:facet name="header">Búsqueda de fórmulas</f:facet>	
+
+           <h:panelGrid columns="7" style="border:none;">
+                <h:outputText value="Nombre" style="font-weight:bold" />
+                    
+	            <h:inputText 
+	            			id="txtNombreBusqueda" 
+	            			value="#{formulasAction.nombre}"
+	               			styleClass="ancho300"
+	               			onblur="javascript:this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');"
+	               			>
+	            </h:inputText>
+	    
+                <h:outputText value="Dominio" style="font-weight:bold" />
+                <h:inputText id="dominio" value="#{formulasAction.dominio}" 
+               styleClass="ancho300" onblur="javascript:this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');">
+            
+               </h:inputText>
+          
+		        <div class="actionButtons">
+		            <h:commandButton  id="search" value="Buscar" action="#{formulasAction.buscarFormula(formulasAction.nombre, formulasAction.dominio)}" reRender="resultado"
+		            onclick="return validacionLongCamposBusqueda()"/>
+		            <s:button id="reset" value="Limpiar" action="#{formulasAction.limpiar()}" onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+		        </div>    
+         
+             </h:panelGrid>
+            
+
+        
+        
+        
+    </rich:panel>
+    
+    <a4j:outputPanel id="resultado">
+	<rich:panel rendered="#{formulasAction.formulas !=null}">
+	<f:facet name="header">Resultado de la búsqueda de fórmulas</f:facet>	
+	<h:panelGrid columns="3" style="width : 100%">
+    
+	<rich:dataTable value="#{formulasAction.formulas}" var="var" rows="10">
+    	<rich:column>
+                <f:facet name="header">
+                    Nombre
+                </f:facet>
+                    <h:outputText value="#{var.nombre}"/>
+                    
+        </rich:column>
+    
+    	  	<rich:column>
+                <f:facet name="header">
+                    Dominio
+                </f:facet>
+                    <h:outputText value="#{var.dominio.descripcion}"/>
+                    
+        </rich:column>
+        
+        <rich:column>
+                <f:facet name="header">
+                    Descripción
+                </f:facet>
+                   <h:outputText value="#{var.descripcion}"/>
+                    
+        </rich:column>
+        
+          	<rich:column>
+                <f:facet name="header">
+                    Cuerpo
+                </f:facet>
+                   <h:outputText value="#{var.cuerpo}"/>
+                    
+        </rich:column>
+        
+          	<rich:column>
+                <f:facet name="header">
+                    Acción
+                </f:facet>
+                	<h:panelGrid columns="5">
+                	<a4j:commandLink action="#{formulasAction.ver(var)}"
+                   		style = "color: black"  >
+	
+					<h:graphicImage value="/img/ver.png" styleClass="img"/>
+					<h:outputText value="Ver" />
+					</a4j:commandLink>
+					<h:outputText />
+                    <a4j:commandLink action="#{formulasAction.editar(var)}" ajaxSingle="true"
+                   		style = "color: black"  >
+	
+					<h:graphicImage value="/img/editar.png" styleClass="img"/>
+					<h:outputText value="Editar" />
+					</a4j:commandLink>
+                    <h:outputText />
+                    </h:panelGrid>
+        </rich:column>
+        
+       
+    
+    	<f:facet name="footer">
+			<rich:datascroller id="datascroller" />
+		</f:facet>
+    
+    </rich:dataTable>   
+    
+    </h:panelGrid>
+	</rich:panel>	
+	</a4j:outputPanel>
+    <h:panelGrid columns="5">
+    
+    </h:panelGrid>
+		
+	</div>
+    
+    <div class="actionButtons">      
+
+        
+        <h:commandButton value="Crear Fórmula" action="#{formulasAction.crearFormula()}"/>
+        <h:commandButton value="Salir" action="#{formulasAction.salir()}"/>        
+        
+
+    </div>
+
+</ui:define>
+
+</ui:composition>

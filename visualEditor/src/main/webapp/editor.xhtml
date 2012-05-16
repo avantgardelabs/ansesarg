@@ -1,0 +1,179 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" 
+	template="layout/template.xhtml">
+
+	<ui:define name="titulo">
+		<h1>Paso 4 de 4 - Tabla de Decision</h1>
+	</ui:define>
+
+	
+
+	<ui:define name="body">
+	
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+			<span class="waitingPanel">
+			<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+			<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+			</span>
+		</rich:modalPanel>
+
+		<div id="formulario">
+
+		<div id="div100" style="height: 320px;">
+		
+		<rich:dataTable
+			       id="mainTable"
+			    value="#{tablaDesicion.filas}" 
+				  var="filaTablaDesicion" 
+			rowKeyVar="nroFila">
+			<f:facet name="header">
+				<h:outputText value="Condiciones"></h:outputText>
+			</f:facet>
+
+			<rich:column style="width:70px">
+				<h:commandLink action="#{editor.eliminarFila(tablaDesicion.filas[nroFila])}" onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+					<h:graphicImage value="img/bin_closed.png" styleClass="img"	title="Quitar" alt="Quitar" />
+				</h:commandLink>
+					
+				<h:commandLink action="#{editor.editarFila(tablaDesicion.filas[nroFila])}" onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+					<h:graphicImage value="img/editar.png" styleClass="img" title="Editar" alt="Editar"/>
+				</h:commandLink>
+				
+				<h:selectBooleanCheckbox>
+					<a4j:support event="onchange" 
+								action="#{editor.addRemoveFila(tablaDesicion.filas[nroFila], nroFila)}" 
+								ajaxSingle="true" 
+								immediate="true"/>
+				</h:selectBooleanCheckbox>
+				
+			</rich:column>
+			
+			
+			
+			<rich:columns 
+				    value="#{condicionesSeleccionadas}"
+					  var="condicionEditada" 
+					index="indice" 
+					   id="condicionEditada#{indice}">
+				<f:facet name="header">
+					<h:outputText value="#{condicionEditada.nombre}"
+						styleClass="columna" />
+				</f:facet>				
+				
+				<h:outputText
+					value="#{tablaDesicion.filas[nroFila].valores[indice].valor.operadorLogico} #{tablaDesicion.filas[nroFila].valores[indice].valor.descripcion}" rendered="#{tablaDesicion.filas[nroFila].valores[indice].valor!=null}"/>
+				
+				<h:outputText
+					value="#{tablaDesicion.filas[nroFila].valores[indice].valorCondicionAtributo.operadorLogico} #{atributoNameGetter.convertirATexto(tablaDesicion.filas[nroFila].valores[indice].valorCondicionAtributo.atributo2)}" rendered="#{tablaDesicion.filas[nroFila].valores[indice].valorCondicionAtributo!=null}"/>
+				<h:outputText
+					value="#{tablaDesicion.filas[nroFila].valores[indice].valorCondicionFormula.operadorLogico} #{tablaDesicion.filas[nroFila].valores[indice].valorCondicionFormula.formula.nombre}" rendered="#{tablaDesicion.filas[nroFila].valores[indice].valorCondicionFormula!=null}"/>
+			
+			</rich:columns>
+			
+			
+			
+			<rich:column>
+				<f:facet name="header">
+					<h:outputText value="Accion" styleClass="columna" />
+				</f:facet>
+
+				<h:selectOneMenu 
+					id="accion" 
+					rendered="#{not empty filaTablaDesicion.acciones}"
+					>
+					<s:selectItems var="accion" value="#{filaTablaDesicion.acciones}"
+						label="#{accion.nombre}">
+					</s:selectItems>
+					<s:convertEntity />
+				</h:selectOneMenu>
+			</rich:column>
+		</rich:dataTable>
+		
+		
+		
+		</div>
+		<br/>
+		<h:inputTextarea value="#{tablaDesicion.observaciones}" style="width : 99%;" rows="4">
+			Observaciones
+		</h:inputTextarea>
+
+<br/>
+
+		</div>
+
+		<div style="clear: both" />
+	</ui:define>
+	<ui:define name="botonera">
+
+
+
+		<h:commandButton action="#{editor.agregarFila()}" value="Agregar Fila" onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})" />
+
+		<h:commandButton action="#{editor.guardarBorrador()}"
+			value="Guardar Borrador" onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+			
+		<h:commandButton action="#{editor.versionarTabla()}"
+			value="Versionar" rendered="false"
+			onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+			/>
+				
+		<h:commandButton action="#{editor.exportar()}" value="Exportar a PDF" />
+		
+		
+        <h:commandButton id="generar" 
+			value="Generar Filas" 
+			action="#{editor.generarFilas()}" 
+			onclick="if(!confirm('Se eliminaran las filas que ya se han cargado. Esta seguro que desea Continuar?')) {return false;} Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300});" />
+		
+		<h:commandButton action="#{editor.asignarAcciones()}" value="Asignar Acciones" onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})" />
+    	
+		<div id="botonera">
+		
+		<h:commandButton
+				id="atras"
+				action="#{editor.anteriorPaso('EDITOR')}" 
+				value="Atras" 
+				styleClass="botoncancelar" 
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+		/>
+		
+		<h:commandLink action="#{editor.cancelar()}" value="Cancelar" styleClass="botonnavegacion" style="color:#ffffff;" onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+		
+		
+		
+</div>
+
+
+
+		<rich:modalPanel id="panel" width="350" height="100">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="Atencion"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="img/cancel.png"
+						styleClass="hidelink" id="hidelink" />
+					<rich:componentControl for="panel" attachTo="hidelink"
+						operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+			<h:outputText
+				value="Esta funcionalidad no esta vigente en la presente version"></h:outputText>
+			<br />
+			
+		</rich:modalPanel>
+		
+		
+		
+	</ui:define>
+
+</ui:composition>

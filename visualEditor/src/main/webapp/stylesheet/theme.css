@@ -1,0 +1,910 @@
+.rich-mpnl-text {
+color:#000000;
+font-family:Arial;
+font-size:11px;
+font-weight:bold;
+padding-left: 3px;
+}
+
+.edit{
+margin-bottom: 10px;}
+.dr-pnl {
+    background-color: #FFFFFF;
+    border-color: #BED6F8;
+    margin-bottom: 5px;
+}
+.hover{
+color: #000000;}
+
+.hover:hover{
+color: #000000;}
+.margenleft{
+margin-left: 20px;}
+.scroll{
+height: 400px;
+overflow-x:hidden;
+overflow-y:scroll;}
+
+.alto230{
+height: 220px;}
+a{
+color: black;
+}
+a:hover{
+color: black;
+}
+.paneles{
+	height: 150px;
+	overflow-x:hidden; 
+	overflow-y:scroll;
+	width: 90%;
+	margin-top: 5px;
+}
+.panel250{
+	height: 250px;
+	overflow-x:hidden; 
+	overflow-y:scroll;
+	width: 90%;
+	margin-top: 5px;
+}
+input{
+	font-family:Arial;
+font-size: 9pt;
+}
+.columnHeader a,link{
+color:#000000;}
+
+.ancho300{width:300px;
+font-family:Arial;
+font-size: 9pt;
+}
+.ancho400{width:400px;
+font-family:Arial;
+font-size: 9pt;}
+.ancho500{width:500px;
+font-family:Arial;
+font-size: 9pt;}
+.ancho150{
+width: 150px;
+color: #000000;
+font-family:Arial;
+font-size: 9pt;
+}
+.ancho70{
+width: 70px;
+color: #000000;
+font-family:Arial;
+font-size: 9pt;
+}
+.ancho165{
+width: 165px;
+color: #000000;
+font-family:Arial;
+font-size: 9pt;
+}
+.ancho200{
+width: 200px;
+color: #000000;
+font-family:Arial;
+font-size: 9pt;
+}
+.ancho250{
+width: 250px;
+color: #000000;
+font-family:Arial;
+font-size: 9pt;
+}
+.ancho150 a{
+width: 150px;
+color: #000000;
+;
+}
+.ancho70 a{
+width: 70px;
+color: #000000;
+;
+}
+.etiqueta {
+	font-size: 10px;
+	color: red;
+}
+.img{
+margin-right: 5px;
+text-indent: 5px;
+border: none;
+
+}
+
+.columna {
+	width: 200px;
+}
+
+.margen5{
+margin-top: 5px;}
+.textoayuda{
+text-align: right;
+cursor: pointer;}
+.textoayuda:hover{
+text-align: right;
+cursor: pointer;
+color: #000000;
+height:0px;
+margin-top:0px;
+}
+
+.codigo{
+width:200px;}
+.descripcion{
+width:500px;}
+
+.busqueda{
+width: 250px;}
+
+
+#div50Titulo {
+	width: 50%;
+	float: left;
+	
+}
+
+#div70 {
+	width: 68%;
+	float: left;
+	overflow: scroll;
+	height: 320px;
+	margin-left: 10px;
+	margin-bottom:10px
+	
+}
+#div30 {
+	width:28%;
+	float: left;
+	overflow: scroll;
+	height: 320px;
+	margin-left: 10px;
+	margin-bottom:10px
+	
+}
+
+#div100{
+	width: 100%;
+	float: left;
+	overflow: scroll;	
+	margin-left: 10px;
+	margin-bottom:10px
+	}
+
+#formulario /*Capa contenedora de los formularios */ {
+	background-color: #E1EBF2; /*fondo celeste*/
+	font-size: 9pt;
+	padding-top: 5px;
+	height: 100%;
+	width: 100%;
+	float: left;
+	
+}
+#formularioblanco /*Capa contenedora de los formularios */ {
+	background-color: #FFFFFF;
+	font-size: 9pt;
+	padding-top: 5px;
+	height: 100%;
+	width: 100%;
+	float: left;
+	
+}
+#formulario100 /*Capa contenedora de los formularios */ {
+	background-color: #ffffff; /*fondo celeste*/
+	font-size: 9pt;
+	padding-top: 5px;
+	height: 100%;
+	width: 100%;
+	float: left;
+	
+}
+
+.botoncomando
+	/*son los botones que sirven para que el Usuario pueda enviar la informacion o cancelar la solicitud*/
+	{
+	background-color: #bed6f8;
+	color: white;
+	float: left;
+	height: 20px;
+	text-align: center;
+	cursor: hand;
+	font-family: Arial;
+	font-size: 9pt;
+	padding: 2px;
+	width: 120px;
+	font-weight: bold;
+	text-decoration: none;
+	filter: progid :     DXImageTransform.Microsoft.Shadow (     direction =
+		  
+		 135, color =     #365913, strength =     8 );
+}
+
+.botoncomando a:link
+	/*link que sirve para la llamada a la accion indicada por el boton*/ {
+	text-decoration: none;
+	color: #FFFFFF;
+	text-decoration: none;
+	margin-top: 10px;
+	height: 15px;
+	background-color: #bed6f8;
+}
+
+.botonncomando a {
+	text-decoration: none;
+	color: #FFFFFF;
+	text-decoration: none;
+	margin-top: 10px;
+	height: 15px;
+}
+
+.nota {
+	font-weight: bold;
+	font-size: 12px;
+	border: 1px solid #f8f9a0;
+	background-color: #f8f9a0;
+	padding-left: 5px;
+}
+
+.ayuda {
+	background: #F0F3F7 url(../img/ayuda.gif) no-repeat scroll left top;
+	border: 1px solid #ACBECE;
+	margin-bottom: 10px;
+	padding: 5px 5px 5px 45px;
+	background-color: #F0F3F7;
+	height: 35px;
+}
+
+.ayuda a {
+	text-align: rigth;
+	float: right;
+}
+
+#preview {
+	border: 1px solid #E1EBF2;
+	font-size: 9pt;
+	padding-top: 10px;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+#botonera {
+	float: right;
+	text-align: right;
+}
+
+.botonnavegacion a:link
+	/*link que sirve para la llamada a la accion indicada por el boton*/ {
+	text-decoration: none;
+	color: #FFFFFF;
+	text-decoration: none;
+	margin: 5px;
+	height: 15px;
+}
+
+.botonnavegacion a {
+	text-decoration: none;
+	color: #FFFFFF;
+	text-decoration: none;
+	margin: 5px;
+	height: 15px;
+}
+
+
+
+
+#area
+	/*Capa donde se muestra los pasos a seguir por el Usuario cuando la aplicacion 
+requiere de varias peticiones*/ {
+	background-color: #c6c8ca;
+	padding: 9px;
+	text-align: left;
+	margin-bottom: 20px;
+	height: 99.2%;
+	float: right;
+	width: 28.5%;
+}
+
+#pendiente /*Pasos pendientes de concretar por el Usuario*/ {
+	color: #fff;
+	font-size: 9pt;
+}
+
+#cumplido /*Pasos cumplidos por el Usuario*/ {
+	color: #333333;
+	font-size: 9pt;
+}
+
+#cajaformulario /*Capa contenedora de los formularios */ {
+	background-color: #E1EBF2; /*fondo celeste*/
+	font-size: 9pt;
+	padding-top: 5px;
+	height: 100%;
+}
+
+#contenido
+	/*capa contenedora la cual permite ordenar las demas areas de trabajo*/
+	{
+	background-color: #fff; /*Fondo Blanco*/
+	width: 99.2%;
+	height: 100%;
+	padding-left: 9px
+}
+
+#areatrabajo {
+	float: left;
+	width: 70%
+}
+
+#footer
+	/*Esta area esta diseñada para mostrar informacion del Organismo*/ {
+	color: #fff;
+	font-size: 9pt;
+	padding: 5px 0 0 0;
+	text-align: center;
+	line-height: normal;
+}
+
+.barraNavegacion {
+	clear: both;
+}
+
+.botonnavegacion {
+	margin: 5px;
+	background-color: #91ce44;
+	color: white;
+	float: left;
+	height: 20px;
+	text-align: center;
+	cursor: hand;
+	font-family: Arial;
+	font-size: 9pt;
+	padding: 2px;
+	width: 120px;
+	font-weight: bold;
+	filter: progid:DXImageTransform.Microsoft.Shadow (direction=135,color=#365913,strength=8);
+}
+
+.botoncancelar {
+	margin: 5px;
+	background-color:red;
+	color: white;
+	float: left;
+	height: 20px;
+	text-align: center;
+	cursor: hand;
+	font-family: Arial;
+	font-size: 9pt;
+	padding: 2px;
+	width: 120px;
+	font-weight: bold;
+	filter: progid:DXImageTransform.Microsoft.Shadow (direction=135,color=#365913,strength=8);	
+}
+
+form {
+	width: 100%;
+}
+
+#cajaformulario /*Capa contenedora de los formularios */ {
+	margin-bottom: 15px;
+	background-color: #E1EBF2; /*fondo celeste*/ /*font-size: 9pt;*/
+	padding-top: 10px;
+	height: 100%;
+	padding-bottom: 10px;
+}
+
+#cajaformulario INPUT[type='submit'] {
+	background-color: red;
+	font-family:Arial;
+font-size: 9pt;
+}
+
+#cajaformulario SELECT {
+	width: 250px;
+	font-family:Arial;
+font-size: 9pt;
+}
+
+#encabezado {
+	padding-left: 30px;
+	padding-right: 30px;
+}
+
+#header {
+	position: relative;
+	margin-bottom: 0px;
+	padding: 0 0px 0 0;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	color: #000000;
+}
+
+#logo {
+	BACKGROUND-IMAGE: url('../img/logo.jpg'); /*Logo de Anses*/
+	BACKGROUND-REPEAT: no-repeat;
+	margin-top: 8px;
+	float: left;
+	width: 30%;
+	height: 70px;
+	padding-left: 30px;
+}
+
+#fondoHeader {
+	BACKGROUND-IMAGE: url('../img/Encabezado_Fondo.jpg');
+	/*Imagen del mundo*/
+	BACKGROUND-REPEAT: no-repeat;
+	float: right;
+	width: 65%;
+}
+
+#fondoHeader h3 /*Nombre de la en color blanco*/ {
+	color: #fff;
+	text-decoration: bold;
+	text-align: right;
+	font-size: 15pt;
+	font-family: Arial;
+	margin-bottom: 0px;
+	margin-top: 20px;
+	margin-right: 230px
+}
+
+#fondoHeader span /*Aplicacion en verde*/ {
+	color: #8BBF4C;
+}
+
+#logoApli {
+	background-image: url('../img/logoprissaweb.png');
+	/*Logo de la Aplicacion*/
+	BACKGROUND-REPEAT: no-repeat;
+	margin-bottom: 10px;
+	margin-top: -28px;
+	float: right;
+	width: 20%;
+	margin-right: 10px;
+	height: 30px
+}
+
+a:active,a:link,a:visited {
+	color: #0000FF;
+	text-decoration: none;
+	height: 15px;
+	margin-top: 5px;
+	border:none;
+}
+
+img{
+border:none;}
+a:hover {
+	text-decoration: none;
+	height: 15px;
+	margin-top: 5px;
+}
+
+input,textarea {
+	border: 1px solid #BBBBBB;
+	font-family:Arial;
+font-size: 9pt;
+	background: #F0F8FF;
+	color: black;
+	color: #000000;
+}
+
+input[type='submit'],input[type='button'] {
+	
+	margin-right: 5px;
+	background-color: #91ce44;
+	color: white;
+	float: left;
+	height: 20px;
+	text-align: center;
+	cursor: hand;
+	font-family: Arial;
+	font-size: 9pt;
+	padding: 2px;
+	width: 120px;
+	font-weight: bold;
+	filter: progid:DXImageTransform.Microsoft.Shadow (direction=135,color=#365913,strength=8);
+}
+.
+
+input[type='reset'] {
+	margin-top: 5px;
+	margin-right: 5px;
+	background-color: red;
+	color: white;
+	float: left;
+	height: 20px;
+	text-align: center;
+	cursor: hand;
+	font-family: Arial;
+	font-size: 9pt;
+	padding: 2px;
+	width: 10%;
+	font-weight: bold;
+	filter: progid :     DXImageTransform.Microsoft.Shadow(direction=135,color=#365913,strength=8 );
+}
+
+.tableControl,.actionButtons {
+	width: 100%;
+}
+
+.tableControl {
+	text-align: right;
+}
+
+.footer {
+	color: #fff;
+	font-size: 9pt;
+	padding: 5px 0 0 0;
+	text-align: center;
+	line-height: normal;
+}
+
+.rich-table {
+	width: 100%;
+}
+.rich-table50 {
+	width: 50%;
+}
+.rich-table70 {
+	width: 70%;
+}
+.rich-table99 {
+	width: 98%;
+}
+h1 {
+	font-family: Arial, sans-serif;
+	color: #578BB8;
+	background-color: #FFFFFF;
+	font-size: 1.6em;
+	margin-top: 0;
+}
+
+body {
+	background-color: #20438D; /*Azul de fondo*/
+	margin: 0;
+	padding: 0;
+	color: #58595b; /*Gris de la letra*/
+	font-family: verdana;
+	font-size: 10pt
+}
+
+.body {
+	padding-top: 100px;
+	padding-left: 30px;
+	padding-right: 30px; 
+}
+
+.columnHeader:hover {
+	color:black;
+}
+.columnHeader a {
+	color:#000000;
+}
+.message {
+	
+	padding: 5px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	font-size: 12px;
+}
+
+.name {
+	vertical-align: top;
+	font-weight: bold;
+	width: 115px;
+	float: left;
+	padding: 5px;
+	margin-top: 3px;
+	clear: left;
+}
+
+.value {
+	float: left;
+	padding: 5px;
+}
+
+.error {
+	/*margin-left: 20px;*/
+	margin-top: 5px;
+	float: left;
+	padding: 5px;
+	border: 1px solid red;
+}
+
+.errors {
+	color: red;
+	font-size: 11px;
+}
+
+.errors input {
+	border: 1px solid red;
+}
+
+.errors textarea {
+	border: 1px solid red;
+}
+
+.required {
+	color: red;
+	padding-left: 2px;
+}
+
+/* date picker style */
+div.seam-date {
+	margin-top: 5px;
+	border: 1px solid #AAAAAA;
+	background-color: #FFFFFF;
+	color: #505050;
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+
+table.seam-date td {
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-weight: 12px;
+}
+
+.seam-date-monthNames {
+	width: 70px;
+	border: 1px solid #dddddd;
+	border-right: 3px solid #444444;
+	border-bottom: 3px solid #444444;
+	background-color: #ffffff;
+	font-size: 12px;
+	cursor: pointer;
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-weight: normal;
+}
+
+a.seam-date-monthNameLink,a.seam-date-monthNameLink:visited {
+	text-align: center;
+	display: block;
+	color: #555555;
+}
+
+a.seam-date-monthNameLink:hover {
+	background-color: #CCCCCC;
+	color: red;
+}
+
+.seam-date-years {
+	height: 10em;
+	overflow: auto;
+	width: 60px;
+	border: 1px solid #dddddd;
+	border-right: 3px solid #444444;
+	border-bottom: 3px solid #444444;
+	background-color: #ffffff;
+	font-size: 12px;
+	cursor: pointer;
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-weight: normal;
+}
+
+a.seam-date-yearLink,a.seam-date-yearLink:visited {
+	text-align: center;
+	display: block;
+	color: #555555;
+}
+
+a.seam-date-yearLink:hover {
+	background-color: #CCCCCC;
+	color: red;
+}
+
+tr.seam-date-header {
+	padding: 2px 0px 2px 0px;
+}
+
+td.seam-date-header {
+	padding: 0px 8px 0px 8px;
+	text-align: center;
+	color: gray;
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+td.seam-date-header-prevMonth {
+	background-image: url("../img/cal-prev.png");
+	background-repeat: no-repeat;
+	background-position: center;
+	padding: 0px 2px 0px 2px;
+	width: 17px;
+	height: 16px;
+	margin-left: 2px;
+}
+
+td.seam-date-header-nextMonth {
+	background-image: url("../img/cal-next.png");
+	background-repeat: no-repeat;
+	background-position: center;
+	padding: 0px 2px 0px 2px;
+	width: 17px;
+	height: 16px;
+	margin-right: 2px;
+}
+
+tr.seam-date-headerDays {
+	color: white;
+	font-weight: normal;
+}
+
+tr.seam-date-headerDays>td {
+	background-color: #CCCCCC;
+	border: 1px solid #AAAAAA;
+	color: white;
+	text-align: center;
+	width: 26px;
+}
+
+tr.seam-date-footer {
+	background-color: white;
+	color: #505050;
+	font-weight: bold;
+}
+
+tr.seam-date-footer>td {
+	text-align: center;
+}
+
+td.seam-date-inMonth {
+	background-color: white;
+	color: black;
+	font-weight: normal;
+	cursor: pointer;
+	border: 1px solid #ece9d8;
+}
+
+td.seam-date-outMonth {
+	background-color: white;
+	color: #999999;
+	font-weight: normal;
+	cursor: pointer;
+	border: 1px solid #ece9d8;
+}
+
+td.seam-date-selected {
+	background-color: #CCCCCC;
+	border: 1px solid #AAAAAA;
+	color: black;
+	font-weight: normal;
+}
+
+td.seam-date-dayOff-inMonth {
+	background-color: #efefef;
+	color: black;
+	font-weight: normal;
+	cursor: pointer;
+	border: 1px solid #ece9d8;
+}
+
+td.seam-date-dayOff-outMonth {
+	background-color: #efefef;
+	color: #999999;
+	font-weight: normal;
+	cursor: pointer;
+	border: 1px solid #ece9d8;
+}
+
+td.seam-date-hover {
+	background-color: #CCCCCC;
+	border: 1px solid #AAAAAA;
+	cursor: pointer;
+	color: red;
+}
+.centrado{
+	padding-left: 20%;
+	padding-right: 20%;
+}
+/*messages*/
+
+.warning {
+   background: url(../img/bullet_error.png) no-repeat scroll 5px center ;
+    color: #cccccc ;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 11px;
+    margin-bottom: 5px;
+    margin-left: 15px;
+    margin-top: 2px;
+    overflow: hidden;
+    padding-top: 2px;
+    text-indent: 25px;
+    width: 425px;
+}
+
+
+
+.errors {
+    
+    border-radius: 5px 5px 5px 5px;
+    color: #BE1E2D;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 11px;
+    height: auto;
+    margin-bottom: 5px;
+    margin-left: 15px;
+    margin-top: 2px;
+    overflow: hidden;
+    padding-top: 2px;
+    text-indent: 25px;
+    width: 100%;
+    padding-left: 10px;
+}
+.errors ul{
+border: 1px solid #be1e2d;
+ width: 425px;
+   
+}
+
+
+
+.exito{
+   background: url(../img/bullet.gif) no-repeat scroll 5px center ;
+    font-family: Arial,Helvetica,sans-serif;
+   
+   height: auto;
+   margin-bottom: 5px;
+    margin-left: 15px;
+    margin-top: 2px;
+    overflow: hidden;
+    padding-top: 2px;
+    text-indent: 25px;
+    width: 425px;
+  color:#74b64a;
+background-repeat:no-repeat;
+   
+}
+
+
+.messages {
+    height: auto;
+    margin-left: 0;
+    margin-top: 0;
+    overflow: hidden;
+    padding-top: 15px;
+   
+   
+}
+
+
+.messages ul {
+    height: auto;
+    margin-left: 0;
+    margin-top: 0;
+    overflow: hidden;
+    padding-left: 0;
+    padding-top: 0;
+     width:1200px;
+   border: 2px solid #F7F7D5;
+  
+    box-shadow: 1px 1px 5px 0 #333333;
+    background-color:#ffffff;
+   
+   margin-bottom: 4px;
+
+}
+
+.Error {
+    border-radius: 5px 5px 5px 5px;
+    color: #BE1E2D;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 11px;
+    height: auto;
+    margin-bottom: 5px;
+    margin-top: 2px;
+    overflow: hidden;
+    padding-left: 3px;
+    padding-top: 2px;
+    width: 100%;
+}
+
+.messages li{
+margin-left: 0px;
+padding-left: 0px;
+}

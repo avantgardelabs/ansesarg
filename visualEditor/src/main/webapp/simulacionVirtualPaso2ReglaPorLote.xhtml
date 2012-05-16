@@ -1,0 +1,261 @@
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich" template="layout/template.xhtml"
+	xmlns:a4j="http://richfaces.org/a4j">
+
+	<ui:define name="titulo">
+		<h1>Simulación - Lotes de Prueba</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">
+		<h:outputText value="Regla a simular: #{simulacionReglaPorLoteAction.tabla.nombre}"/>
+		<a href="" class="textoayuda">ver mas >></a>
+		
+		</div>
+	</ui:define>
+
+	<ui:define name="body">
+
+		<![CDATA[<h:messages globalOnly="true" styleClass="message" id="globalMessages"/>]]>
+
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false"
+			resizeable="false" autosized="true" zindex="2000" top="500"
+			minWidth="350" width="300" style="border:none;">
+			<span class="waitingPanel"> <h:graphicImage
+					value="/img/wait_bar.gif" style="vertical-align: middle;" /> <h:outputText
+					style="" value="#{messages['message.pleasewait']}" /> </span>
+		</rich:modalPanel>
+
+		<div id="formulario">
+
+			<a4j:outputPanel id="panelNombre">
+				<h:panelGrid columns="1" styleClass="rich-table70">
+					<s:decorate template="layout/edit.xhtml">
+						<ui:define name="label">Nombre:</ui:define>
+						<h:inputText
+							value="#{simulacionReglaPorLoteAction.loteSimulacion.nombre}" />
+					</s:decorate>
+
+					<s:decorate template="layout/edit.xhtml">
+						<ui:define name="label">Descripción:</ui:define>
+						<h:inputText
+							value="#{simulacionReglaPorLoteAction.loteSimulacion.descripcion}" />
+					</s:decorate>
+
+					<br />
+
+				</h:panelGrid>
+				<h:panelGrid columns="5">
+					<h:outputLabel value="Visibilidad" style="font-weight:bold" />
+
+					<h:selectOneRadio
+						value="#{simulacionReglaPorLoteAction.loteSimulacion.visibilidad}">
+						<f:selectItem itemLabel="Confidencial" itemValue="false" />
+						<f:selectItem itemLabel="Datos Públicos" itemValue="true" />
+					</h:selectOneRadio>
+					<h:outputText value="" />
+					<h:outputText value="" />
+					<h:outputText value="" />
+					<h:outputText value="" />
+				</h:panelGrid>
+			</a4j:outputPanel>
+
+
+
+		</div>
+
+		<s:div id="inferior">
+			<rich:panel style="width: 100%; float: left">
+				<rich:panel style="width: 48%; float: left; margin-left:13px">
+					<f:facet name="header">Entidades Involucradas</f:facet>
+
+					<h:outputText value="#{simuladorVirtual.msjError}"
+						styleClass="message Error errors" />
+
+					<rich:dataTable value="#{simuladorVirtual.listaEntidadesFisicas}"
+						var="var" rows="10">
+						<rich:column>
+							<f:facet name="header">
+                    Entidad
+            	    </f:facet>
+							<h:outputText value="#{var.entidad.nombre}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">
+                    Acción
+                	</f:facet>
+							<a4j:commandLink action="#{simuladorVirtual.cargarEntidad(var)}"
+								style="color: black" reRender="panelNombre">
+
+								<h:graphicImage value="/img/addIcon.png" styleClass="img"
+									style="width: 16px;" title="agregar" />
+
+							</a4j:commandLink>
+						</rich:column>
+					</rich:dataTable>
+				</rich:panel>
+
+				<rich:panel style="width: 48%;margin-right:10px; float: right;">
+					<f:facet name="header">Entidades Cargadas</f:facet>
+					<rich:dataTable value="#{simuladorVirtual.listaEntidadesCargadas}"
+						var="var" rows="10">
+						<rich:column>
+							<f:facet name="header">
+                    Entidad
+                </f:facet>
+							<h:outputText value="#{var.entidad.nombre}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">
+                    Acción
+                </f:facet>
+							<a4j:commandLink
+								action="#{simuladorVirtual.editarEntidadCargada(var)}"
+								style="color: black" reRender="panelNombre">
+
+								<h:graphicImage value="/img/editar.png" styleClass="img"
+									title="Editar" />
+
+							</a4j:commandLink>
+							<a4j:commandLink
+								action="#{simuladorVirtual.eliminarEntidadCargada(var)}"
+								style="color: black" reRender="panelNombre">
+
+								<h:graphicImage value="/img/cancel.png" styleClass="img"
+									title="Eliminar" />
+
+							</a4j:commandLink>
+						</rich:column>
+					</rich:dataTable>
+				</rich:panel>
+
+			</rich:panel>
+		</s:div>
+		<br />
+
+
+		<rich:panel style="width:100%; float: left;" styleClass="edit"
+			rendered="#{!(simuladorVirtual.entidadSeleccionada == null)}">
+			<f:facet name="header">
+				<h:outputText
+					value="Detalles de la entidad #{simuladorVirtual.entidadSeleccionada.entidad.nombre}" />
+			</f:facet>
+			<rich:dataTable
+				value="#{simuladorVirtual.entidadSeleccionada.atributosInvolucrados}"
+				var="var" rows="10">
+
+				<rich:column>
+					<f:facet name="header">
+                    Atributo
+                </f:facet>
+					<h:outputText value="#{var.atributo.nombre}" />
+
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">
+                    Dato
+                </f:facet>
+					<h:inputText id="literalText" size="50" maxlength="50"
+						value="#{var.currentLiteral}" styleClass="ancho300"
+						rendered="#{var.atributo.esTexto()}" />
+
+					<h:inputText id="literalNumber" size="50" maxlength="50"
+						value="#{var.currentLiteralNumero}" styleClass="ancho300"
+						rendered="#{var.atributo.esNumero()}" />
+
+					<rich:calendar id="literalFecha" size="50"
+						value="#{var.currentLiteralFecha}" styleClass="ancho300"
+						datePattern="dd/MM/yyyy" rendered="#{var.atributo.esFecha()}"
+						locale="ES">
+						<a4j:support event="onchange" reRender="literalFecha"
+							ajaxSingle="true" />
+
+					</rich:calendar>
+
+					<rich:comboBox id="literalBoolean" size="50"
+						value="#{var.currentLiteralBoolean}" styleClass="ancho300"
+						rendered="#{var.atributo.esBooleano()}" enableManualInput="false">
+
+						<f:selectItem itemValue="VERDADERO" itemLabel="Verdadero" />
+						<f:selectItem itemValue="FALSO" itemLabel="Falso" />
+
+						<a4j:support event="onchange" reRender="literalBoolean"
+							ajaxSingle="true" />
+					</rich:comboBox>
+					<h:outputText value="#{var.msjValidacion}" styleClass="errors"
+						id="mensajeValidacion" />
+				</rich:column>
+
+				<f:facet name="footer">
+					<rich:datascroller id="datascroller" />
+				</f:facet>
+
+			</rich:dataTable>
+
+			<br />
+
+			<h:commandButton value="Guardar"
+				action="#{simuladorVirtual.guardar()}"
+				actionListener="#{simulacionReglaPorAsistenteAction.setTipoAccion(1)}">
+			</h:commandButton>
+
+			<br />
+		</rich:panel>
+
+		<rich:panel style="width:100%; margin-top:10px;" styleClass="edit">
+			<f:facet name="header">Resultados</f:facet>
+			<rich:dataTable id="tablaResultado" value="#{report.getMessages()}"
+				var="mensaje">
+
+				<rich:column style="width:350px;">
+					<f:facet name="header">Traza</f:facet>
+					<h:outputText value="#{mensaje.getDescription('traza').value}" />
+				</rich:column>
+
+				<rich:column style="width:100px;">
+					<f:facet name="header">UDAI</f:facet>
+					<h:outputText value="#{mensaje.getDescription('UDAI').value}" />
+				</rich:column>
+
+				<rich:column style="width:100px;">
+					<f:facet name="header">Ciudadano</f:facet>
+					<h:outputText value="#{mensaje.getDescription('CIUDADANO').value}" />
+				</rich:column>
+
+				<rich:column style="width:100px;">
+					<f:facet name="header">Obs.Gral.</f:facet>
+					<h:outputText value="#{mensaje.getDescription('SISTEMAS').value}" />
+				</rich:column>
+
+			</rich:dataTable>
+		</rich:panel>
+
+		<br />
+		<br />
+		<div class="actionButtons">
+
+			<h:commandButton value="Volver"
+				action="#{simulacionReglaPorLoteAction.cancelar()}" immediate="true" />
+
+			<h:commandButton value="Limpiar"
+				action="#{simuladorVirtual.limpiar()}" />
+
+			<h:commandButton value="Simular"
+				action="#{simuladorVirtual.simular()}" />
+
+			<h:commandButton value="Guardar Lote"
+				disabled="#{simulacionReglaPorAsistenteAction.tipoAccion != 1}"
+				action="#{simulacionReglaPorLoteAction.GuardarLoteSimulacion()}" />
+		</div>
+
+	</ui:define>
+
+</ui:composition>

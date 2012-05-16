@@ -1,0 +1,88 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<!-- Librerias que debera contener todas las paginas -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	template="template.xhtml">
+
+<!-- Seccion del titulo -->
+	<ui:define name="titulo">
+		<h1>Cálculo de años aportados</h1>
+	</ui:define>
+
+
+<!-- Ayuda -->
+	<ui:define name="ayuda">
+		<div class="ayuda">Indique el criterio que se utilizara para el
+		calculo, segun el regimen aplicado.<br />
+		<a href="" style="text-align: right; cursor: pointer;">ver mas >></a></div>
+	</ui:define>
+
+
+
+<!-- Inicio del Body -->
+	<ui:define name="body">
+
+
+<!-- Inicio del Formulario -->
+		<div id="cajaformulario">
+		
+		
+		
+	
+		
+		<h:panelGrid columns="2">
+			
+			<h:outputText value="Criterio de calculo" />
+			<rich:comboBox selectFirstOnUpdate="false" defaultLabel="Buscar..">
+				<s:selectItems value="#{asistente.listaAniosAportes}" var="item"
+					label="#item.nombre"></s:selectItems>
+			</rich:comboBox>
+			<h:outputText value="Criterio de cálculo" />
+			<rich:comboBox defaultLabel="Buscar">
+	                  <f:selectItem itemValue="suggestion 1"/>
+      		</rich:comboBox>
+		</h:panelGrid>
+		
+		
+		
+		</div>
+		
+		
+		
+	</ui:define>
+
+
+
+	
+
+	
+
+
+
+
+<!-- Inicio de la seccion de botonera -->
+	<ui:define name="botonera">
+	
+	<!-- etiqueta utilizadas como hiperlinks -->
+		<h:outputLink value="nuevaFuncionEditor.seam"
+			styleClass="botonnavegacion">Agregar</h:outputLink>
+
+		<div id="botonera">
+		
+		
+		<!-- Botones -->
+		<h:commandButton value="Grabar" /> <h:commandButton
+			type="submit" value="Continuar"
+			action="#{asistente.establecerPaso('ANIOSAPORTADOS')}" /></div>
+	</ui:define>
+	
+	
+	
+</ui:composition>

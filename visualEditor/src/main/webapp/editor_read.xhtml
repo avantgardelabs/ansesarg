@@ -1,0 +1,131 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" 
+	template="layout/template.xhtml">
+
+	<ui:define name="titulo">
+		<h1>Paso 4 de 4 - Tabla de Decision</h1>
+	</ui:define>
+
+	
+
+	<ui:define name="body">
+	
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+			<span class="waitingPanel">
+			<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+			<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+			</span>
+		</rich:modalPanel>
+
+		<div id="formulario">
+
+		<div id="div100" style="height: 320px;">
+		
+		<rich:dataTable
+			       id="mainTable"
+			    value="#{tablaDesicion.filas}" 
+				  var="filaTablaDesicion" 
+			rowKeyVar="nroFila">
+			<f:facet name="header">
+				<h:outputText value="Condiciones"></h:outputText>
+			</f:facet>
+
+			<rich:columns 
+				    value="#{condicionesSeleccionadas}"
+					  var="condicionEditada" 
+					index="indice" 
+					   id="condicionEditada#{indice}">
+				<f:facet name="header">
+					<h:outputText value="#{condicionEditada.nombre}"
+						styleClass="columna" />
+				</f:facet>				
+				
+				<h:outputText
+					value="#{tablaDesicion.filas[nroFila].valores[indice].valor.operadorLogico} #{tablaDesicion.filas[nroFila].valores[indice].valor.nombre}"/>
+			</rich:columns>
+			
+			
+			
+			<rich:column>
+				<f:facet name="header">
+					<h:outputText value="Accion" styleClass="columna" />
+				</f:facet>
+
+				<h:selectOneMenu 
+					id="accion" 
+					readonly="true"
+					>
+					<s:selectItems var="accion" value="#{filaTablaDesicion.acciones}"
+						label="#{accion.nombre}">
+					</s:selectItems>
+					<s:convertEntity />
+				</h:selectOneMenu>
+			</rich:column>
+		</rich:dataTable>
+		
+		
+		
+		</div>
+		<br/>
+		<h:inputTextarea value="#{tablaDesicion.observaciones}" style="width : 99%;" rows="4" readonly="true" disabled="true">
+			Observaciones
+		</h:inputTextarea>
+<br/>
+
+
+		</div>
+
+		<div style="clear: both" />
+	</ui:define>
+	<ui:define name="botonera">	
+    	
+		<div id="botonera">
+		
+		<s:button
+				id="atras"
+				view="/resultado_esperado_read.seam"
+				value="Atras" 
+				styleClass="botoncancelar" 
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"
+		/>
+		
+		<h:commandLink action="#{editor.cancelar()}" value="Cancelar" styleClass="botonnavegacion" style="color:#ffffff;" onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+		
+		
+		
+</div>
+
+
+
+		<rich:modalPanel id="panel" width="350" height="100">
+			<f:facet name="header">
+				<h:panelGroup>
+					<h:outputText value="Atencion"></h:outputText>
+				</h:panelGroup>
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="img/cancel.png"
+						styleClass="hidelink" id="hidelink" />
+					<rich:componentControl for="panel" attachTo="hidelink"
+						operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+			<h:outputText
+				value="Esta funcionalidad no esta vigente en la presente version"></h:outputText>
+			<br />
+			
+		</rich:modalPanel>
+		
+		
+		
+	</ui:define>
+
+</ui:composition>

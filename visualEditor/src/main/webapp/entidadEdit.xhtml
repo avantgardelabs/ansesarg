@@ -1,0 +1,339 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j" template="layout/template.xhtml">
+
+<ui:define name="ayuda">
+		<div class="ayuda">Pantalla buscar entidades y visualizar las entidades que ya contiene el sistema. <br />
+		<a href="" class="textoayuda">ver mas >></a>
+		</div>
+</ui:define>
+
+	<ui:define name="body">
+		<script type="text/javascript">
+			//<!--
+				var _persistible = false;
+				var _tamanioBusqueda = 0;
+				function busquedaValida() {
+					if (_tamanioBusqueda < 3) {
+						alert('Debe ingresar al menos tres caracteres para la busqueda');
+						return false;
+					}
+					return true;
+				}
+			//-->
+		</script>
+				
+		<rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+			<span class="waitingPanel">
+			<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+			<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+			</span>
+		</rich:modalPanel>
+		
+		
+		
+		
+		<rich:simpleTogglePanel id="panelAtributos" styleClass="margen5">
+		  	 <f:facet name="header">#{entidadHome.managed ? 'Editar' : 'Agregar'} Entidad</f:facet>
+
+          	 <s:decorate  id="nombreEntidad" template="layout/edit.xhtml">
+              <ui:define name="label">Nombre</ui:define>
+              <h:inputText 
+              		id="txtnombreEntidad"
+              		onchange="_modificado=true"	
+                    size="50"
+                    maxlength="50"
+                    value="#{entidadHome.instance.nombre}"
+                    required="true"
+                    requiredMessage="El nombre de la entidad es obligatorio"
+                    onblur="javascript:this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');"
+                    >
+                    
+                    <s:validate/>
+                    
+                     
+              </h:inputText>
+        
+          	</s:decorate>
+          	
+          	<s:decorate  id="descripcionEntidad" template="layout/edit.xhtml">      
+              <ui:define name="label">Descripcion</ui:define>
+              <h:inputText id="txtdescripcionEntidad"
+                    onchange="_modificado=true"
+                         styleClass="ancho500"
+                    maxlength="100"
+                        value="#{entidadHome.instance.descripcion}"
+                        required="true"
+                        requiredMessage="La descripcion de la entidad es obligatoria"
+                    	onblur="javascript:this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');">
+                    <s:validate/>
+                    
+                    
+              </h:inputText>
+        
+          	</s:decorate>
+          
+		</rich:simpleTogglePanel>
+				
+		<rich:panel rendered="true" id="formAtributos" styleClass="margen5">
+			  <f:facet name="header">Agregar Atributos</f:facet>
+
+	          <s:decorate id="nombreAtributo" template="layout/edit.xhtml">
+	              
+	              <ui:define name="label">Nombre<span class="required">*</span></ui:define>
+	              <h:inputText id="txtnombreAtributo"
+	                         size="50"
+	                    maxlength="50"
+	                        value="#{entidadHome.atributo.nombre}"
+	                        onblur="javascript:this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');"
+						>
+	                     
+	              </h:inputText>
+	        
+	          </s:decorate>
+	          
+	          <s:decorate id="descripcion" template="layout/edit.xhtml">
+	              
+	              <ui:define name="label">Descripcion<span class="required">*</span></ui:define>
+	              <h:inputText id="txtdescripcion"
+	                         styleClass="ancho500"
+	                    maxlength="100"
+	                    onblur="javascript:this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');"
+	                        value="#{entidadHome.atributo.descripcion}"
+						>
+	                     
+	              </h:inputText>
+	        
+	        </s:decorate>
+	          
+	           <s:decorate id="tipoCarga" template="layout/edit.xhtml">
+	              
+	              <ui:define name="label">Tipo de Carga:<span class="required">*</span></ui:define>
+					<rich:comboBox value="#{entidadHome.atributo.tipoCarga}"
+						id="cboTipoCarga" enableManualInput="false"
+						styleClass="ancho300"
+						>
+						 <f:selectItem id="fisico" itemLabel="Carga Fisica" itemValue="FISICO" >
+	                    </f:selectItem>
+	                    <f:selectItem id="logico" itemLabel="Carga Logica" itemValue="LOGICO" >
+	                    </f:selectItem>
+					</rich:comboBox>
+					<a4j:support event="onchange" reRender="cboTipoCarga" bypassUpdates="true" ajaxSingle="true"/> 
+	          </s:decorate>
+	          
+	          
+	          
+	          <s:decorate id="tipoDato" template="layout/edit.xhtml">
+	              
+	              <ui:define name="label">Tipo de Dato<span class="required">*</span></ui:define>
+					<rich:comboBox value="#{entidadHome.atributo.tipoDato}"
+						id="tipoDato" enableManualInput="false"
+						styleClass="ancho300"
+						>
+						<f:selectItem itemValue="TEXTO" itemLabel="Texto" />
+						<f:selectItem itemValue="NUMERO" itemLabel="Numeros" />
+						<f:selectItem itemValue="FECHA" itemLabel="Fecha" />
+						<f:selectItem itemValue="BOOLEANO" itemLabel="Booleano" />
+					</rich:comboBox>
+					<a4j:support event="onblur" reRender="tipoDato" bypassUpdates="true" ajaxSingle="true"/> 
+	          </s:decorate>
+
+			 <div>
+				<h:commandButton 
+					onclick="_modificado=true"
+					action="#{entidadHome.addAtributo()}"
+					value="Agregar ..." 
+					reRender="tablaAtributos, formAtributos, cancelEdit" 
+					rendered="#{!entidadHome.editando}"
+				/>
+		
+				<h:commandButton 
+					onclick="_modificado=true"
+					action="#{entidadHome.actualizarAtributo()}"
+					value="Actualizar" 
+					reRender="tablaAtributos, formAtributos, cancelEdit" 
+					rendered="#{entidadHome.editando}"
+				/>
+			</div>
+			<br/>
+			
+			<div style="clear:both">
+                <span class="required">*</span> 
+               Los campos que contengan <span class="required">(*)</span> son de caracter obligatorios
+            	
+            </div>			
+		</rich:panel>
+		<rich:panel styleClass="margen5">
+		  <f:facet name="header">Acciones</f:facet>
+
+        		 <f:facet name="header">Atributos Seleccionados</f:facet>
+   			   <div class="results" id="tablaValores">
+   							
+   				
+				<rich:dataTable id="tablaAtributos"
+				styleClass="rich-table70"
+						value="#{entidadHome.instance.atributos}" rows="10" var="atr">
+
+						<rich:column width="20px">
+							<h:graphicImage value="/img/aviso.png" width="20px"
+								height="20px" title="El atributo no posee referencias a datos"
+								alt="El atributo no posee referencias a datos" rendered="#{not entidadHome.esAnclado(atr)}"/>
+							<h:graphicImage value="/img/ok.png" width="20px"
+								height="20px" title="El atributo posee referencias a datos"
+								alt="El atributo posee referencias a datos" rendered="#{entidadHome.esAnclado(atr)}"/>
+						</rich:column>
+
+						<rich:column sortBy="#{atr.nombre}">
+							<f:facet name="header">
+								<h:outputText value="Nombre" />
+							</f:facet>
+							<h:outputText value="#{atr.nombre}" />
+						</rich:column>
+
+						<rich:column sortBy="#{atr.descripcion}">
+							<f:facet name="header">
+								<h:outputText value="Descripcion" />
+							</f:facet>
+							<h:outputText value="#{atr.descripcion}" />
+						</rich:column>
+
+						<rich:column sortBy="#{atr.tipoDato}">
+							<f:facet name="header">
+								<h:outputText value="Tipo de Dato" />
+							</f:facet>
+							<h:outputText value="#{atr.tipoDato}" />
+						</rich:column>
+
+						<rich:column styleClass="ancho150" sortBy="#{atr.tipoCarga}">
+							<f:facet name="header">
+								<h:outputText value="Tipo de Carga "/>
+							</f:facet>
+							
+							<h:graphicImage value="/img/bbdd_borrar.png" width="20px"
+								height="20px" title="Atributo Logico"
+								alt="El atributo es cargado por una regla"
+								rendered="#{atr.tipoCarga == 'LOGICO'}" />
+
+
+							<h:graphicImage
+								title="Atributo Fisico"
+								alt="Atributo Fisico"
+								value="/img/bbdd_nuevo.png" width="20px" height="20px"
+								rendered="#{atr.tipoCarga == 'FISICO'}" />
+
+
+						</rich:column>
+						
+					<rich:column styleClass="ancho150">
+        				<f:facet name="header">Accion</f:facet>
+								<a4j:commandLink id="removeAtributo"
+									ajaxSingle="true"
+									action="#{entidadHome.eliminarAtributo(atr)}"
+									reRender="tablaAtributos,cancelEdit,mensajesPrincipal"
+									value=""
+									onclick="if(!confirm('Se eliminara un atributo y no podra recuperarlo, esta seguro que desea Continuar?')) {return false;} else {_modificado=true;}"
+									styleClass="hover"
+									><h:graphicImage value="/img/bin_closed.png"
+									title="Quitar" alt="Quitar" styleClass="img"/>
+									Eliminar
+								</a4j:commandLink>
+								#{' '}
+								<a4j:commandLink id="editarAtributo"
+									ajaxSingle="true"
+									action="#{entidadHome.editarAtributo(atr)}"
+									reRender="formAtributos"
+									value="" styleClass="hover"
+									><h:graphicImage value="/img/editar.png"
+									title="Editar" alt="Editar" styleClass="img"/> 
+									Editar
+								</a4j:commandLink>
+						
+					</rich:column>
+
+						<f:facet name="footer">
+							<rich:datascroller id="datascroller" />
+						</f:facet>
+			</rich:dataTable>
+		
+		</div>
+
+
+		</rich:panel>
+        <div class="actionButtons">
+
+			<h:commandButton id="save"
+				value="Guardar" action="#{entidadHome.persist}"
+				disabled="#{!entidadHome.wired}" rendered="#{!entidadHome.managed}" 
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+
+			<h:commandButton id="update" value="Guardar"
+				action="#{entidadHome.update}" rendered="#{entidadHome.managed}" 
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>
+
+			<h:commandButton id="delete" value="Eliminar"
+				action="#{entidadHome.remove}" immediate="true"
+				rendered="#{entidadHome.managed}" 
+				onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})">
+				
+				<a4j:support 
+                	event="onclick"
+					onsubmit="if(!confirm('Se eliminara un elemento y no podra recuperarlo, esta seguro que desea Continuar?')) {return false;}"
+					ajaxSingle="true"
+					immediate="true" 
+				/>
+			</h:commandButton> 
+				
+				<s:button id="cancelEdit"
+				value="Cancelar" propagation="end" view="/entidadList.xhtml"
+				rendered="#{entidadHome.managed}"
+				action="#{entidadHome.cancel}" 
+				>
+					<a4j:support 
+                	event="onclick"
+                	ajaxSingle="true"
+					onsubmit="javascript:
+						if (!_modificado) {
+							_modificado = #{entidadHome.modificado}; 
+						}
+						if (_modificado) {
+							if(!confirm('Se perderan los cambios. Esta seguro que desea Cancelar?')) {
+								return false;
+							}
+						}
+						Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300});"
+				/>
+				</s:button> 
+				
+				<s:button id="cancelAdd"
+				value="Cancelar" propagation="end"
+				view="/#{empty entidadFrom ? 'entidadList' : entidadFrom}.xhtml"
+				rendered="#{!entidadHome.managed}" >
+				<a4j:support 
+                	event="onclick"
+                	ajaxSingle="true"
+					onsubmit="javascript:
+						if (!_modificado) {
+							_modificado = #{entidadHome.modificado}; 
+						}
+						if (_modificado) {
+							if(!confirm('Se perderan los cambios. Esta seguro que desea Cancelar?')) {
+								return false;
+							}
+						}
+						Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300});" 
+				/>
+				</s:button>
+			
+			
+		</div>
+	
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,72 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                             "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich"
+	template="layout/template_asistente.xhtml">
+
+	<ui:define name="titulo">
+		<h1>Selección de sexo</h1>
+	</ui:define>
+
+	<ui:define name="ayuda">
+		<div class="ayuda">Seleccione el sexo del trabajador para la nueva regla.* En caso que la nueva regla sea de aplicacion indistinta para M o F continuar al siguiente paso.* En caso que la re
+		gla contenga resultados diferentes para M y F, debera seleccionar <b>"discriminar sexo"</b> y una vez finalizada la regla, generar la regla correspondiente al sexo opuesto<br />
+		<a href="" style="text-align: right; cursor: pointer;">ver mas >></a></div>
+	</ui:define>
+
+	<ui:define name="body">
+
+
+		<div id="cajaformulario"><h:panelGrid columns="2"
+			rowClasses="prop" columnClasses="name,value">
+
+			<h:outputText value="Discrimina Sexo" />
+			<h:selectBooleanCheckbox value="#{asistente.discriminaSexo}" />
+			<h:outputText value="Sexo" />
+
+			<rich:comboBox selectFirstOnUpdate="false" defaultLabel="Buscar..">
+				<f:selectItem itemValue="Masculino" itemLabel="Masculino" />
+				<f:selectItem itemValue="Femenino" itemLabel="Femenino" />
+
+
+			</rich:comboBox>
+		</h:panelGrid></div>
+
+		<div style="clear: both" />
+	</ui:define>
+	
+	
+	<ui:define name="preview">
+<rich:dataTable width="300px;" style="overflow:scroll;"
+			var="paso" value="#">
+			<f:facet name="header">
+				<h:outputText value="Area de Preview" />
+			</f:facet>
+			
+			<rich:column title="Paso">
+				<h:outputText value="Seleccione el sexo del trabajador para la nueva regla.
+				 En caso que la nueva regla sea de aplicacion indistinta para M o F continuar al siguiente paso. 
+				 En caso que la regla contenga resultados diferentes para M y F, debera seleccionar 
+	discriminar sexo y una vez finalizada la regla, generar la regla correspondiente al sexo opuesto" />
+			</rich:column>
+			
+			
+
+		</rich:dataTable>
+		</ui:define>
+		
+	<ui:define name="botonera">
+
+		<div id="botonera">
+		<h:commandButton type="submit"
+			value="Grabar"  />
+		
+		<h:commandButton type="submit"
+			value="Continuar" action="#{asistente.establecerPaso('SEXO')}" />
+		</div>
+	</ui:define>
+</ui:composition>

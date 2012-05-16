@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<components xmlns="http://jboss.com/products/seam/components"
+            xmlns:core="http://jboss.com/products/seam/core"
+            xmlns:persistence="http://jboss.com/products/seam/persistence"
+            xmlns:drools="http://jboss.com/products/seam/drools"
+            xmlns:bpm="http://jboss.com/products/seam/bpm"
+            xmlns:security="http://jboss.com/products/seam/security"
+            xmlns:mail="http://jboss.com/products/seam/mail"
+            xmlns:web="http://jboss.com/products/seam/web"            
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:excel="http://jboss.com/products/seam/excel"  
+            xmlns:async="http://jboss.com/products/seam/async"          
+            xsi:schemaLocation=
+                "http://jboss.com/products/seam/core http://jboss.com/products/seam/core-2.0.xsd 
+                 http://jboss.com/products/seam/persistence http://jboss.com/products/seam/persistence-2.0.xsd 
+                 http://jboss.com/products/seam/drools http://jboss.com/products/seam/drools-2.0.xsd
+                 http://jboss.com/products/seam/bpm http://jboss.com/products/seam/bpm-2.0.xsd
+                 http://jboss.com/products/seam/security http://jboss.com/products/seam/security-2.0.xsd
+                 http://jboss.com/products/seam/mail http://jboss.com/products/seam/mail-2.0.xsd
+                 http://jboss.com/products/seam/web http://jboss.com/products/seam/web-2.0.xsd
+                 http://jboss.com/products/seam/components http://jboss.com/products/seam/components-2.0.xsd
+                 http://jboss.com/products/seam/excel http://jboss.com/products/seam/excel-2.1.xsd
+				 http://jboss.com/products/seam/async http://jboss.com/products/seam/async-2.0.xsd">
+
+   
+   
+   <core:init debug="true" jndi-pattern="@jndiPattern@"/>
+   
+   <!--   <core:ejb installed="@embeddedEjb@"/> -->
+   
+   <drools:rule-base name="escenarioRules">
+       <drools:rule-files>
+           <value>escenario.drl</value>
+       </drools:rule-files>
+   </drools:rule-base>
+   
+   <drools:managed-working-memory 
+ 		name="escenarioWM"
+ 		auto-create="true"
+ 		scope="event"
+ 		rule-base="#{escenarioRules}">
+ 	</drools:managed-working-memory>
+   
+   
+   <persistence:managed-persistence-context
+   		name="entityManager"
+   		auto-create="true"
+   		entity-manager-factory="#{asistenteEntityManagerFactory}"   		
+   />
+   
+   <persistence:entity-manager-factory 
+   		name="asistenteEntityManagerFactory"
+   		persistence-unit-name="asistente_reglas"
+   />
+   
+	<security:identity authenticate-method="#{autenticador.autenticar}"/>   
+	<persistence:managed-persistence-context
+                name="entityManagerMMX"
+                auto-create="true"
+                entity-manager-factory="#{asistenteEntityManagerFactoryMMX}"            
+   />
+   
+   <persistence:entity-manager-factory 
+                name="asistenteEntityManagerFactoryMMX"
+                persistence-unit-name="mmx"
+   />
+   
+   <!-- 
+   <persistence:entity-manager-factory name="asistente_reglasEntityManager"
+   	persistence-unit-name="asistente_reglas"
+   	installed="false"
+   />
+   
+   <persistence:managed-persistence-context
+   name="entityManager"
+   auto-create="true"
+   entity-manager-factory="#{asistente_reglasEntityManager}"
+   persistence-unit-jndi-name="asistente_reglas"
+   />
+   
+   <core:managed-persistence-context name="entityManager"
+                              auto-create="true"
+                   entity-manager-factory="#{asistente_reglasEntityManagerFactory}"/>
+
+   <core:entity-manager-factory name="asistente_reglasEntityManagerFactory" 
+               persistence-unit-name="asistente_reglas"/>
+   
+
+	<component name="org.jboss.seam.ui.entityConverter">
+  		<property name="entityManager">#{em}</property>
+	</component>
+	
+	
+    -->
+   <!-- 
+   <core:init debug="true" jndi-pattern="\#{ejbName}/local"/>
+   
+   
+       
+   <core:manager concurrent-request-timeout="500" 
+                 conversation-timeout="120000" 
+                 conversation-id-parameter="cid"
+                 parent-conversation-id-parameter="pid"/>
+    
+ 
+                      
+   
+               
+   <core:ejb installed="@embeddedEjb@"/>
+    -->
+                      
+                                            
+
+<!--
+	  
+   <drools:rule-base name="securityRules">
+       <drools:rule-files>
+           <value>/security.drl</value>
+       </drools:rule-files>
+   </drools:rule-base>
+  
+   
+   
+   <event type="org.jboss.seam.security.notLoggedIn">
+       <action execute="#{redirect.captureCurrentView}"/>
+   </event>
+   <event type="org.jboss.seam.security.loginSuccessful">
+       <action execute="#{redirect.returnToCapturedView}"/>
+   </event>
+   
+   <mail:mail-session host="localhost" port="2525" username="test" password="test" />
+        -->
+   <!-- For use with jBPM pageflow or process management -->
+   <!--  
+   <bpm:jbpm>
+      <bpm:process-definitions></bpm:process-definitions>
+      <bpm:pageflow-definitions></bpm:pageflow-definitions>
+   </bpm:jbpm>
+   -->
+   
+   <!-- Factory para obtener la url actual -->
+   <factory name="contextPath" scope="CONVERSATION"  auto-create="true"
+		value="#{servletContexts.request.contextPath}"/>
+
+	<web:multipart-filter create-temp-files="true"
+                      max-request-size="1000000" 
+                      url-pattern="*.seam" />
+             
+    
+    <!-- Install the QuartzDispatcher -->
+    <async:quartz-dispatcher/>
+            
+</components>
