@@ -152,7 +152,7 @@ public class WrapperRulesFactory implements IWrapperService {
 		//log.debug("Cantidad de atributos involucrados: " + atributosInvolucrados.size());
 
 		for (Atributo a : atributosInvolucrados) {
-			//log.debug("Atributo Involucrado: " + a.getEntidad().getNombre() + "." + a.getNombre());
+			log.debug("Atributo Involucrado: " + a.getEntidad().getNombre() + "." + a.getNombre());
 		}
 
 		
@@ -1136,9 +1136,9 @@ public class WrapperRulesFactory implements IWrapperService {
 				// Se carga una variable local con todos los atributos que
 				// estan
 				// involucrados en la regla
-				if (!atributosInvolucrados.contains(a.getAccionModificaHecho().getAtributo()) && a.getAccionModificaHecho().getAtributo().getTipoCarga().equals("LOGICO")) {
+				/*if (!atributosInvolucrados.contains(a.getAccionModificaHecho().getAtributo()) && a.getAccionModificaHecho().getAtributo().getTipoCarga().equals("LOGICO")) {
 					atributosInvolucrados.add(a.getAccionModificaHecho().getAtributo());
-				}
+				}*/
 								
 				//log.debug("Entidad a declarar en la modificacion de un hecho: " + a.getAccionModificaHecho().getAtributo().getEntidad().getNombre());
 
@@ -1525,7 +1525,7 @@ public class WrapperRulesFactory implements IWrapperService {
 
 		
 		if (!atributosInvolucrados.contains(atr)) {
-			atributosInvolucrados.add(atr);
+			//atributosInvolucrados.add(atr);
 		}
 		
 
