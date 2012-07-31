@@ -242,12 +242,12 @@ public class WrapperRulesFactory implements IWrapperService {
 		declararVariablesEnCondicion();
 		
 
-		String traza = "\t\treporte.addMessage(\"0\").addDescription(\"traza\",\"" + "REGLA: " + tablaDecision.getNombre() + " -" + condicionesDSL
+		String traza = "\t\treport.addMessage(\"0\").addDescription(\"traza\",\"" + "REGLA: " + tablaDecision.getNombre() + " -" + condicionesDSL
 				+ accionesDSL + "\"); \n";
 
-		traza += "\t\treporte.addMessage(\"0\").addDescription(\"UDAI\",\"" + fila.getMensajeOperadorUdai() + "\");\n";
-		traza += "\t\treporte.addMessage(\"0\").addDescription(\"CIUDADANO\",\"" + fila.getMensajeUsuarioWEB() + "\");\n";
-		traza += "\t\treporte.addMessage(\"0\").addDescription(\"SISTEMAS\",\"" + fila.getObservacion() + "\");\n";
+		traza += "\t\treport.addMessage(\"0\").addDescription(\"UDAI\",\"" + fila.getMensajeOperadorUdai() + "\");\n";
+		traza += "\t\treport.addMessage(\"0\").addDescription(\"CIUDADANO\",\"" + fila.getMensajeUsuarioWEB() + "\");\n";
+		traza += "\t\treport.addMessage(\"0\").addDescription(\"SISTEMAS\",\"" + fila.getObservacion() + "\");\n";
 
 		String cadenaLog = "\n\t\t//log.debug(\" Regla ejecutada  " + tablaDecision.getNombre() + fila.getId() + "\");";
 

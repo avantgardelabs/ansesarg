@@ -159,6 +159,9 @@ public class SimulacionEscenario implements Serializable{
 	    regla= regla + "\n\nimport ar.gov.anses.prissa.asistente.modelosemantico.*; \n" +
 	    		"import ar.gob.anses.prissa.mi.asistente_reglas.simulador.MensajeSistema;\n" +
 	    		"import java.util.*;" +
+	    		"import ar.gob.anses.prissa.mi.asistente_reglas.excepciones.RuleException;\n\n" + 
+	    		
+	    		"global ar.gov.anses.prissa.asistente2.messages.Report report;\n" +
 	    		"\n\n\n";
 		
 		regla = regla + ruleWrapper(t) + funcionesHelpers();	
@@ -226,11 +229,11 @@ public class SimulacionEscenario implements Serializable{
 				
 				if (d.getCondicion().getFuncion()!=null){
 					
-					log.info(String.format("Nombre de la funci—n: %s",d.getCondicion().getFuncion().getNombre()));
-					log.info(String.format("Cuerpo de la funci—n: %s",d.getCondicion().getFuncion().getCuerpo()));
+					log.info(String.format("Nombre de la funciï¿½n: %s",d.getCondicion().getFuncion().getNombre()));
+					log.info(String.format("Cuerpo de la funciï¿½n: %s",d.getCondicion().getFuncion().getCuerpo()));
 					
 					for ( Parametro parametro:d.getCondicion().getFuncion().getParametros()){
-						log.info(String.format("Nombre del parametro: %s, descripci—n del parametro %s, entidad del parametro %s", parametro.getNombre(),parametro.getAtributo().getDescripcion(),parametro.getEntidad().getNombre()));
+						log.info(String.format("Nombre del parametro: %s, descripciï¿½n del parametro %s, entidad del parametro %s", parametro.getNombre(),parametro.getAtributo().getDescripcion(),parametro.getEntidad().getNombre()));
 					}
 					
 					if (!vFunciones.contains(d.getCondicion().getFuncion())){						
@@ -406,8 +409,8 @@ public class SimulacionEscenario implements Serializable{
 			
 			pseudocodigo += "$" + p.getEntidad().getNombre() + "." + accessor + _metodo + "()";
 			
-			/*Agrego la entidad a la lista de entidades utilizadas si es que no se encuentra en dicho vector y además agrego la
-			 * inicialización de la variable en DRL
+			/*Agrego la entidad a la lista de entidades utilizadas si es que no se encuentra en dicho vector y ademï¿½s agrego la
+			 * inicializaciï¿½n de la variable en DRL
 			*/
 			if (!vEntidades.contains(p.getEntidad())){						
 				vEntidades.add(p.getEntidad());

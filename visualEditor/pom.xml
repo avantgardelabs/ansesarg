@@ -130,7 +130,6 @@
 			<groupId>org.richfaces.framework</groupId>
 			<artifactId>richfaces-api</artifactId>
 			<version>3.3.0.GA</version>
-			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
