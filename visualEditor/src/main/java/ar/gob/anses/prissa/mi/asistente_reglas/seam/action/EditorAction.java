@@ -1178,7 +1178,9 @@ public class EditorAction implements Serializable {
 	            FacesContext facesContext = FacesContext.getCurrentInstance();
 	            OutputStream responseStream = ((HttpServletResponse)facesContext.getExternalContext().getResponse()).getOutputStream();
 	            
-	            String reglaFinal=  "\n\nimport ar.gov.anses.prissa.asistente.modelosemantico.*; \n" +
+	            String reglaFinal=  "\n\npackage ar.org.anses.prissa.reglas;\n" +
+	            		"\n" +
+	            		"import ar.gov.anses.prissa.asistente.modelosemantico.*; \n" +
 	    	    		"import ar.gob.anses.prissa.mi.asistente_reglas.simulador.MensajeSistema;\n" +
 	    	    		"import java.util.*;" +
 	    	    		"import ar.gob.anses.prissa.mi.asistente_reglas.excepciones.RuleException;\n\n" + 
