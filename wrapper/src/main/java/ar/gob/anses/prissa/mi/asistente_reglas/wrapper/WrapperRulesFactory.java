@@ -1856,7 +1856,7 @@ public class WrapperRulesFactory implements IWrapperService {
 	private String elevarException(boolean elevar) {
 
 		if (elevar)
-			return "throw new RuleException(\"Se ha interrumpido la ejecucion del programa\");";
+			return "exception= new RuleException(\"Se ha interrumpido la ejecucion del programa\");";
 		else
 			return "";
 	}
