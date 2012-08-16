@@ -1,0 +1,62 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:s="http://jboss.com/products/seam/taglib"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:a="http://richfaces.org/a4j"
+                xmlns:rich="http://richfaces.org/rich"
+                xmlns:a4j="http://richfaces.org/a4j" 
+                template="layout/template.xhtml">
+                       
+<ui:define name="ayuda">
+		<div class="ayuda">Generacion de modelo de dominio <br />
+		<a href="" class="textoayuda">...</a>
+		</div>
+</ui:define>
+
+<ui:define name="body">
+
+    	<rich:modalPanel id="asistenteWaitingPanel" moveable="false" resizeable="false" autosized="true" zindex="2000" top="500" minWidth="350" width="300" >
+			<span class="waitingPanel">
+			<h:graphicImage value="/img/wait_bar.gif" style="vertical-align: middle;"/>
+			<h:outputText style="" value="#{messages['message.pleasewait']}"/>
+			</span>
+		</rich:modalPanel>
+	
+        <rich:panel styleClass="margen5">
+            <f:facet name="header">Modelo de dominio</f:facet>
+
+			<s:decorate template="layout/edit.xhtml">
+ 				<ui:define name="label">Directorio:</ui:define>
+ 				
+ 				<h:inputText value="#{modelGenController.modelFactory.path}" required="true" requiredMessage="Debe indicar el directorio donde se colocara el modelo de dominio"/>
+ 					
+			
+				
+ 		 	</s:decorate>
+        
+            <div style="clear:both">
+                
+                los campos que contengan  <span class="required">(*)</span> son de caracter obligatorios
+            </div>
+            
+        </rich:panel>
+                
+        <div class="actionButtons">
+
+            <h:commandButton id="gen" 
+                          value="Generar" 
+                         action="#{modelGenController.generar()}"
+                      
+                       onclick="Richfaces.showModalPanel('asistenteWaitingPanel',{width:350, top:300})"/>  
+        
+            
+
+        </div>
+    
+</ui:define>
+
+</ui:composition>

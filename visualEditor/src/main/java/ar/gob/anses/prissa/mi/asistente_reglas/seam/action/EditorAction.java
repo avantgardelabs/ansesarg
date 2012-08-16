@@ -310,7 +310,7 @@ public class EditorAction implements Serializable {
 		return "nuevo_dominio.xhtml";
 	}
 
-	/** Persistimos la condici�n en la BBDD */
+	/** Persistimos la condiciÔøΩn en la BBDD */
 	public void guardarCondicion() {
 		persistenceService.save(this.condicion);
 	}
@@ -619,7 +619,7 @@ public class EditorAction implements Serializable {
 				if (cantFilas > 300) {
 					log.debug("Se cancela la generacion de filas.");
 					log.debug("Cantidad de filas a generar: mas de " + cantFilas + ".");
-					FacesMessages.instance().add(new FacesMessage("Se intentaron generar m�s de 300 filas. Se cancelo el proceso."));
+					FacesMessages.instance().add(new FacesMessage("Se intentaron generar mÔøΩs de 300 filas. Se cancelo el proceso."));
 					return null;
 				}
 
@@ -1095,7 +1095,7 @@ public class EditorAction implements Serializable {
 				"%" + nameInstrument + "%");
 
 		this.listInstruments = (ArrayList<Instrumento>) query.getResultList();
-		log.debug("El tamaño de la lista de la busqueda es " + listInstruments.size());
+		log.debug("El tama√±o de la lista de la busqueda es " + listInstruments.size());
 	}
 
 	public List<Condicion> getCondicionesSeleccionadas() {

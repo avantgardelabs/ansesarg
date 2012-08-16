@@ -18,7 +18,8 @@
 		<module>exceptions</module>
 		<module>visualEditor</module>
 		<!-- <module>books</module> -->
-		
+
+		<module>model-gen</module>
 	</modules>
 
 	<properties>

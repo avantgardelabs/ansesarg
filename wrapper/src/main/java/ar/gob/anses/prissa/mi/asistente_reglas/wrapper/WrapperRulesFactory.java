@@ -389,7 +389,7 @@ public class WrapperRulesFactory implements IWrapperService {
 
 			/*
 			 * Agrego la entidad a la lista de entidades utilizadas si es que no
-			 * se encuentra en dicho vector y adem‚àö¬∞s agrego la inicializaci‚àö‚â•n
+			 * se encuentra en dicho vector y adem‚Äö√†√∂¬¨‚àûs agrego la inicializaci‚Äö√†√∂‚Äö√¢‚Ä¢n
 			 * de la variable en DRL
 			 */
 
@@ -803,11 +803,11 @@ public class WrapperRulesFactory implements IWrapperService {
 			/* Cuando una condicion es evaluada por una funcion */
 			if (des.getCondicion().getFuncion() != null) {
 
-				//log.debug(String.format("Nombre de la funci‚Äö√Ñ√Æn: %s", des.getCondicion().getFuncion().getNombre()));
-				//log.debug(String.format("Cuerpo de la funci‚Äö√Ñ√Æn: %s", des.getCondicion().getFuncion().getCuerpo()));
+				//log.debug(String.format("Nombre de la funci‚Äö√Ñ√∂‚àö√ë‚àö√Ün: %s", des.getCondicion().getFuncion().getNombre()));
+				//log.debug(String.format("Cuerpo de la funci‚Äö√Ñ√∂‚àö√ë‚àö√Ün: %s", des.getCondicion().getFuncion().getCuerpo()));
 
 				for (Parametro parametro : des.getCondicion().getFuncion().getParametros()) {
-					//log.debug(String.format("Nombre del parametro: %s, descripci‚Äö√Ñ√Æn del parametro %s, entidad del parametro %s",
+					//log.debug(String.format("Nombre del parametro: %s, descripci‚Äö√Ñ√∂‚àö√ë‚àö√Ün del parametro %s, entidad del parametro %s",
 							//parametro.getNombre(), parametro.getAtributo().getDescripcion(), parametro.getEntidad().getNombre()));
 				}
 				if (!vFunciones.contains(des.getCondicion().getFuncion())) {
@@ -1608,7 +1608,7 @@ public class WrapperRulesFactory implements IWrapperService {
 
 			/*
 			 * Agrego la entidad a la lista de entidades utilizadas si es que no
-			 * se encuentra en dicho vector y adem‚àö¬∞s agrego la inicializaci‚àö‚â•n
+			 * se encuentra en dicho vector y adem‚Äö√†√∂¬¨‚àûs agrego la inicializaci‚Äö√†√∂‚Äö√¢‚Ä¢n
 			 * de la variable en DRL
 			 */
 			if (!vEntidades.contains(p.getEntidad())) {
@@ -1856,7 +1856,7 @@ public class WrapperRulesFactory implements IWrapperService {
 	private String elevarException(boolean elevar) {
 
 		if (elevar)
-			return "exception= new RuleException(\"Se ha interrumpido la ejecucion del programa\");";
+			return " report.setHasFail(true);";
 		else
 			return "";
 	}
