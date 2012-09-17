@@ -28,6 +28,7 @@ public class ModelFactory {
 	private EntityManager entityManager;
 	
 	private Log log; 
+	private Entidad entidad; 
 	
 	
 	private String path;
@@ -38,6 +39,9 @@ public class ModelFactory {
 	public static ModelFactory createFactory(){
 		return new ModelFactory();
 	}
+	
+	
+	
 	
 	private String getHeader() { 
 		String result="\n package ar.gov.anses.prissa.asistente.modelosemantico;\n" +

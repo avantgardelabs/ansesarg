@@ -101,7 +101,12 @@ public class SystemProperties implements Serializable {
 	public String getDirectorioGestorArchivosDRL() {
 		String local = config.getProperty("directorio.gestor.archivo");
 		return getDirectorioBase() + File.separator + local;
-	}   
+	}  
+	
+	public String getWorkSpaceAgentes() { 
+		return  config.getProperty("agentes.workspace");
+		
+	}
    
 	public String getDirectorioBase() {
 		String directorioBase = config.getProperty("directorio.base",

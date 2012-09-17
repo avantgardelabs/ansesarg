@@ -20,6 +20,7 @@
 		<!-- <module>books</module> -->
 
 		<module>model-gen</module>
+		<module>agentsFactory</module>
 	</modules>
 
 	<properties>

@@ -29,6 +29,12 @@
 			<artifactId>model-gen</artifactId>
 			<version>3.0</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>ar.gov.anses.prissa.asistente</groupId>
+			<artifactId>agentsFactory</artifactId>
+			<version>3.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>ar.gov.anses.prissa.asistente2.server</groupId>

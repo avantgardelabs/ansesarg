@@ -33,6 +33,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.servlet.http.HttpServletResponse;
 
+import org.drools.agent.AgentEventListener;
 import org.jboss.seam.Component;
 import org.jboss.seam.ScopeType;
 import org.jboss.seam.annotations.AutoCreate;
@@ -52,6 +53,7 @@ import org.richfaces.event.NodeSelectedEvent;
 import org.richfaces.model.TreeNode;
 import org.richfaces.model.TreeNodeImpl;
 
+import ar.gob.anses.prissa.mi.asistente_reglas.agentfactory.AgentFactory;
 import ar.gob.anses.prissa.mi.asistente_reglas.entity.Accion;
 import ar.gob.anses.prissa.mi.asistente_reglas.entity.Condicion;
 import ar.gob.anses.prissa.mi.asistente_reglas.entity.CondicionAtributo;
@@ -1116,6 +1118,7 @@ public class EditorAction implements Serializable {
 		log.debug(regla);
 		crearArchivoDrl();
 		presentarArchivo(regla);
+		
 	}
 
 	public void crearArchivoDrl() {
@@ -1210,6 +1213,29 @@ public class EditorAction implements Serializable {
 	        
 	        FacesContext.getCurrentInstance().responseComplete();
 		
+	}
+	
+	/**
+	 * Genera un ruleAgent con la tabla de desicion proporcionada. 
+	 * @param tabla
+	 */
+	public void generarAgente(TablaDecision tabla) throws Exception{
+		SystemProperties sys = (SystemProperties) Component.getInstance(SystemProperties.class);
+
+		String workspace = sys.getWorkSpaceAgentes();
+		try {
+			AgentFactory agente = new AgentFactory();
+			agente.setLog(log);
+			agente.generar(tabla, workspace);
+			FacesMessages.instance().add(new FacesMessage("El agente ha sido generado existosamente "));
+		} catch (Exception e) {
+			throw e;
+			//log.error(e);
+			//FacesMessages.instance().add(new FacesMessage("Ha ocurrido un error al crear el agente. Error: " + e.getMessage()));
+		}
+		
+		
+
 	}
 
 }
