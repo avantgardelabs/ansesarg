@@ -341,11 +341,11 @@ public class AgentFactory {
 		File f = new File(path);
 		f.mkdirs();
 		f = new File(workspace + "/" + nombreAgente + "/src/main/config");
-		f.mkdir();
+		f.mkdirs();
 
 		f = new File(workspace + "/" + nombreAgente
 				+ "/src/main/resources/META-INF");
-		f.mkdir();
+		f.mkdirs();
 
 		generarPOM(nombreAgente, workspace);
 		generarInterface(nombreAgente, path);
