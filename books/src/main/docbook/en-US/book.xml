@@ -22,9 +22,14 @@
 
 
     
-    <!--  <xi:include href="gettingStarted.xml"/>-->
+    <!--  <xi:include href="gettingStarted.xml"/>
     <xi:include href="releases/CR3.4.xml"/>
     <xi:include href="releases/3.5CR.xml"/>
+    -->
+    
+    <xi:include href="STABLE-3.18/intro.xml"/>
+    <xi:include href="STABLE-3.18/despliegue.xml"/>
+    <xi:include href="STABLE-3.18/modelo_logico_datos.xml"/>
    
     <index/>
 </book>

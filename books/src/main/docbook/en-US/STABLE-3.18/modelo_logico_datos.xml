@@ -1,0 +1,2695 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<chapter version="5.0"
+	xsi:schemaLocation="http://docbook.org/ns/docbook http://www.docbook.org/xml/5.0/xsd/docbook.xsd http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd"
+	xml:base="./" xmlns="http://docbook.org/ns/docbook"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	xmlns:xi="http://www.w3.org/2001/XInclude"
+	xmlns:ns="http://docbook.org/ns/docbook">
+<title>Modelo logico de datos</title>
+
+<section>
+<title>Introduccion</title>
+<para> A continuacion se describen las tablas que integran la
+aplicacion. Esta descripcion esta basado en notacion ANSI SQL.</para>
+<para>Es importante mencionar y destacar que la estructura actual
+fue realizada el ORM. Esto significa que cualquier cambio en el modelo
+dominio tendra un impacto directo en el modelo logico de datos.</para>
+
+
+</section>
+
+<section>
+<title>Descripcion de las tablas</title>
+
+<section>
+<title>Accion</title>
+<para>Esta table representa las acciones de las tablas de
+desicion. </para>
+<para>
+<ns:code>
+	<table>
+	<ns:thead>
+		<td> Field </td>
+		<td> Type </td>
+		<td> Null </td>
+		<td> Key </td>
+		<td> Default </td>
+		<td> Extra</td>
+	</ns:thead>
+	<tr>
+	<td> id </td>
+	<td> bigint(20) </td>
+	<td> NO </td>
+	<td> PRI </td>
+	<td> NULL </td>
+	<td> auto_increment </td>
+	</tr>
+	<tr>
+	<td> descripcion </td>
+	<td> varchar(100) </td>
+	<td> YES </td>
+	<td> </td>
+	<td> NULL </td>
+	<td> </td>
+	</tr>
+	<tr>
+	<td> id_original </td>
+	<td> bigint(20) </td>
+	<td> NO </td>
+	<td> MUL </td>
+	<td> NULL </td>
+	<td> </td>
+	</tr>
+	<tr>
+	<td> lastVersion </td>
+	<td> bit(1) </td>
+	<td> NO </td>
+	<td> </td>
+	<td> NULL </td>
+	<td> </td>
+	</tr>
+	<tr>
+	<td> nombre </td>
+	<td> varchar(50) </td>
+	<td> NO </td>
+	<td> </td>
+	<td> NULL </td>
+	<td> </td>
+	</tr>
+	<tr>
+	<td> version_previa </td>
+	<td> bigint(20) </td>
+	<td> YES </td>
+	<td> </td>
+	<td> NULL </td>
+	<td> </td>
+	</tr>
+	<tr>
+	<td> removed </td>
+	<td> bit(1) </td>
+	<td> NO </td>
+	<td> </td>
+	<td> NULL </td>
+	<td> </td>
+	</tr>
+	<tr>
+	<td> tipoAccion </td>
+	<td> varchar(255) </td>
+	<td> NO </td>
+	<td> </td>
+	<td> NULL </td>
+	<td> </td>
+	</tr>
+	<tr>
+	<td> version </td>
+	<td> bigint(20) </td>
+	<td> NO </td>
+	<td> </td>
+	<td> NULL </td>
+	<td> </td>
+	</tr>
+	<tr>
+	<td> accionActivaRegla_id </td>
+	<td> bigint(20) </td>
+	<td> YES </td>
+	<td> MUL </td>
+	<td> NULL </td>
+	<td> </td>
+	</tr>
+	<tr>
+	<td> accionModificaHecho_id </td>
+	<td> bigint(20) </td>
+	<td> YES </td>
+	<td> MUL </td>
+	<td> NULL </td>
+	<td> </td>
+	</tr>
+	<tr>
+	<td> dominio_id </td>
+	<td> bigint(20) </td>
+	<td> NO </td>
+	<td> MUL </td>
+	<td> NULL </td>
+	<td> </td>
+	</tr>
+	</table>
+</ns:code>
+</para>
+</section>
+
+<section>
+<title>AccionActivaRegla</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> reglaPorPseudocodigo_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> tablaDecision_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>AccionModificaHecho</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> persistible </td>
+<td> bit(1) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> tipoDato </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> tipoModificacion </td>
+<td> varchar(255) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> accionModificaHechoFormula_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> accionModificaHechoFuncion_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> accionModificaHechoLiteral_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> atributo_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> entidad_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>AccionModificaHechoFormula</title>
+<table>
+
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> formula_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+
+</table>
+</section>
+
+<section>
+<title>AccionModificaHechoFuncion</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> funcion_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>AccionModificaHechoFuncion_ValorParametro</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> AccionModificaHechoFuncion_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> valoresParametros_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>AccionModificaHechoLiteral</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> literal </td>
+<td> varchar(100) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+
+<section>
+<title>AnclajeRequerimientoInformatico</title>
+<table>
+<tr>
+<td>Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td>estado </td>
+<td> int(11) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td>requerimiento_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td>entidad_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>AnclajeRequerimientoInformatico_Atributo</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> AnclajeRequerimientoInformatico_requerimiento_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> atributos_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>Atributo</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> anclado </td>
+<td> bit(1) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> descripcion </td>
+<td> varchar(100) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> idTipoDato </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> nombre </td>
+<td> varchar(255) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> persistible </td>
+<td> bit(1) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> tipoCarga </td>
+<td> varchar(255) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> tipoDato </td>
+<td> varchar(255) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> entidad_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> reglaPseudocodigo_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> tablaDecision_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+<section>
+<title>Clausula</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> atributo </td>
+<td> tinyblob </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> operador </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> tipo </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> valor </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> condicionReglaPseudocodigo_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>Condicion</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> descripcion </td>
+<td> varchar(100) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> id_original </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> lastVersion </td>
+<td> bit(1) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> nombre </td>
+<td> varchar(50) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> version_previa </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> pseudoCodigo </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> reglaPsC </td>
+<td> tinyblob </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> removed </td>
+<td> bit(1) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> tipoSalida </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> valor </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> version </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> atributo_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> dominio_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> entidad_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> funcion_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> regla_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>CondicionReglaPseudocodigo</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> clausula </td>
+<td> tinyblob </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> clausulaActual </td>
+<td> tinyblob </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> entidad </td>
+<td> tinyblob </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> tipo </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> reglaPseudocodigo_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+
+<section>
+<title>CondicionReglaPseudocodigo_Clausula</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> CondicionReglaPseudocodigo_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> clausulas_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+
+</table>
+</section>
+
+<section>
+<title>Condicion_Atributo</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> operadorLogico </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> removed </td>
+<td> bit(1) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> atributo2_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>Condicion_Condicion_Atributo</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> Condicion_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td>condicionAtributoList_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>Condicion_Condicion_Formula</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> Condicion_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> condicionFormulaList_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+
+<section>
+<title>Condicion_Literal</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> Condicion_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> literales_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>Descisor</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> condicion_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> valor_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> valor_Cond_Atr_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> valor_Cond_Form_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+<section>
+<title>Dictamen</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> id </td>
+<td> int(11) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> dictamenPrimeraInstancia </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> dictamenSegundaInstancia </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> dictamenTerceraInstancia </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> porcentajeInvalidez </td>
+<td> double </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+
+<section>
+<title>Dominio</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> descripcion </td>
+<td> varchar(50) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> id_original </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> lastVersion </td>
+<td> bit(1) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> version_previa </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> removed </td>
+<td> bit(1) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> version </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+
+<section>
+<title>Entidad</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> descripcion </td>
+<td> varchar(100) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> id_original </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> lastVersion </td>
+<td> bit(1) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> nombre </td>
+<td> varchar(50) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> version_previa </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> removed </td>
+<td> bit(1) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> version </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>Entidad_Atributo</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> Entidad_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> atributos_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+
+</table>
+</section>
+
+
+<section>
+<title>Escenario</title>
+<table>
+<tr>
+<td>Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> Id_Escenario </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> descripcion </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> nombre </td>
+<td> varchar(50) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> usuario </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> visibilidad </td>
+<td> bit(1) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> regla_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> tabla_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>Escenario_Fila</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> Id_Escenario_Fila </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> atributo_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> entidad_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> escenario_Id_Escenario </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+
+
+<section>
+<title>FilaTablaDecision</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> elevaExcepcion </td>
+<td> bit(1) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> mensajeOperadorUdai </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> mensajeUsuarioWEB </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> observacion </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title> FilaTablaDecision_Accion </title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> FilaTablaDecision_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> acciones_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>FilaTablaDecision_Descisor</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> FilaTablaDecision_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> valores_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>Formula</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> cuerpo </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> descripcion </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> nombre </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> dominio_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>Funcion</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> autor </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> cuerpo </td>
+<td> text </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> descripcion </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> fecha </td>
+<td> datetime </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> id_original </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> lastVersion </td>
+<td> bit(1) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> minorVersion </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> nombre </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> observaciones </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> previousVersionNumber </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> version_previa </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> removed </td>
+<td> bit(1) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> tipoDato </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> version </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> dominio_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>Funcion_Instrumento</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> Funcion_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> instrumentosNormativos_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+
+<section>
+<title>Funcion_Parametro</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> Funcion_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> parametros_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>Incognita</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> codigo </td>
+<td> char(1) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> atributo_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> entidad_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> formula_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>Instrumento</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> activo </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> descripcion </td>
+<td> varchar(100) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> esCarpeta </td>
+<td> bit(1) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> fechaAplicacion </td>
+<td> date </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> fechaFirma </td>
+<td> date </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> fechaVigencia </td>
+<td> date </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> textoExplicativo </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> padre_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>Instrumento_attachs</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> Instrumento_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> element </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>Literal</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> descripcion </td>
+<td> varchar(100) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> nombre </td>
+<td> varchar(50) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> operadorLogico </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>LoteSimulacion</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> Id_Lote </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> descripcion </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> nombre </td>
+<td> varchar(50) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> usuario </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> visibilidad </td>
+<td> bit(1) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> regla_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> tabla_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>Lote_Fila</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> Id_Lote_Fila </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> Lote_Identificacion </td>
+<td> int(11) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> tipo </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> Valor_Simple </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> atributo_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> entidad_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> loteSimulacion_Id_Lote </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>ReglaFilaPseudocodigo</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> condicionPseudocodigo </td>
+<td> text </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> mensajeOperadorUdai </td>
+<td> text </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> mensajeUsuarioWEB </td>
+<td> text </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> observacion </td>
+<td> text </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> reglaLiteral </td>
+<td> text </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+
+<section>
+<title>ReglaFilaPseudocodigo_Accion</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> ReglaFilaPseudocodigo_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> acciones_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+
+<section>
+<title>ReglaPseudocodigo_Atributo</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> ReglaPseudocodigo_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> atributos_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>ReglaPseudocodigo_Funcion</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> ReglaPseudocodigo_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> funciones_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>ReglaPseudocodigo_Instrumento</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> ReglaPseudocodigo_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> instrumentosNormativos_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>ReglaPseudocodigo_ReglaFilaPseudocodigo</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+<td> </td>
+</tr>
+<tr>
+<td> ReglaPseudocodigo_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+<td> </td>
+</tr>
+<tr>
+<td> reglasFilas_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> </td>
+<td></td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>Relacion</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> atributo_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> atributo_1_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> entidad_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> entidad_1_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>TablaDecision</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> autor </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> descripcion </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> fecha </td>
+<td> datetime </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> id_original </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> lastVersion </td>
+<td> bit(1) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> minorVersion </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> nombre </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> observaciones </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> previousVersionNumber </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> version_previa </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> removed </td>
+<td> bit(1) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> version </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> dominio_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>TablaDecision_FilaTablaDecision</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> TablaDecision_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> filas_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+
+<section>
+<title>TablaDecision_Instrumento</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> TablaDecision_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> instrumentos_id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+<section>
+<title>ValorParametro</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> id </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> valor </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> parametro_id </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+
+</table>
+</section>
+
+
+
+
+<section>
+<title>Valor_Simple</title>
+<table>
+<tr>
+<td> Field </td>
+<td> Type </td>
+<td> Null </td>
+<td> Key </td>
+<td> Default </td>
+<td> Extra </td>
+</tr>
+<tr>
+<td> Id_Valor_Simple </td>
+<td> bigint(20) </td>
+<td> NO </td>
+<td> PRI </td>
+<td> NULL </td>
+<td> auto_increment </td>
+</tr>
+<tr>
+<td> tipo </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> Valor_Simple_Desde </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> Valor_Simple_Hasta </td>
+<td> varchar(255) </td>
+<td> YES </td>
+<td> </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+<tr>
+<td> escenarioFila_Id_Escenario_Fila </td>
+<td> bigint(20) </td>
+<td> YES </td>
+<td> MUL </td>
+<td> NULL </td>
+<td> </td>
+</tr>
+</table>
+</section>
+
+
+
+
+</section>
+
+
+</chapter>
