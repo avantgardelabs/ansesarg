@@ -310,7 +310,7 @@ public class AgentFactory {
 				+ " <change-set xmlns='http://drools.org/drools-5.0/change-set'\n"
 				+ "             xmlns:xs='http://www.w3.org/2001/XMLSchema-instance'\n"
 				+ " xs:schemaLocation='http://drools.org/drools-5.0/change-set' >\n"
-				+ "   <add>\n" + "     <resource source=\"EMPTY\" \n"
+				+ "   <add>\n" + "     <resource source=\"${host.url}/" +nombreAgente +".drl\" \n"
 				+ "  type=\"DRL\"/>\n" + "   </add>\n" + " </change-set>";
 
 		FileWriter fw = null;
