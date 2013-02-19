@@ -331,9 +331,22 @@ public class AgentFactory {
 
 	public void generar(TablaDecision tabla, String workspace) throws Exception {
 		regla = tabla;
-		String nombreAgente = tabla.getDominio().getDescripcion()
+		String nombreTmp = tabla.getDominio().getDescripcion()
 				.replaceAll(" ", "")
 				+ tabla.getNombre().replaceAll(" ", "");
+		
+		/*String nombrePre[]=nombreTmp.split("^[A-Za-z_0-9]*");
+		
+		String nombreAgente="";
+		
+		for (int i = 0; i < nombrePre.length; i++){
+			nombreAgente +=nombrePre[i];
+		}*/
+		
+		String nombreAgente=nombreTmp.replaceAll("[^A-Za-z_0-9]","");
+	
+				
+				
 		log.info("Generando el agente: " + nombreAgente);
 		String path = workspace + "/" + nombreAgente
 				+ "/src/main/java/ar/gov/anses/prissa/asistente2/agentes/"
