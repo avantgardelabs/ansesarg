@@ -71,8 +71,6 @@ public class AgentFactory {
 		String contenido = "package ar.gov.anses.prissa.asistente2.server.agentes."
 				+ nombreAgente
 				+ ";\n"
-				+ nombreAgente
-				+ ";\n"
 				+ "import javax.xml.ws.Holder; \n"
 				+ " import ar.gov.anses.prissa.asistente2.messages.Report; \n"
 				+ " import ar.gov.anses.prissa.asistente2.server.agents.RuleAgent; \n"
@@ -80,7 +78,7 @@ public class AgentFactory {
 				+ "public interface "
 				+ nombreAgente
 				+ " extends RuleAgent {  \n"
-				+ "    Report execute(Holder<PingFacts>  param); \n" + "}";
+				+ "    Report execute(Holder<" + nombreAgente + "Facts>  param); \n" + "}";
 
 		FileWriter fw = null;
 		PrintWriter pw = null;
@@ -120,9 +118,9 @@ public class AgentFactory {
 				+ "\n"
 				+ " @Stateless \n"
 				+ " @WebService \n"
-				+ " @WebContext(contextRoot = PingBean.WEB_CONTEXT_ROOT,  \n"
-				+ "            urlPattern = PingBean.WEB_CONTEXT_URL_PATTERN) \n"
-				+ " public class PingBean extends RuleAgentBean implements Ping { \n"
+				+ " @WebContext(contextRoot = " + nombreAgente + "Bean.WEB_CONTEXT_ROOT,  \n"
+				+ "            urlPattern = " + nombreAgente + "Bean.WEB_CONTEXT_URL_PATTERN) \n"
+				+ " public class " + nombreAgente + "Bean extends RuleAgentBean implements " + nombreAgente + " { \n"
 				+ "\n"
 				+ " private static final String DOMAIN = \""
 				+ dominio
@@ -132,7 +130,7 @@ public class AgentFactory {
 				+ nombreAgente
 				+ "\"; \n"
 				+ "\n"
-				+ "protected static final String WEB_CONTEXT_ROOT = \"/\" + DOMAIN + "
+				+ "protected static final String WEB_CONTEXT_ROOT = \"/\" + DOMAIN "
 				+ " + NAME; \n"
 				+ "\n"
 				+ "protected static final String WEB_CONTEXT_URL_PATTERN = \"/\" + NAME; \n"
@@ -258,7 +256,6 @@ public class AgentFactory {
 				+ ";\n"
 				+ "\n"
 				+ "import ar.gov.anses.prissa.asistente2.server.agents.RuleAgentFacts;\n"
-				+ "import ar.gov.anses.prissa.asistente.modelosemantico.*;"
 				+ "\n"
 				+ "public class "
 				+ nombreAgente
