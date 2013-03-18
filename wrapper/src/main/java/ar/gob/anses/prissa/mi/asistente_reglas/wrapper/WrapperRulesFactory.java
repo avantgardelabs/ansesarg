@@ -173,15 +173,8 @@ public class WrapperRulesFactory implements IWrapperService {
 		strCondiciones = "\t" + wrapCondiciones(fila);
 
 		
-		//log.debug("**************** Condiciones generadas antes de su tratamiento Fila:   " +fila.getId() +" ************************");
-		//log.debug(strCondiciones);
 		
-		// strCondiciones = strCondiciones + "\t\t eval(!isExecuted(\"" +
-		// tablaDecision.getNombre() + "_" + fila.getId() + "\",$control))\n";
-
 		if (fila.getAcciones() != null) {
-
-			//log.debug("Cantidad de Entidades en acciones: " + getEntidadesEnAcciones(fila.getAcciones()).size());
 			for (Entidad ent : getEntidadesEnAcciones(fila.getAcciones())) {
 				if (ent != null) {
 					updatesObjetos = updatesObjetos + "\n\t\t update($" + ent.getNombre() + ");";
@@ -208,7 +201,7 @@ public class WrapperRulesFactory implements IWrapperService {
 			encontrado = false;
 		}
 
-		//log.debug("Valor de EmptyFacts: " + emptyFacts);
+		
 
 		strCondiciones = emptyFacts + strCondiciones;
 
@@ -236,11 +229,11 @@ public class WrapperRulesFactory implements IWrapperService {
 		strCondiciones = emptyFacts + strCondiciones;
 
 		
+		
 		analizarContracondiciones(fila.getAcciones());
-
 		
 		declararVariablesEnCondicion();
-		
+		//strCondiciones.replaceAll("\\(  \\&\\&", "(");
 
 		String traza = "\t\treport.addMessage(\"0\").addDescription(\"traza\",\"" + "REGLA: " + tablaDecision.getNombre() + " -" + condicionesDSL
 				+ accionesDSL + "\"); \n";
@@ -455,13 +448,14 @@ public class WrapperRulesFactory implements IWrapperService {
 		
 		String condicionesFinales ="";
 		for (MetaDataCondicion m: listaOrdenada  ){
-			//log.debug("Linea condicion: " + m.getCondicion());
 			condicionesFinales+= m.getCondicion();
 		}
 
-		//return condiciones;
 		
+		
+			
 		return condicionesFinales;
+		
 
 	}
 
@@ -971,13 +965,33 @@ public class WrapperRulesFactory implements IWrapperService {
 		}
 
 		metaCondicion.setAtributosDeclarados(atributosEnCondicion);
-		metaCondicion.setCondicion( cadena + " " + exclusionCondicion(acciones, ((Descisor) resultado.get(0)).getCondicion().getEntidad().getNombre()) + ")\t\n"
-				+ condicionEnFuncion + "\t\n");
+		
+		
+		
+		String cadenaLimpia=cadena.trim();
+		
+		
+		String aExcluir=exclusionCondicion(acciones, ((Descisor) resultado.get(0)).getCondicion().getEntidad().getNombre());
+		
+		if (!cadenaLimpia.substring(cadenaLimpia.length()-1,cadenaLimpia.length()).equals("(")){
+			if (!aExcluir.trim().equals(""))
+				cadena=cadena + " && " + aExcluir;
+			else
+				cadena=cadena + " " + aExcluir;
+			
+		}
+		
+		
+		String condicionParseada= cadena + ")\t\n"
+				+ condicionEnFuncion + "\t\n";
+		
+		
+		metaCondicion.setCondicion(condicionParseada);
 		
 		metaDataCondiciones.add(metaCondicion);
 		
-		return cadena + " " + exclusionCondicion(acciones, ((Descisor) resultado.get(0)).getCondicion().getEntidad().getNombre()) + ")\t\n"
-				+ condicionEnFuncion + "\t\n";
+		
+		return condicionParseada;
 
 	}
 
@@ -1089,22 +1103,10 @@ public class WrapperRulesFactory implements IWrapperService {
 		String cadena = "";
 
 		for (Accion a : acciones) {
-			/*
-			 * if (a.getTipoAccion().equals("MH") &&
-			 * a.getAccionModificaHecho().getAccionModificaHechoFormula() ==
-			 * null &&
-			 * a.getAccionModificaHecho().getEntidad().getNombre().equals
-			 * (entidad)) {
-			 * 
-			 * cadena = cadena + " && " +
-			 * a.getAccionModificaHecho().getAtributo().getNombre() + "==null";
-			 * 
-			 * }
-			 */
-
+			
 			if (a.getTipoAccion().equals("MH") && a.getAccionModificaHecho().getEntidad().getNombre().equals(entidad)) {
 
-				cadena = cadena + " && " + a.getAccionModificaHecho().getAtributo().getNombre() + "==null";
+				cadena = cadena + "  " + a.getAccionModificaHecho().getAtributo().getNombre() + "==null";
 
 			}
 		}
@@ -1264,6 +1266,8 @@ public class WrapperRulesFactory implements IWrapperService {
 				mergeContraCondicion(a.getAccionModificaHecho().getAtributo());
 			}
 		}
+		
+		//strCondiciones.replaceAll("\\(  \\&&", "\\(");
 	}
 
 	/**
