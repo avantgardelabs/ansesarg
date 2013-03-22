@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -230,6 +233,7 @@ public class AgentFactory {
 		String cadena = "";
 		WrapperRulesFactory wrapper = new WrapperRulesFactory(tabla);
 		wrapper.setLog(log);
+		wrapper.buildRule();
 		Set<Atributo> listaAtributos = wrapper.getAtributosInvolucrados();
 
 		for (Atributo a : listaAtributos) {
@@ -245,7 +249,7 @@ public class AgentFactory {
 
 		}
 
-		return "";
+		return cadena;
 
 	}
 
@@ -332,14 +336,6 @@ public class AgentFactory {
 				.replaceAll(" ", "")
 				+ tabla.getNombre().replaceAll(" ", "");
 		
-		/*String nombrePre[]=nombreTmp.split("^[A-Za-z_0-9]*");
-		
-		String nombreAgente="";
-		
-		for (int i = 0; i < nombrePre.length; i++){
-			nombreAgente +=nombrePre[i];
-		}*/
-		
 		String nombreAgente=nombreTmp.replaceAll("[^A-Za-z_0-9]","");
 	
 				
@@ -365,6 +361,45 @@ public class AgentFactory {
 		generarFacts(tabla, nombreAgente, path);
 		generarDevProperties(nombreAgente, workspace);
 		generarChangeSet(nombreAgente, workspace);
+	}
+	
+	public void generarSVNFile(String svnServer,String workspace) { 
+		
+		String nombreTmp = regla.getDominio().getDescripcion()
+				.replaceAll(" ", "")
+				+ regla.getNombre().replaceAll(" ", "");
+		
+		String nombreAgente=nombreTmp.replaceAll("[^A-Za-z_0-9]","");
+		Format formatter = new SimpleDateFormat("yyyymmddHHmmss");
+		String version = formatter.format(new Date());
+		String path = workspace + "/" + nombreAgente + "/svnLoader.sh";
+		
+		String commands=" " +
+				"	svn update \n" 
+				+ " svn copy . " + svnServer + "/tags/" + nombreAgente + "/" + version + " \n";
+		
+		FileWriter fw = null;
+		PrintWriter pw = null;
+		try {
+			fw = new FileWriter(path);
+			pw = new PrintWriter(fw);
+			pw.print(commands);
+		} catch (IOException e) {
+			log.error(e);
+			
+		} finally {
+			pw.close();
+			try {
+				fw.close();
+			} catch (IOException e) {
+				log.error(e);
+			}
+		}
+		
+		
+	
+		
+		
 	}
 
 	public AgentFactory() {

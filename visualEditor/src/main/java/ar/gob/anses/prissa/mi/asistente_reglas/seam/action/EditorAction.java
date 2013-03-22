@@ -1227,6 +1227,7 @@ public class EditorAction implements Serializable {
 			AgentFactory agente = new AgentFactory();
 			agente.setLog(log);
 			agente.generar(tabla, workspace);
+			agente.generarSVNFile(sys.getSVNServer(), workspace);
 			FacesMessages.instance().add(new FacesMessage("El agente ha sido generado existosamente "));
 		} catch (Exception e) {
 			throw e;

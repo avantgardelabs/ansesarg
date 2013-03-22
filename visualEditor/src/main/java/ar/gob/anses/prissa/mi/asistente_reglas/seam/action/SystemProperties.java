@@ -107,6 +107,10 @@ public class SystemProperties implements Serializable {
 		return  config.getProperty("agentes.workspace");
 		
 	}
+	
+	public String getSVNServer(){ 
+		return config.getProperty("svn.server");
+	}
    
 	public String getDirectorioBase() {
 		String directorioBase = config.getProperty("directorio.base",
