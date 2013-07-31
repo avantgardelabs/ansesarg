@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -22,6 +23,8 @@ public class AgentFactory {
 
 	@Logger
 	private Log log;
+
+
 
 	private TablaDecision regla;
 
@@ -49,6 +52,12 @@ public class AgentFactory {
 				+ "          <version>1.0</version> \n"
 				+ "          <scope>provided</scope> \n"
 				+ "      </dependency> \n"
+				+"	<dependency> \n"
+				+"		<groupId>ar.gov.anses.prissa.asistente2</groupId> \n"
+				+"		<artifactId>ejemplo-modelo</artifactId> \n"
+				+"		<version>1.0</version> \n"
+				+"		<scope>provided</scope> \n"
+				+"	</dependency>\n"
 				+ "  </dependencies> \n"
 				+ " </project> ";
 		FileWriter fw = null;
@@ -234,18 +243,27 @@ public class AgentFactory {
 		WrapperRulesFactory wrapper = new WrapperRulesFactory(tabla);
 		wrapper.setLog(log);
 		wrapper.buildRule();
-		Set<Atributo> listaAtributos = wrapper.getAtributosInvolucrados();
+		Set<Atributo> listaTemp = wrapper.getAtributosInvolucrados();
 
-		for (Atributo a : listaAtributos) {
-			cadena += "private " + a.getEntidad().getNombre() + " "
-					+ a.getEntidad().getNombre().toLowerCase() + ";" + "\n"
-					+ " public " + a.getEntidad().getNombre() + " get"
-					+ a.getEntidad().getNombre() + "() { " + " return "
-					+ a.getEntidad().getNombre().toLowerCase() + "; }\n";
+		ArrayList<Entidad> listaEntidades = new ArrayList();
+		
+		for (Atributo a:listaTemp){
+			if (!listaEntidades.contains(a.getEntidad())){
+				listaEntidades.add(a.getEntidad());
+				log.info("Entidad: " + a.getEntidad().getDescripcion() );
+			}
+		}
+		
+		for (Entidad e : listaEntidades) {
+			cadena += "private " + e.getNombre() + " "
+					+ e.getNombre() + ";" + "\n"
+					+ " public " + e.getNombre() + " get"
+					+ e.getNombre() + "() { " + " return "
+					+ e.getNombre() + "; }\n";
 
-			cadena += " public void set" + a.getEntidad().getNombre() + "("
-					+ a.getEntidad().getNombre() + " valor) { " + " this."
-					+ a.getEntidad().getNombre() + "=valor;}\n";
+			cadena += " public void set" + e.getNombre() + "("
+					+ e.getNombre() + " valor) { " + " this."
+					+ e.getNombre() + "=valor;}\n";
 
 		}
 
@@ -255,12 +273,15 @@ public class AgentFactory {
 
 	private void generarFacts(TablaDecision tabla, String nombreAgente,
 			String path) throws Exception {
-		String contenido = "package ar.gov.anses.prissa.asistente2.server.agentes."
+		String contenido = "" +
+				"	package ar.gov.anses.prissa.asistente2.server.agentes."
 				+ nombreAgente
 				+ ";\n"
 				+ "\n"
 				+ "import ar.gov.anses.prissa.asistente2.server.agents.RuleAgentFacts;\n"
 				+ "\n"
+				+ "import ar.gov.anses.prissa.asistente.modelosemantico.*;\n"
+				+ "\n" 
 				+ "public class "
 				+ nombreAgente
 				+ "Facts extends RuleAgentFacts {\n"
